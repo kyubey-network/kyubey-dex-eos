@@ -1,0 +1,82 @@
+﻿<div style="background:#0c0c0c">
+    <div class="container currency-container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="section-title">
+                    {{ id }}
+                </h2>
+
+                <div><div class="section-title-underscore"></div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="toggle-buttons-outer">
+                <div class="toggle-buttons">
+                    <a v-bind:class="{ 'active': active === 'kchart' }" v-on:click="active = 'kchart'" class="toggle-buttons-item">K线图</a>
+                    <a v-bind:class="{ 'active': active === 'sellrecord' }" v-on:click="active = 'sellrecord'" class="toggle-buttons-item">出售记录</a>
+                    <a v-bind:class="{ 'active': active === 'buyrecord' }" v-on:click="active = 'buyrecord'" class="toggle-buttons-item">购买记录</a>
+                    <a v-if="$root.account" v-bind:class="{ 'active': active === 'exchange' }" v-on:click="active = 'exchange'" class="toggle-buttons-item">发布交易</a>
+                </div>
+            </div>
+
+            <div v-show="active === 'kchart'" id="kchart" style="height: 300px;"></div>
+            <div v-show="active === 'sellrecord'">
+                <table class="trade-table">
+                    <tr v-for="y in currency.orders.filter(z => z.ask.quantity.indexOf('EOS') > 0)">
+                        <td>{{ y.account }}</td>
+                        <td>{{ y.ask.quantity.indexOf('EOS') > 0 ? '出售' : '购买' }}</td>
+                        <td>{{ y.bid.quantity }}</td>
+                        <td>{{ y.ask.quantity }}</td>
+                    </tr>
+                    <tr v-if="currency && currency.sells && currency.sells.length === 0">
+                        <td colspan="4">当前没有正在进行的交易</td>
+                    </tr>
+                </table>
+            </div>
+            <div v-show="active === 'buyrecord'">
+                <table class="trade-table">
+                    <tr v-for="y in currency.orders.filter(z => z.ask.quantity.indexOf('EOS') <= 0)">
+                        <td>{{ y.account }}</td>
+                        <td>{{ y.ask.quantity.indexOf('EOS') > 0 ? '出售' : '购买' }}</td>
+                        <td>{{ y.bid.quantity }}</td>
+                        <td>{{ y.ask.quantity }}</td>
+                    </tr>
+                    <tr v-if="currency && currency.buys && currency.buys.length === 0">
+                        <td colspan="4">当前没有正在进行的交易</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="container row" v-show="active === 'exchange'">
+                <div class="col-md-6">
+                    <h3 class="section-title">发布交易</h3>
+                    <div><div class="section-title-underscore"></div></div>
+                    <p>
+                        <label class="label">{{ id }}</label>
+                        <input type="text" class="textbox" v-model="asset" />
+                    </p>
+                    <p>
+                        <label class="label">EOS</label>
+                        <input type="text" class="textbox" v-model="total" />
+                    </p>
+                    <p>
+                        <div class="placeholder"></div>
+                        <a v-on:click="buy()" class="btn btn-small"><i class="fa fa-exchange"></i> 买入</a>
+                        <a v-on:click="sell()" class="btn btn-small"><i class="fa fa-exchange"></i> 出售</a>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="section-title">我的资产</h3>
+                    <div><div class="section-title-underscore"></div></div>
+                    <table class="trade-table">
+                        <tr v-for="x in $root.balances">
+                            <td>{{ x }}</td>
+                        </tr>
+                        <tr v-if="$root.currency && $root.currency.buys && $root.currency.buys.length === 0">
+                            <td>我没有任何资产</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
