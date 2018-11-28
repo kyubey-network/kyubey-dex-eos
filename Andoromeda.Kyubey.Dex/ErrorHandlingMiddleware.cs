@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Pomelo.Booster.Management.WebApi.Models;
+using Andoromeda.Kyubey.Dex.Models;
 
 namespace Andoromeda.Kyubey.Dex
 {

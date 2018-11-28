@@ -9,50 +9,47 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Andoromeda.Kyubey.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Andoromeda.Kyubey.Dex
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
+            services.AddMvc();
+            //services.AddConfiguration(out var config);
+            //services.AddDbContext<KyubeyContext>(x => x.UseMySql(config["MySql"]));
+            services.AddSwaggerGen(x =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                x.SwaggerDoc("v1", new Info() { Title = "Kyubey Dex", Version = "v1" });
+                x.DocInclusionPredicate((docName, apiDesc) => apiDesc.HttpMethod != null);
+                x.DescribeAllEnumsAsStrings();
             });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCors(c => c.AddPolicy("Kyubey", x =>
+                x.AllowCredentials()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+            ));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
+            
+            app.UseCors("Kyubey");
+            app.UseErrorHandlingMiddleware();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
-            app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kyubey Dex"));
+
+            app.UseMvcWithDefaultRoute();
+            app.UseVueMiddleware();
         }
     }
 }

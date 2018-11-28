@@ -1,11 +1,10 @@
 ﻿LazyRouting.SetRoute({
     '/home': null,
-    '/currency/all': null,
-    '/currency/:id': { id: '[A-Z]{1,10}' },
-    '/debug': null
+    '/token/all': null,
+    '/token/:id': { id: '[A-Z]{1,10}' }
 });
 
 LazyRouting.SetMirror({
     '/': '/home',
-    '/currency': '/currency/all'
+    '/token': '/currency/all'
 });

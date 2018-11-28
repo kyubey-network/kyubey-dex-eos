@@ -6,85 +6,109 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/dasdaq.css">
+    <link href="/css/site.css?v=20181123" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="/css/one-page-wonder.min.css?v=20181123" rel="stylesheet">
     <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-slider.min.js"></script>
+    <script src="/js/common.js?v=20181029"></script>
+    <script src="/js/i18n.js"></script>
     <script src="/js/eos.js"></script>
     <script src="/js/vue.js"></script>
     <script src="/js/vue-router.js"></script>
     <script src="/js/vue-lazy-routing.js"></script>
-    <script src="/js/dasdaq.routing.js"></script>
-    <script src="/js/dasdaq.queryview.js"></script>
-    <script src="/js/dasdaq.js"></script>
-    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
-    <title>Dasdaq</title>
+    <script src="/js/kyubey.routing.js"></script>
+    <script src="/js/kyubey.queryview.js"></script>
+    <script src="/js/kyubey.js"></script>
+    <title>Kyubey</title>
 </head>
 <body>
     <div id="app">
-        <div class="container navbar-container">
-            <div class="navbar-header">
-                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-                    <i class="fa fa-list-ul"></i>
-                </button>
-                <a href="#" class="navbar-brand"><img src="/img/logo.svg" /></a>
-            </div>
-            <nav id="bs-navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a v-on:click="redirect('/')" v-bind:class="{ 'active': active === 'home' }">首页</a>
-                    </li>
-                    <li class="active">
-                        <a v-on:click="redirect('/currency')" v-bind:class="{ 'active': active === 'currency' }">市场</a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- <li><a href="http://mb.bootcss.com" onclick="_hmt.push(['_trackEvent', 'docv3-navbar', 'click', 'themes'])" target="_blank">主题/模板</a></li> -->
-                    <li>
-                        <a v-if="!$root.account" v-on:click="init_scatter()" target="_blank"><img class="scatter-icon" src="/img/scatter.png" />Scatter登录</a>
-                        <a v-if="$root.account">欢迎您，<span>{{ $root.account.name }}</span></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <router-view></router-view>
-        <div class="footer">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
             <div class="container">
-                <div class="col-md-4">
-                    <h4>
-                        条款说明
-                    </h4>
-                    <ul>
-                        <li><a>服务条款</a></li>
+                <a class="navbar-brand" href="/">Kyubey</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dex"></a>
+                        </li>
                     </ul>
-                </div>
-                <div class="col-md-4">
-                    <h4>
-                        关于
-                    </h4>
-                    <ul>
-                        <li><a>Link</a></li>
-                        <li><a>Link</a></li>
-                        <li><a>Link</a></li>
+                    <ul class="navbar-nav ">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Language
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="/lang/en-US">English</a>
+                                <a class="dropdown-item" href="/lang/zh-CN">简体中文</a>
+                                <a class="dropdown-item" href="/lang/zh-TW">繁體中文</a>
+                                <a class="dropdown-item" href="/lang/ja">日本語</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="col-md-12 copyright">© 2018 DasDaq All Right Reserved.</div>
-        </div>
-
-        <!-- start notifications -->
-        <div class="notification" v-bind:class="{ 'active': control.currentNotification !== null, 'pending': control.currentNotification && control.currentNotification.level === 'pending', 'succeeded': control.currentNotification && control.currentNotification.level === 'succeeded', 'warning': control.currentNotification && control.currentNotification.level === 'warning', 'error': control.currentNotification && control.currentNotification.level === 'error', 'important': control.currentNotification && control.currentNotification.level === 'important' }">
-            <div class="notification-title">{{ control.currentNotification ? control.currentNotification.title : null }}</div>
-            <div class="notification-detail" v-if="control.currentNotification && control.currentNotification.detail">{{ control.currentNotification ? control.currentNotification.detail : null }}</div>
-            <div class="notification-button-outer" v-if="control.currentNotification && control.currentNotification.button">
-                <a class="notification-button" v-on:click="clickNotification">{{ control.currentNotification.button }}</a>
+        </nav>
+        <router-view></router-view>
+        <footer class="py-5 bg-black">
+            <div class="container">
+                <div style="text-align:center">
+                    <table style="margin:auto">
+                        <tbody align="center">
+                            <tr>
+                                <td width="100">
+                                    <div align="center">
+                                        <div align="center">
+                                            <a data-toggle="tooltip" data-placement="top" title="Please contact us through : Inquiries@kyubey.network"><img src="/img/email_L.png" /></aid>
+                                        </div>
+                                        <div align="center">
+                                            <a data-toggle="tooltip" data-placement="top" title="Please contact us through : Inquiries@kyubey.network"><font color="#737373"> Mail </font></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="100">
+                                    <div align="center">
+                                        <div align="center">
+                                            <a href="https://medium.com/@kyubeynetwork/" target="_blank" style="color:red;text-decoration:none;"><img src="/img/medium.png" /></a>
+                                        </div>
+                                        <div align="center">
+                                            <a href="https://medium.com/@kyubeynetwork/" target="_blank" style="color:red;text-decoration:none;"> <font color="#737373"> medium </font></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="100">
+                                    <div align="center">
+                                        <div align="center">
+                                            <a href="https://t.me/Kyubey_Network" target="_blank" style="color:red;text-decoration:none;"><img src="/img/telegram.png" /></a>
+                                        </div>
+                                        <div align="center">
+                                            <a href="https://t.me/Kyubey_Network" target="_blank" style="color:red;text-decoration:none;"> <font color="#737373"> TG group</font></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="100">
+                                    <div align="center">
+                                        <div align="center">
+                                            <a href="https://t.me/Kyubey_Network_Announcement" target="_blank" style="color:red;text-decoration:none;"><img src="/img/telegram.png" /></a>
+                                        </div>
+                                        <div align="center">
+                                            <a href="https://t.me/Kyubey_Network_Announcement" target="_blank" style="color:red;text-decoration:none;"><font color="#737373"> TG channel </font></a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+                <p></p>
+                <p class="m-0 text-center text-white small">Copyright &copy; Kyubey {{ new Date().getFullYear() }}</p>
             </div>
-        </div>
-        <!-- end notifications -->
+        </footer>
     </div>
-    <!-- WPA start -->
-    <script id="qd2852162657c8bc61ca45ff1ce55406327abe4cdcfc" src="https://wp.qiye.qq.com/qidian/2852162657/c8bc61ca45ff1ce55406327abe4cdcfc" charset="utf-8" async defer></script>
-    <!-- WPA end -->
 </body>
 </html>
