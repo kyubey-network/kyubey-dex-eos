@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Andoromeda.Kyubey.Models" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
