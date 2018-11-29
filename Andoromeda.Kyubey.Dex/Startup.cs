@@ -19,11 +19,13 @@ namespace Andoromeda.Kyubey.Dex
 {
     public class Startup
     {
+        private IConfiguration configuration;
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddConfiguration(out var config, "appsettings");
-            services.AddDbContext<KyubeyContext>(x => x.UseMySql(config["MySql"]));
+            services.AddConfiguration(out configuration, "appsettings");
+            services.AddDbContext<KyubeyContext>(x => x.UseMySql(configuration["MySql"]));
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new Info() { Title = "Kyubey Dex", Version = "v1" });
@@ -40,23 +42,23 @@ namespace Andoromeda.Kyubey.Dex
 
             services.AddTimedJob();
 
-            services.AddNewsRepositoryFactory();
+            services.AddNewsRepositoryFactory()
+                .AddTokenRepositoryactory();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var rootFolder = System.AppContext.BaseDirectory;
 
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
             app.UseStaticFiles();
 
-            var tokensFolder = Path.Combine(rootFolder, @"Tokens");
-            if (!Directory.Exists(tokensFolder))
+            var tokensFolder = Path.Combine(env.ContentRootPath, configuration["RepositoryStore"], "token-list");
+            if (Directory.Exists(tokensFolder))
             {
                 app.UseStaticFiles(new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(rootFolder, @"Tokens")),
+                    FileProvider = new PhysicalFileProvider(tokensFolder),
                     RequestPath = new PathString("/token_assets")
                 });
             }
