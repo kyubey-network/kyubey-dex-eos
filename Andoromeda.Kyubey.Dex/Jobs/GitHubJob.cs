@@ -24,7 +24,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 Path.Combine(config["RepositoryStore"], "dex-slides")).Wait();
         }
 
-        [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60, SkipWhileExecuting = true)]
+        [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public void SyncTokensRepository(IConfiguration config)
         {
             GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
