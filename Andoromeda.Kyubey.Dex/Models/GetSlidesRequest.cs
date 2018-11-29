@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Models
 {
-    public class GetBannerRequest
+    public class GetSlidesRequest
     {
       public string test_column { get; set; }
     }
