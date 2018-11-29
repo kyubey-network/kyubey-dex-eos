@@ -39,6 +39,8 @@ namespace Andoromeda.Kyubey.Dex
             ));
 
             services.AddTimedJob();
+
+            services.AddNewsRepositoryFactory();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
