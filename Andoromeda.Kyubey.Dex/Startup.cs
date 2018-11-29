@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Andoromeda.Kyubey.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Andoromeda.Kyubey.Dex
 {
@@ -43,9 +45,21 @@ namespace Andoromeda.Kyubey.Dex
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            var rootFolder = System.AppContext.BaseDirectory;
+
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
             app.UseStaticFiles();
+
+            var tokensFolder = Path.Combine(rootFolder, @"Tokens");
+            if (!Directory.Exists(tokensFolder))
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(rootFolder, @"Tokens")),
+                    RequestPath = new PathString("/token_assets")
+                });
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
