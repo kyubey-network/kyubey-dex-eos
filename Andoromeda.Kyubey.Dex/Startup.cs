@@ -35,6 +35,8 @@ namespace Andoromeda.Kyubey.Dex
                     .AllowAnyMethod()
                     .AllowAnyHeader()
             ));
+
+            services.AddTimedJob();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -49,6 +51,12 @@ namespace Andoromeda.Kyubey.Dex
 
             app.UseMvcWithDefaultRoute();
             app.UseVueMiddleware();
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<KyubeyContext>().Database.EnsureCreated();
+                app.UseTimedJob();
+            }
         }
     }
 }

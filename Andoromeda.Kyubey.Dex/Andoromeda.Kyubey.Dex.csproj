@@ -8,10 +8,14 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Andoromeda.Kyubey.Models" Version="1.0.0-*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Pomelo.AspNetCore.TimedJob" Version="2.0.0-rtm-10046" />
+    <PackageReference Include="Andoromeda.Framework.GitHub" Version="1.0.0-*" />
+    <PackageReference Include="Andoromeda.Framework.AnnotatedMarkdown" Version="1.0.0-*" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="Jobs\" />
   </ItemGroup>
 
   <ItemGroup>
