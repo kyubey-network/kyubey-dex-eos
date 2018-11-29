@@ -20,8 +20,8 @@ namespace Andoromeda.Kyubey.Dex
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            //services.AddConfiguration(out var config);
-            //services.AddDbContext<KyubeyContext>(x => x.UseMySql(config["MySql"]));
+            services.AddConfiguration(out var config, "appsettings");
+            services.AddDbContext<KyubeyContext>(x => x.UseMySql(config["MySql"]));
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new Info() { Title = "Kyubey Dex", Version = "v1" });
@@ -39,7 +39,6 @@ namespace Andoromeda.Kyubey.Dex
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
             app.UseStaticFiles();

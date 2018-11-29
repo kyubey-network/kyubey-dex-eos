@@ -8,5 +8,6 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 {
     public class NodeController : BaseController
     {
+
     }
 }
