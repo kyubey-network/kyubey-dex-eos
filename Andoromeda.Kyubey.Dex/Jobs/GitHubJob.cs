@@ -11,25 +11,46 @@ namespace Andoromeda.Kyubey.Dex.Jobs
         [Invoke(Begin = "2018-11-01 0:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public void SyncNewsRepository(IConfiguration config)
         {
-            GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
+            try
+            {
+                GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
                 "kyubey-network", "dex-news", "master",
                 Path.Combine(config["RepositoryStore"], "dex-news")).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }            
         }
 
         [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public void SyncSlidesRepository(IConfiguration config)
         {
-            GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
+            try
+            {
+                GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
                 "kyubey-network", "dex-slides", "master",
                 Path.Combine(config["RepositoryStore"], "dex-slides")).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }            
         }
 
         [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
         public void SyncTokensRepository(IConfiguration config)
         {
-            GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
+            try
+            {
+                GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
                 "kyubey-network", "token-list", "master",
                 Path.Combine(config["RepositoryStore"], "token-list")).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }
         }
     }
 }

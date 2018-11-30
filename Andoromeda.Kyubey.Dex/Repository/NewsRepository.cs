@@ -8,6 +8,7 @@ using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Framework.AnnotatedMarkdown;
 using Andoromeda.Framework.GitHub;
 using Andoromeda.Kyubey.Dex.Repository;
+using Andoromeda.Kyubey.Dex.Extensions;
 
 namespace Andoromeda.Kyubey.Dex.Repository
 {
@@ -34,7 +35,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
             {
                 var md = File.ReadAllText(x);
                 var result = AnnotationParser.Parse(md);
-                yield return GetSingle(Path.GetFileNameWithoutExtension(x));
+                yield return GetSingle(Path.GetFileNameWithoutExtension(x).TrimEnd($".{_lang}"));
             }
         }
 

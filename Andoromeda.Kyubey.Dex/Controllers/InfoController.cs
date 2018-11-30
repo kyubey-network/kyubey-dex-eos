@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    public class InfoController : Controller
+    public class InfoController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/slides")]
         public IActionResult Banner([FromServices] KyubeyContext db, [FromQuery]GetSlidesRequest request)
