@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    public class TokenController : Controller
+    public class TokenController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/token")]
         public async Task<IActionResult> TokenList([FromServices] KyubeyContext db)

@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Models
 {
-    public class GetSlidesRequest: GetBaseRequest
+    public class GetPagingRequest : GetBaseRequest
     {
-      public string test_column { get; set; }
+        public int Skip { get; set; }
+
+        public int Take { get; set; } = 10;
     }
 }

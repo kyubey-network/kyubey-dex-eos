@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
     }
 }

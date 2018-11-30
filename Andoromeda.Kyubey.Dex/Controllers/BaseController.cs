@@ -3,7 +3,7 @@ using Andoromeda.Kyubey.Dex.Models;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
         [NonAction]
         protected IActionResult ApiResult<T>(T ret, int code = 200)
