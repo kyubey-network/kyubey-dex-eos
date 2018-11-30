@@ -17,10 +17,18 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 "kyubey-network", "dex-news", "master",
                 Path.Combine(config["RepositoryStore"], "dex-news")).Wait();
             }
-            catch (Exception e)
+            catch (AggregateException ex)
             {
-                Console.Write(e);
-            }            
+                ex.Flatten().Handle((x) =>
+                {
+                    if (x is IOException)
+                    {
+                        Console.WriteLine(x);
+                        return true;
+                    }
+                    return false;
+                });
+            }
         }
 
         [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
@@ -32,10 +40,18 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 "kyubey-network", "dex-slides", "master",
                 Path.Combine(config["RepositoryStore"], "dex-slides")).Wait();
             }
-            catch (Exception e)
+            catch (AggregateException ex)
             {
-                Console.Write(e);
-            }            
+                ex.Flatten().Handle((x) =>
+                {
+                    if (x is IOException)
+                    {
+                        Console.WriteLine(x);
+                        return true;
+                    }
+                    return false;
+                });
+            }
         }
 
         [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
@@ -47,9 +63,17 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 "kyubey-network", "token-list", "master",
                 Path.Combine(config["RepositoryStore"], "token-list")).Wait();
             }
-            catch (Exception e)
+            catch (AggregateException ex)
             {
-                Console.Write(e);
+                ex.Flatten().Handle((x) =>
+                {
+                    if (x is IOException)
+                    {
+                        Console.WriteLine(x);
+                        return true;
+                    }
+                    return false;
+                });
             }
         }
     }
