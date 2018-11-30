@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Andoromeda.Kyubey.Dex
+namespace Andoromeda.Kyubey.Dex.Middlewares
 {
     public class VueMiddleware
     {
