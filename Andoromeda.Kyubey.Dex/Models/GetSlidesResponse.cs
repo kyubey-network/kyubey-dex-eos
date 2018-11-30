@@ -7,12 +7,12 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetSlidesResponse
     {
-        public string foreground_src { get; set; }
+        public string Foreground { get; set; }
 
-        public string background_src { get; set; }
+        public string Background { get; set; }
 
-        public string href { get; set; }
+        public string Link { get; set; }
 
-        public int priority { get; set; }
+        public int Priority { get; set; }
     }
 }

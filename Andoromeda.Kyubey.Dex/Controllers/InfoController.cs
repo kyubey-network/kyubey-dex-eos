@@ -17,16 +17,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var tokens = db.Tokens.ToList();
             var responseData = new List<GetSlidesResponse> {
                       new GetSlidesResponse(){
-                           background_src="1.png",
-                           foreground_src="2.png",
-                           href="/token/exchange",
-                           priority=99
+                           Background="1.png",
+                           Foreground="2.png",
+                           Link="/token/exchange",
+                           Priority=99
                       },
                       new GetSlidesResponse(){
-                           background_src="1.png",
-                           foreground_src="2.png",
-                           href="/token/exchange",
-                           priority=98
+                           Background="1.png",
+                           Foreground="2.png",
+                           Link="/token/exchange",
+                           Priority=98
                       }
                  };
 
