@@ -7,18 +7,18 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class CurrentOrders
     {
-        public long id { get; set; }
+        public long Id { get; set; }
 
-        public string type { get; set; }
+        public string Type { get; set; }
 
-        public double price { get; set; }
+        public double Price { get; set; }
 
-        public double amount { get; set; }
+        public double Amount { get; set; }
 
-        public double total { get; set; }
+        public double Total { get; set; }
 
-        public string token { get; set; }
+        public string Token { get; set; }
 
-        public DateTime time { get; set; }
+        public DateTime Time { get; set; }
     }
 }

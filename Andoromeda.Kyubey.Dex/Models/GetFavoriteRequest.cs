@@ -7,12 +7,12 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetFavoriteRequest
     {
-        public string symbol { get; set; } 
+        public string Symbol { get; set; } 
 
-        public double unit_price { get; set; }
+        public double Unit_price { get; set; }
 
-        public double change { get; set; }
+        public double Change { get; set; }
 
-        public bool favorite { get; set; }
+        public bool Favorite { get; set; }
     }
 }

@@ -7,22 +7,22 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class HistoryOrders
     {
-        public string id     { get; set; }
+        public string Id     { get; set; }
 
-        public string symbol { get; set; }
+        public string Symbol { get; set; }
 
-        public string bidder { get; set; }
+        public string Bidder { get; set; }
 
-        public string asker  { get; set; }
+        public string Asker  { get; set; }
 
-        public string type   { get; set; }
+        public string Type   { get; set; }
 
-        public double unit_price { get; set; }
+        public double Unit_price { get; set; }
 
-        public double amount { get; set;}
+        public double Amount { get; set;}
 
-        public double total  { get; set; }
+        public double Total  { get; set; }
 
-        public DateTime time   { get; set; }
+        public DateTime Time   { get; set; }
     }
 }

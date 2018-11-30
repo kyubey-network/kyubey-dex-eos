@@ -56,10 +56,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             responseData.AddRange(r.Select(
                x => new GetFavoriteRequest
                {
-                   symbol = x.id,
-                   unit_price = x.price,
-                   change = x.change,
-                   favorite = favorite.Exists(y => y.TokenId == x.id)
+                   Symbol = x.id,
+                   Unit_price = x.price,
+                   Change = x.change,
+                   Favorite = favorite.Exists(y => y.TokenId == x.id)
                 }
             ));
            
@@ -80,28 +80,28 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             
             ret.AddRange(buy.Select(x => new CurrentOrders
             {
-                id = x.Id,
-                token = x.TokenId,
-                type = "Buy",
-                amount = x.Ask,
-                price = x.UnitPrice,
-                total = x.Bid,
-                time = x.Time
+                Id = x.Id,
+                Token = x.TokenId,
+                Type = "Buy",
+                Amount = x.Ask,
+                Price = x.UnitPrice,
+                Total = x.Bid,
+                Time = x.Time
             }));
             ret.AddRange(sell.Select(x => new CurrentOrders
             {
-                id = x.Id,
-                token = x.TokenId,
-                type = "Sell",
-                amount = x.Bid,
-                price = x.UnitPrice,
-                total = x.Ask,
-                time = x.Time
+                Id = x.Id,
+                Token = x.TokenId,
+                Type = "Sell",
+                Amount = x.Bid,
+                Price = x.UnitPrice,
+                Total = x.Ask,
+                Time = x.Time
             }));
             var response = new ApiResult()
             {
                 code = 200,
-                data = ret.OrderByDescending(x=>x.time),
+                data = ret.OrderByDescending(x=>x.Time),
                 msg = "Succeeded"
             };
             return Json(response);
@@ -118,21 +118,21 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 matches.Select(
                     x => new HistoryOrders
                     {
-                       id = x.Id,
-                       symbol = x.TokenId,
-                       bidder = x.Bidder,
-                       asker = x.Asker,
-                       type = x.Bidder == account ?  "sell" : "buy",
-                       unit_price = x.UnitPrice,
-                       amount = x.Ask,
-                       total = x.Bid,
-                       time = x.Time
+                       Id = x.Id,
+                       Symbol = x.TokenId,
+                       Bidder = x.Bidder,
+                       Asker = x.Asker,
+                       Type = x.Bidder == account ?  "sell" : "buy",
+                       Unit_price = x.UnitPrice,
+                       Amount = x.Ask,
+                       Total = x.Bid,
+                       Time = x.Time
                     }
                 ));
             var response = new ApiResult()
             {
                 code = 200,
-                data = userHistoryList.OrderByDescending(x => x.time),
+                data = userHistoryList.OrderByDescending(x => x.Time),
                 msg = "Succeeded"
             };
             return Json(response);
