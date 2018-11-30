@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Andoromeda.Kyubey.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Andoromeda.Kyubey.Dex.Middlewares;
 
 namespace Andoromeda.Kyubey.Dex
 {
@@ -35,13 +38,18 @@ namespace Andoromeda.Kyubey.Dex
                     .AllowAnyMethod()
                     .AllowAnyHeader()
             ));
+
+            services.AddTimedJob();
+
+            services.AddNewsRepositoryFactory()
+                .AddTokenRepositoryactory();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration)
         {
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
-            app.UseStaticFiles();
+            app.DexStaticFiles(env, configuration);
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -49,6 +57,12 @@ namespace Andoromeda.Kyubey.Dex
 
             app.UseMvcWithDefaultRoute();
             app.UseVueMiddleware();
+
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<KyubeyContext>().Database.EnsureCreated();
+                app.UseTimedJob();
+            }
         }
     }
 }
