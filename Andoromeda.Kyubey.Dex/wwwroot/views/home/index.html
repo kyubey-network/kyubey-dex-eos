@@ -1,5 +1,43 @@
-﻿<div>
+﻿<div class="home-page">
     <div v-for="x in slides">
         {{ x.background }}
     </div>
+    <section>
+        <div class="table-container">
+            <div class="table-title-container">
+                <div>
+                    <img src="/img/home-page/eos.png" alt="eos" class="eos-img" />
+                    <span>EOS交易</span>
+                </div>
+                <div>
+                    <input type="search" class="my-input" placeholder="通信证" name="name" value="" />
+                    <button>
+                        <i class="far fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">交易对</th>
+                        <th scope="col">最新价</th>
+                        <th scope="col">24H涨跌幅</th>
+                        <th scope="col">24H最高价</th>
+                        <th scope="col">24H最低价</th>
+                        <th scope="col">24H成交量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in tokenTable" :key="index">
+                        <td>{{item.symbol}}/EOS</td>
+                        <td>{{item.current_price}}</td>
+                        <td>{{item.change_recent_day}}</td>
+                        <td>{{item.max_price_recent_day}}</td>
+                        <td>{{item.min_price_recent_day}}</td>
+                        <td>{{item.volume_recent_day}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>

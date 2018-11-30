@@ -1,7 +1,8 @@
 ﻿component.data = function () {
     return {
         news: [],
-        slides: []
+        slides: [],
+        tokenTable: []
     };
 };
 
@@ -15,6 +16,11 @@ component.created = function () {
         .fetch(x => {
             self.slides = x.data;
         });
+    qv.get(`/api/v1/lang/${app.lang}/token`, {}).then(res => {
+        if (res.code - 0 === 200) {
+            self.tokenTable = res.data;
+        }
+    })
 };
 
 component.methods = {
