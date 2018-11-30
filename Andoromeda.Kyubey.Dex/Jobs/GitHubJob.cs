@@ -20,7 +20,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
         public void SyncSlidesRepository(IConfiguration config)
         {
             GitHubSynchronizer.CreateOrUpdateRepositoryAsync(
-                "kyubey-network", "dex-news", "master",
+                "kyubey-network", "dex-slides", "master",
                 Path.Combine(config["RepositoryStore"], "dex-slides")).Wait();
         }
 

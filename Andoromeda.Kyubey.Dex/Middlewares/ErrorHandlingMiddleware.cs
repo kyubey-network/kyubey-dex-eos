@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Andoromeda.Kyubey.Dex.Models;
 
-namespace Andoromeda.Kyubey.Dex
+namespace Andoromeda.Kyubey.Dex.Middlewares
 {
     public class ErrorHandlingMiddleware
     {

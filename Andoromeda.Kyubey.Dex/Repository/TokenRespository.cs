@@ -13,7 +13,7 @@ using static Andoromeda.Kyubey.Dex.Repository.TokenRespository;
 
 namespace Andoromeda.Kyubey.Dex.Repository
 {
-    public class TokenRespository : IRepository<TokenManifestJObject>
+    public class TokenRespository : IRepository<TokenManifest>
     {
         private string tokenFolderAbsolutePath;
         private const string manifestFileName = "manifest.json";
@@ -27,10 +27,10 @@ namespace Andoromeda.Kyubey.Dex.Repository
             tokenFolderAbsolutePath = path;
         }
 
-        public IEnumerable<TokenManifestJObject> EnumerateAll()
+        public IEnumerable<TokenManifest> EnumerateAll()
         {
             var tokenFolderDirectories = Directory.GetDirectories(tokenFolderAbsolutePath);
-            var result = new List<TokenManifestJObject>();
+            var result = new List<TokenManifest>();
             foreach (var t in tokenFolderDirectories)
             {
                 var item = GetSingle(t);
@@ -40,13 +40,13 @@ namespace Andoromeda.Kyubey.Dex.Repository
             return result;
         }
 
-        public TokenManifestJObject GetSingle(object id)
+        public TokenManifest GetSingle(object id)
         {
             var filePath = Path.Combine(tokenFolderAbsolutePath, id.ToString(), manifestFileName);
             if (File.Exists(filePath))
             {
                 var fileContent = System.IO.File.ReadAllText(filePath);
-                return JsonConvert.DeserializeObject<TokenManifestJObject>(fileContent);
+                return JsonConvert.DeserializeObject<TokenManifest>(fileContent);
             }
             return null;
         }
@@ -147,7 +147,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
             public const string JP = ".ja";
         }
 
-        public class TokenRepositoryFactory : IRepositoryFactory<TokenManifestJObject>
+        public class TokenRepositoryFactory : IRepositoryFactory<TokenManifest>
         {
             private IConfiguration _config;
             private IHostingEnvironment _hostingEnv;
@@ -158,7 +158,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
                 _hostingEnv = hostingEnv;
             }
 
-            public async Task<IRepository<TokenManifestJObject>> CreateAsync(string lang)
+            public async Task<IRepository<TokenManifest>> CreateAsync(string lang)
             {
                 var path = Path.Combine(_hostingEnv.ContentRootPath, _config["RepositoryStore"], "token-list");
                 if (!Directory.Exists(path))
@@ -170,13 +170,14 @@ namespace Andoromeda.Kyubey.Dex.Repository
                 return new TokenRespository(path, lang);
             }
 
-            public IRepository<TokenManifestJObject> Create(string lang)
+            public IRepository<TokenManifest> Create(string lang)
             {
                 return CreateAsync(lang).Result;
             }
         }
     }
 }
+
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class TokenRepositoryExtensions

@@ -5,39 +5,61 @@ using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Models
 {
-    public class TokenManifestJObject
+    public class TokenManifest
     {
         public string Id { get; set; }
+
         public string[] Owners { get; set; }
+
         public int Priority { get; set; }
-        public TokenManifestBasicJObject Basic { get; set; }
-        public IncubationJObject Incubation { get; set; }
+
+        public TokenManifestBasic Basic { get; set; }
+
+        public Incubation Incubation { get; set; }
+
         public bool Dex { get; set; }
+
         public bool Contract_Exchange { get; set; }
     }
-    public class IncubationJObject
+
+    public class Incubation
     {
         public decimal Goal { get; set; }
+
         public DateTime DeadLine { get; set; }
+
         public DateTime? Begin_Time { get; set; }
     }
-    public class TokenManifestBasicJObject
+
+    public class TokenManifestBasic
     {
         public string Protocol { get; set; }
-        public TokenManifestBasicContractJObject Contract { get; set; }
+
+        public TokenManifestBasicContract Contract { get; set; }
+
         public string Website { get; set; }
+
         public string Github { get; set; }
+
         public string Email { get; set; }
+
         public string Tg { get; set; }
+
         public decimal? Total_Supply { get; set; }
+
         public decimal[] Curve_Arguments { get; set; }
+
         public string Price_Table { get; set; }
+
         public string Price_Scope { get; set; }
     }
-    public class TokenManifestBasicContractJObject
+
+    public class TokenManifestBasicContract
     {
         public string Transfer { get; set; }
+
         public string Pricing { get; set; }
+
         public string Depot { get; set; }
     }
 }
