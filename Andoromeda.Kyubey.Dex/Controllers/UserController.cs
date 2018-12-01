@@ -12,7 +12,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class UserController : Controller
     {
         [HttpGet("/api/v1/lang/{lang}/user/{account}/favorite")]
-        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db,string account)
+        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account)
         {
             var last = await db.MatchReceipts
                 .GroupBy(x => x.TokenId)
@@ -33,18 +33,18 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 })
                 .ToListAsync();
 
-            var rOrdinal = last.Select(x => new
+            var lastUnitPrice = last.Select(x => new
             {
                 id = x.TokenId,
                 price = x.Last?.UnitPrice ?? 0,
-                change = (x.Last?.UnitPrice ?? 0) / (last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice - 1)
+                change = (x.Last?.UnitPrice) / (last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice - 1)
             });
 
-            var r = db.Tokens.Where(x => x.Status == TokenStatus.Active).ToList().Select(x => new
+            var tokendUnitPriceResult = db.Tokens.Where(x => x.Status == TokenStatus.Active).ToList().Select(x => new
             {
                 id = x.Id,
-                price = rOrdinal.FirstOrDefault(o => o.id == x.Id)?.price ?? 0,
-                change = rOrdinal.FirstOrDefault(o => o.id == x.Id)?.change ?? 0
+                price = lastUnitPrice.FirstOrDefault(o => o.id == x.Id)?.price ?? 0,
+                change = lastUnitPrice.FirstOrDefault(o => o.id == x.Id)?.change ?? 0
             }).ToList();
 
             var favorite = await db.Favorites
@@ -53,7 +53,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
       
             var responseData = new List<GetFavoriteRequest> {};
             
-            responseData.AddRange(r.Select(
+            responseData.AddRange(tokendUnitPriceResult.Select(
                x => new GetFavoriteRequest
                {
                    Symbol = x.id,
@@ -63,7 +63,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 }
             ));
            
-            var response = new ApiResult() {
+            var response = new ApiResult{
                    code = 200,
                    data = responseData,
                    msg = "Succeeded"
@@ -76,9 +76,9 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         {
             var buy = await db.DexBuyOrders.Where(x => x.Account == account).ToListAsync();
             var sell = await db.DexSellOrders.Where(x => x.Account == account).ToListAsync();
-            var ret = new List<CurrentOrders>(buy.Count + sell.Count);
+            var ret = new List<GetCurrentOrdersResponse>(buy.Count + sell.Count);
             
-            ret.AddRange(buy.Select(x => new CurrentOrders
+            ret.AddRange(buy.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
                 Token = x.TokenId,
@@ -88,7 +88,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Total = x.Bid,
                 Time = x.Time
             }));
-            ret.AddRange(sell.Select(x => new CurrentOrders
+            ret.AddRange(sell.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
                 Token = x.TokenId,
@@ -101,7 +101,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var response = new ApiResult()
             {
                 code = 200,
-                data = ret.OrderByDescending(x=>x.Time),
+                data = ret.OrderByDescending(x => x.Time),
                 msg = "Succeeded"
             };
             return Json(response);
@@ -109,10 +109,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{lang-id}/user/{account}/history-delegate")]
-        public IActionResult GethistoryDelegate ([FromServices] KyubeyContext db, string account)
+        public async Task<IActionResult>  GethistoryDelegate ([FromServices] KyubeyContext db, string account)
         {
-            IQueryable<MatchReceipt> matches = db.MatchReceipts
-                .Where(x => x.Bidder == account || x.Asker == account);
+            var matches = await db.MatchReceipts
+                .Where(x => x.Bidder == account || x.Asker == account).ToListAsync();
             var userHistoryList = new List<HistoryOrders> { };
             userHistoryList.AddRange(
                 matches.Select(
@@ -138,12 +138,13 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return Json(response);
         }
         
-        /*
+        
         [HttpGet("/api/v1/lang/{lang-id}/user/{account}/wallet")]
-        public async Task<IActionResult> GetWallet([FromServices] KyubeyContext db, string account)
+        public IActionResult GetWallet([FromServices] KyubeyContext db, string account)
         {
+            throw new NotImplementedException("");
         }
-        */
+       
 
     }
 }
