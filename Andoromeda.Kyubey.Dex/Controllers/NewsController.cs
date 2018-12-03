@@ -11,10 +11,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class NewsController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/news")]
+        [ProducesResponseType(typeof(ApiResult<List<GetNewsListResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> List([FromServices] NewsRepositoryFactory newsRepositoryFactory, [FromQuery] GetNewsListRequest request)
         {
-            var newRepository = await newsRepositoryFactory.CreateAsync(request.Lang);
-            var responseData = newRepository
+            var newsRepository = await newsRepositoryFactory.CreateAsync(request.Lang);
+            var responseData = newsRepository
                 .EnumerateAll()
                 .OrderByDescending(x => x.PublishedAt)
                 .Skip(request.Skip)
@@ -31,6 +33,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("api/v1/lang/{lang}/news/{id}")]
+        [ProducesResponseType(typeof(ApiResult<GetNewsContentResponse>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Content([FromServices] NewsRepositoryFactory newsRepositoryFactory, [FromQuery] GetContentBaseRequest request)
         {
             var newRepository = await newsRepositoryFactory.CreateAsync(request.Lang);
@@ -40,6 +44,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             {
                 return ApiResult(404, "Not Found");
             }
+
             return ApiResult(new GetNewsContentResponse()
             {
                 Id = newsObj.Id,

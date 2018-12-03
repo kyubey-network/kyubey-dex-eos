@@ -7,15 +7,16 @@ using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
     public class InfoController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/slides")]
+        [ProducesResponseType(typeof(ApiResult<List<GetSlidesResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public IActionResult Banner([FromServices] KyubeyContext db, [FromQuery]GetSlidesRequest request)
         {
-            var textC = request.test_column;
+            var testColumn = request.TestColumn;
             var tokens = db.Tokens.ToList();
             var responseData = new List<GetSlidesResponse> {
                       new GetSlidesResponse(){
@@ -32,17 +33,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                       }
                  };
 
-            var response = new ApiResult()
-            {
-                code = 200,
-                data = responseData,
-                msg = "Succeeded"
-
-            };
-            return Json(response);
+            return ApiResult(responseData);
         }
 
         [HttpGet("api/v1/lang/{lang}/volume")]
+        [ProducesResponseType(typeof(ApiResult<double>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Volume([FromServices] KyubeyContext db)
         {
             var volumeVal = await db.MatchReceipts.Where(x => x.Time > DateTime.Now.AddDays(-1)).SumAsync(x => x.Bid);

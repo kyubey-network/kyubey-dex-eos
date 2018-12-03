@@ -7,6 +7,6 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetSlidesRequest: GetBaseRequest
     {
-      public string test_column { get; set; }
+      public string TestColumn { get; set; }
     }
 }
