@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
@@ -38,6 +40,13 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
             };
             return Json(response);
+        }
+
+        [HttpGet("api/v1/lang/{lang}/volume")]
+        public async Task<IActionResult> Volume([FromServices] KyubeyContext db)
+        {
+            var volumeVal = await db.MatchReceipts.Where(x => x.Time > DateTime.Now.AddDays(-1)).SumAsync(x => x.Bid);
+            return ApiResult(volumeVal);
         }
     }
 }
