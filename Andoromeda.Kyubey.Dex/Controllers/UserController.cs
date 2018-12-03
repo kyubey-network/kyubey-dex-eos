@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
@@ -12,7 +13,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class UserController : Controller
     {
         [HttpGet("/api/v1/lang/{lang}/user/{account}/favorite")]
-        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account)
+        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken )
         {
             var last = await db.MatchReceipts
                 .GroupBy(x => x.TokenId)
@@ -51,10 +52,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 .Where(x=>x.Account == account)
                 .ToListAsync();
       
-            var responseData = new List<GetFavoriteRequest> {};
+            var responseData = new List<GetFavoriteResponse> {};
             
             responseData.AddRange(tokendUnitPriceResult.Select(
-               x => new GetFavoriteRequest
+               x => new GetFavoriteResponse
                {
                    Symbol = x.id,
                    Unit_price = x.price,
@@ -72,7 +73,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
         
         [HttpGet("/api/v1/lang/{lang-id}/user/{account}/current-delegate")]
-        public async Task<IActionResult> GetCurrentDelegate ([FromServices] KyubeyContext db, string account)
+        public async Task<IActionResult> GetCurrentDelegate ([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
             var buy = await db.DexBuyOrders.Where(x => x.Account == account).ToListAsync();
             var sell = await db.DexSellOrders.Where(x => x.Account == account).ToListAsync();
@@ -109,14 +110,14 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{lang-id}/user/{account}/history-delegate")]
-        public async Task<IActionResult>  GethistoryDelegate ([FromServices] KyubeyContext db, string account)
+        public async Task<IActionResult>  GethistoryDelegate ([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
             var matches = await db.MatchReceipts
                 .Where(x => x.Bidder == account || x.Asker == account).ToListAsync();
-            var userHistoryList = new List<HistoryOrders> { };
+            var userHistoryList = new List<GetHistoryOrdersResponse> { };
             userHistoryList.AddRange(
                 matches.Select(
-                    x => new HistoryOrders
+                    x => new GetHistoryOrdersResponse
                     {
                        Id = x.Id,
                        Symbol = x.TokenId,

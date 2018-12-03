@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Models
 {
-    public class GetFavoriteRequest
+    public class GetFavoriteResponse
     {
         public string Symbol { get; set; } 
 

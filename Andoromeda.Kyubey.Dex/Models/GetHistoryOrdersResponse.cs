@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Models
 {
-    public class HistoryOrders
+    public class GetHistoryOrdersResponse
     {
         public string Id     { get; set; }
 
