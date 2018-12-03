@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Andoromeda.Kyubey.Dex.Models;
+using Andoromeda.Kyubey.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Andoromeda.Kyubey.Dex.Models;
-using Andoromeda.Kyubey.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
@@ -96,6 +96,25 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 });
 
             return ApiResult(responseData);
+        }
+
+        [HttpGet("/api/v1/lang/{langId}/token/{tokenId}/match")]
+        [ProducesResponseType(typeof(ApiResult<List<GetRecentTransactionResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
+        public async Task<IActionResult> RecentTransactionRecord([FromServices] KyubeyContext db, string tokenId, CancellationToken token)
+        {
+            var responseData = await db.MatchReceipts
+                .Where(x => x.TokenId == tokenId)
+                .OrderByDescending(x => x.Time)
+                .Take(20)
+                .ToListAsync(token);
+
+            return ApiResult(responseData.Select(x => new GetRecentTransactionResponse
+            {
+                UnitPrice = x.UnitPrice,
+                Amount = x.Ask,
+                Time = x.Time
+            }));
         }
     }
 }
