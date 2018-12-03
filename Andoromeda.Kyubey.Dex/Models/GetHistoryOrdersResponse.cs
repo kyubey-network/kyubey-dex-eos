@@ -17,7 +17,7 @@ namespace Andoromeda.Kyubey.Dex.Models
 
         public string Type   { get; set; }
 
-        public double Unit_price { get; set; }
+        public double UnitPrice { get; set; }
 
         public double Amount { get; set;}
 

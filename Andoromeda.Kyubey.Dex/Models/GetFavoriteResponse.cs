@@ -9,7 +9,7 @@ namespace Andoromeda.Kyubey.Dex.Models
     {
         public string Symbol { get; set; } 
 
-        public double Unit_price { get; set; }
+        public double UnitPrice { get; set; }
 
         public double Change { get; set; }
 

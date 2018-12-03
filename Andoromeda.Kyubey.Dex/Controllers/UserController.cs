@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         [HttpGet("/api/v1/lang/{lang}/user/{account}/favorite")]
-        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken )
+        public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
             var last = await db.MatchReceipts
                 .GroupBy(x => x.TokenId)
@@ -22,7 +22,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     TokenId = x.Key,
                     Last = x.LastOrDefault()
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var last24 = await db.MatchReceipts
                 .Where(y => y.Time < DateTime.UtcNow.AddDays(-1))
@@ -32,16 +32,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     TokenId = x.Key,
                     Last = x.LastOrDefault()
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var lastUnitPrice = last.Select(x => new
             {
                 id = x.TokenId,
-                price = x.Last?.UnitPrice ?? 0,
+                price = x.Last?.UnitPrice,
                 change = (x.Last?.UnitPrice) / (last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice - 1)
             });
 
-            var tokendUnitPriceResult = db.Tokens.Where(x => x.Status == TokenStatus.Active).ToList().Select(x => new
+            var tokendUnitPriceResult = (await db.Tokens.Where(x => x.Status == TokenStatus.Active).ToListAsync(cancellationToken)).Select(x => new
             {
                 id = x.Id,
                 price = lastUnitPrice.FirstOrDefault(o => o.id == x.Id)?.price ?? 0,
@@ -49,36 +49,31 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             }).ToList();
 
             var favorite = await db.Favorites
-                .Where(x=>x.Account == account)
-                .ToListAsync();
-      
-            var responseData = new List<GetFavoriteResponse> {};
-            
+                .Where(x => x.Account == account)
+                .ToListAsync(cancellationToken);
+
+            var responseData = new List<GetFavoriteResponse> { };
+
             responseData.AddRange(tokendUnitPriceResult.Select(
                x => new GetFavoriteResponse
                {
                    Symbol = x.id,
-                   Unit_price = x.price,
+                   UnitPrice = x.price,
                    Change = x.change,
                    Favorite = favorite.Exists(y => y.TokenId == x.id)
-                }
+               }
             ));
-           
-            var response = new ApiResult{
-                   code = 200,
-                   data = responseData,
-                   msg = "Succeeded"
-            };
-            return Json(response);
+
+            return ApiResult(responseData);
         }
-        
-        [HttpGet("/api/v1/lang/{lang-id}/user/{account}/current-delegate")]
-        public async Task<IActionResult> GetCurrentDelegate ([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
+
+        [HttpGet("/api/v1/lang/{lang}/user/{account}/current-delegate")]
+        public async Task<IActionResult> GetCurrentDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
-            var buy = await db.DexBuyOrders.Where(x => x.Account == account).ToListAsync();
-            var sell = await db.DexSellOrders.Where(x => x.Account == account).ToListAsync();
-            var ret = new List<GetCurrentOrdersResponse>(buy.Count + sell.Count);
-            
+            var buy = await db.DexBuyOrders.Where(x => x.Account == account).ToListAsync(cancellationToken);
+            var sell = await db.DexSellOrders.Where(x => x.Account == account).ToListAsync(cancellationToken);
+            var ret = new List<GetCurrentOrdersResponse>();
+
             ret.AddRange(buy.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
@@ -89,6 +84,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Total = x.Bid,
                 Time = x.Time
             }));
+
             ret.AddRange(sell.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
@@ -99,53 +95,37 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Total = x.Ask,
                 Time = x.Time
             }));
-            var response = new ApiResult()
-            {
-                code = 200,
-                data = ret.OrderByDescending(x => x.Time),
-                msg = "Succeeded"
-            };
-            return Json(response);
-      
+
+            return ApiResult(ret.OrderByDescending(x => x.Time));
         }
 
-        [HttpGet("/api/v1/lang/{lang-id}/user/{account}/history-delegate")]
-        public async Task<IActionResult>  GethistoryDelegate ([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
+        [HttpGet("/api/v1/lang/{lang}/user/{account}/history-delegate")]
+        public async Task<IActionResult> GetHistoryDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
             var matches = await db.MatchReceipts
-                .Where(x => x.Bidder == account || x.Asker == account).ToListAsync();
-            var userHistoryList = new List<GetHistoryOrdersResponse> { };
-            userHistoryList.AddRange(
-                matches.Select(
-                    x => new GetHistoryOrdersResponse
-                    {
-                       Id = x.Id,
-                       Symbol = x.TokenId,
-                       Bidder = x.Bidder,
-                       Asker = x.Asker,
-                       Type = x.Bidder == account ?  "sell" : "buy",
-                       Unit_price = x.UnitPrice,
-                       Amount = x.Ask,
-                       Total = x.Bid,
-                       Time = x.Time
-                    }
-                ));
-            var response = new ApiResult()
+                .Where(x => x.Bidder == account || x.Asker == account).ToListAsync(cancellationToken);
+
+            var userHistoryList = matches.Select(x => new GetHistoryOrdersResponse
             {
-                code = 200,
-                data = userHistoryList.OrderByDescending(x => x.Time),
-                msg = "Succeeded"
-            };
-            return Json(response);
+                Id = x.Id,
+                Symbol = x.TokenId,
+                Bidder = x.Bidder,
+                Asker = x.Asker,
+                Type = x.Bidder == account ? "sell" : "buy",
+                UnitPrice = x.UnitPrice,
+                Amount = x.Ask,
+                Total = x.Bid,
+                Time = x.Time
+            });
+
+            return ApiResult(userHistoryList.OrderByDescending(x => x.Time));
         }
-        
-        
-        [HttpGet("/api/v1/lang/{lang-id}/user/{account}/wallet")]
+
+
+        [HttpGet("/api/v1/lang/{lang}/user/{account}/wallet")]
         public IActionResult GetWallet([FromServices] KyubeyContext db, string account)
         {
             throw new NotImplementedException("");
         }
-       
-
     }
 }
