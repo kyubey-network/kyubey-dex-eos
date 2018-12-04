@@ -44,6 +44,9 @@
                 path = name;
             LazyRouting.RedirectTo(name, path, params, query);
         },
+        setLang: function (param) { 
+            this.$i18n.locale = param
+        }
     },
     computed: {
         isSignedIn: function () {

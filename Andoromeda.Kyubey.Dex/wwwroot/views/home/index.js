@@ -2,7 +2,9 @@
     return {
         news: [],
         slides: [],
-        tokenTable: []
+        tokenTable: [],
+        tokenTableSource: [],
+        searchText: ''
     };
 };
 
@@ -18,11 +20,21 @@ component.created = function () {
         });
     qv.get(`/api/v1/lang/${app.lang}/token`, {}).then(res => {
         if (res.code - 0 === 200) {
+            self.tokenTableSource = res.data;
             self.tokenTable = res.data;
         }
     })
 };
 
 component.methods = {
-
+    searchToken: function () { 
+        console.log('search token');
+        if (this.searchText !== '') {
+            this.tokenTable = this.tokenTableSource.filter(item => {
+                return item.symbol.toUpperCase().includes(this.searchText.toUpperCase())
+            })
+        } else {
+            this.tokenTable = this.tokenTableSource;
+        }
+    }
 };

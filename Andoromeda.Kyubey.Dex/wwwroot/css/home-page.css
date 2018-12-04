@@ -1,5 +1,5 @@
 .home-page {
-    margin-top: 67.074px;
+    margin-top: 60px;
 }
 .home-page section {
     padding: 2rem 4rem;
@@ -29,7 +29,6 @@
 }
 .eos-img {
     width: 16px;
-    margin-right: 0.5rem;
 }
 .my-input {
     -webkit-appearance: none;
@@ -91,4 +90,16 @@
 }
 .serach-btn button:hover {
     color: #000;
+}
+.my-star {
+    display: inline-block;
+    font: normal normal normal 2em FontAwesome;
+}
+.my-star::before {
+    content: "\f006"; 
+    color: #AFAFAF;
+}
+.my-star:hover::before {
+    content: "\f005"; 
+    color: #FFDC00;
 }

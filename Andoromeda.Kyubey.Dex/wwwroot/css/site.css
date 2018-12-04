@@ -1344,3 +1344,11 @@ section {
         background-size: auto 100% !important;
     }
 }
+.my-nav-link {
+    margin-left: 20px;
+    font-size: .8rem;
+    color: #BABABA;
+}
+.footer-text-color {
+    color: #AFAFAF;
+}

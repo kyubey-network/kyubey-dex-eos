@@ -34,10 +34,14 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top" style="padding: 0">
             <div class="container">
-                <a class="navbar-brand" href="/">Kyubey</a>
-                <router-link to="/exchange">DEX交易</router-link>
+                <a class="navbar-brand" href="/">
+                    <img style="width: 50px;" src="/img/KYUBEY_logo.png" alt="">
+                </a>
+                <router-link to="/exchange" class="my-nav-link">{{$t('exchange_nav')}}</router-link>
+                <router-link to="/" class="my-nav-link">{{$t('market_nav')}}</router-link>
+                <router-link to="/" class="my-nav-link">{{$t('contract_nav')}}</router-link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -48,27 +52,27 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ">
-                        <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="scatterLogin()">使用Scatter登录</a></li>
+                        <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="scatterLogin()">{{$t('login_nav')}}</a></li>
                         <li class="nav-item" v-if="isSignedIn"><span class="nav-link">欢迎您，{{ account.name }}</span></li>
-                        <!--<li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="scatterLogout()">注销</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Language
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/lang/en-US">English</a>
-                    <a class="dropdown-item" href="/lang/zh-CN">简体中文</a>
-                    <a class="dropdown-item" href="/lang/zh-TW">繁體中文</a>
-                    <a class="dropdown-item" href="/lang/ja">日本語</a>
-                </div>
-            </li>-->
+                        <li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="scatterLogout()">注销</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{$t('lang')}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" @click="setLang('en')">English</a>
+                                <a class="dropdown-item" @click="setLang('zh')">简体中文</a>
+                                <a class="dropdown-item" @click="setLang('zh_tw')">繁體中文</a>
+                                <a class="dropdown-item" @click="setLang('jp')">日本語</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
         <router-view></router-view>
-        <footer class="py-5 bg-black">
-            <div class="container">
+        <footer class="py-5 bg-black" style="background: #292929;">
+            <!-- <div class="container">
                 <div style="text-align:center">
                     <table style="margin:auto">
                         <tbody align="center">
@@ -118,9 +122,31 @@
                 </div>
                 <p></p>
                 <p class="m-0 text-center text-white small">Copyright &copy; Kyubey {{ new Date().getFullYear() }}.All rights reserved.</p>
+            </div> -->
+            <div class="container d-flex justify-content-between">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <img style="width: 100px;" src="/img/KYUBEY_logo.png" alt="">
+                    <p class="footer-text-color small">市场有风险，投资需谨慎</p>
+                </div>
+                <div>
+                    <div class="pt-2"><a class="footer-text-color small" href="">联系我们</a></div>
+                    <div class="pt-2"><a class="footer-text-color small" href="">公告中心</a></div>
+                    <div class="pt-2"><a class="footer-text-color small" href="">API 行情</a></div>
+                </div>
+            </div>
+            <div class="container pt-2">
+                <div class="row">
+                    <div class="col-3">
+                    </div>
+                    <div class="col-6">
+                        <p class="m-0 text-center footer-text-color small">Copyright &copy; Kyubey {{ new Date().getFullYear() }}.All rights reserved.</p>
+                    </div>
+                    <div class="col-3">
+                        <p class="m-0 text-right footer-text-color small">24H Total：152126.5628 EOS</p>
+                    </div>
+                </div>
             </div>
         </footer>
-
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
