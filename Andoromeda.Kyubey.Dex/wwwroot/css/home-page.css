@@ -1,5 +1,5 @@
 .home-page {
-    margin-top: 100px;
+    margin-top: 67.074px;
 }
 .home-page section {
     padding: 2rem 4rem;
@@ -47,7 +47,48 @@
     padding: 0 0.7rem;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 }
-[type="search"] {
-    -webkit-appearance: textfield;
-    outline-offset: -2px;
+.banner-box {
+    background: #242424;
+    color: #fff;
+    width: 100%;
+    display: flex;
+    padding: 10px 25px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+}
+.more-text {
+    color: #FFB500;
+    height: 25px;
+    line-height: 25px;
+    cursor: pointer;
+}
+.home-news {
+    height: 25px;
+    line-height: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    cursor: pointer;
+}
+.home-news::before {
+    font-family: 'FontAwesome';
+    content: "\f06a";
+    color: #5E9FCD;
+    font-size: 18px;
+    margin-right: 5px;
+}
+.serach-btn {
+    position: relative;
+}
+.serach-btn button {
+    color: #ccc;
+    position: absolute;
+    border-style: none;
+    border-width: 0;
+    right: 4px;
+    background: #fff;
+}
+.serach-btn button:hover {
+    color: #000;
 }

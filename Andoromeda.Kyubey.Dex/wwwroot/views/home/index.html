@@ -1,18 +1,36 @@
 ﻿<div class="home-page">
-    <div v-for="x in slides">
-        {{ x.background }}
+    <div class="clearfix" style="width: 100%;background: #313131;color:#ffffff;padding: 4rem 4rem 2rem 4rem;">
+        <div class="continer">
+            <div class="row">
+                <div class="col-8">
+                    <h1 style="color:#FFB500;margin-bottom:10px;">KYUBEY</h1>
+                    <h3 style="font-weight:normal!important;">The first EOS based decentralized exchange in the world</h3>
+                    <p style="margin-bottom: 10px;">No deposit / No withdrawal / Safe assets / Open & transparency</p>
+                    <button type="button" class="btn btn-warning">Trade Now</button>
+                </div>
+                <div class="col-4">
+                    <img style="width: 20rem;" src="/img/home-page//conputer.png" alt="dex" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banner-box">
+        <div class="home-news">需要及时知道的新币通知标题 11-29</div>
+        <div class="home-news">需要及时知道的活动通知 11-29</div>
+        <div class="home-news">需要及时知道的新币通知 11-29</div>
+        <div class="more-text">更多>></div>
     </div>
     <section>
         <div class="table-container">
             <div class="table-title-container">
-                <div>
+                <div class="d-flex align-items-center">
                     <img src="/img/home-page/eos.png" alt="eos" class="eos-img" />
                     <span>EOS交易</span>
                 </div>
-                <div>
-                    <input type="search" class="my-input" placeholder="通信证" name="name" value="" />
-                    <button>
-                        <i class="far fa-search"></i>
+                <div class="d-flex align-items-center serach-btn">
+                    <input type="search" class="my-input" placeholder="通行证" name="name" value="" />
+                    <button type="submit">
+                        <i class="fa fa-search"></i>
                     </button>
                 </div>
             </div>

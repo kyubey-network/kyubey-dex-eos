@@ -1,5 +1,6 @@
 ﻿LazyRouting.SetRoute({
     '/home': null,
+    '/exchange': null,
     '/token/all': null,
     '/token/:id': { id: '[A-Z]{1,10}' }
 });

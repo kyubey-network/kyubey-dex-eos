@@ -49,5 +49,6 @@
         isSignedIn: function () {
             return !!this.account;
         }
-    }
+    },
+    i18n: i18n
 });
