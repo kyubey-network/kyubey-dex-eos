@@ -4,7 +4,7 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetBaseRequest
     {
-        [FromRoute]
+        [FromRoute(Name = "lang")]
         public string Lang { get; set; }
     }
 }

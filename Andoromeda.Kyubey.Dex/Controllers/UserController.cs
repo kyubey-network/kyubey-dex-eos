@@ -13,7 +13,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class UserController : BaseController
     {
         [HttpGet("/api/v1/lang/{lang}/user/{account}/favorite")]
-        [ProducesResponseType(typeof(ApiResult<List<GetFavoriteResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetFavoriteResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
@@ -70,7 +70,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{lang}/user/{account}/current-delegate")]
-        [ProducesResponseType(typeof(ApiResult<List<GetCurrentOrdersResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetCurrentOrdersResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetCurrentDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
@@ -104,7 +104,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{lang}/user/{account}/history-delegate")]
-        [ProducesResponseType(typeof(ApiResult<List<GetHistoryOrdersResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetHistoryOrdersResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetHistoryDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {

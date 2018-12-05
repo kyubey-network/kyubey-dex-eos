@@ -3,13 +3,14 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Pomelo.AspNetCore.TimedJob;
 using Andoromeda.Framework.GitHub;
+using Andoromeda.Framework.Logger;
 
 namespace Andoromeda.Kyubey.Dex.Jobs
 {
     public class GitHubJob : Job
     {
         [Invoke(Begin = "2018-11-01 0:00", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
-        public void SyncNewsRepository(IConfiguration config)
+        public void SyncNewsRepository(IConfiguration config, ILogger logger)
         {
             try
             {
@@ -23,7 +24,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 {
                     if (x is IOException)
                     {
-                        Console.WriteLine(x);
+                        logger.LogError(x.ToString());
                         return true;
                     }
                     return false;
@@ -32,7 +33,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
         }
 
         [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
-        public void SyncSlidesRepository(IConfiguration config)
+        public void SyncSlidesRepository(IConfiguration config, ILogger logger)
         {
             try
             {
@@ -46,7 +47,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 {
                     if (x is IOException)
                     {
-                        Console.WriteLine(x);
+                        logger.LogError(x.ToString());
                         return true;
                     }
                     return false;
@@ -54,8 +55,8 @@ namespace Andoromeda.Kyubey.Dex.Jobs
             }
         }
 
-        [Invoke(Begin = "2018-11-01 0:01", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
-        public void SyncTokensRepository(IConfiguration config)
+        [Invoke(Begin = "2018-11-01 0:02", Interval = 1000 * 60 * 5, SkipWhileExecuting = true)]
+        public void SyncTokensRepository(IConfiguration config, ILogger logger)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace Andoromeda.Kyubey.Dex.Jobs
                 {
                     if (x is IOException)
                     {
-                        Console.WriteLine(x);
+                        logger.LogError(x.ToString());
                         return true;
                     }
                     return false;

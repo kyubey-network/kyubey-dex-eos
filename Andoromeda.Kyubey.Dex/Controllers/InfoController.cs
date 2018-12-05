@@ -10,7 +10,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class InfoController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/slides")]
-        [ProducesResponseType(typeof(ApiResult<List<GetSlidesResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetSlidesResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Banner([FromServices] SlidesRepositoryFactory slidesRepositoryFactory, [FromQuery]GetSlidesRequest request)
         {

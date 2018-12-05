@@ -99,7 +99,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{langId}/token/{tokenId}/match")]
-        [ProducesResponseType(typeof(ApiResult<List<GetRecentTransactionResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetRecentTransactionResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> RecentTransactionRecord([FromServices] KyubeyContext db, string tokenId, CancellationToken token)
         {

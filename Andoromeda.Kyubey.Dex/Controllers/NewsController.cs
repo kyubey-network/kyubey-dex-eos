@@ -11,7 +11,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class NewsController : BaseController
     {
         [HttpGet("api/v1/lang/{lang}/news")]
-        [ProducesResponseType(typeof(ApiResult<List<GetNewsListResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetNewsListResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> List([FromServices] NewsRepositoryFactory newsRepositoryFactory, [FromQuery] GetNewsListRequest request)
         {

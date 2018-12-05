@@ -147,7 +147,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
             public const string JP = ".ja";
         }
 
-        public class TokenRepositoryFactory : IRepositoryFactory<TokenManifest>
+        public class TokenRepositoryFactory 
         {
             private IConfiguration _config;
             private IHostingEnvironment _hostingEnv;
@@ -158,7 +158,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
                 _hostingEnv = hostingEnv;
             }
 
-            public async Task<IRepository<TokenManifest>> CreateAsync(string lang)
+            public async Task<TokenRespository> CreateAsync(string lang)
             {
                 var path = Path.Combine(_hostingEnv.ContentRootPath, _config["RepositoryStore"], "token-list");
                 if (!Directory.Exists(path))
@@ -170,7 +170,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
                 return new TokenRespository(path, lang);
             }
 
-            public IRepository<TokenManifest> Create(string lang)
+            public TokenRespository Create(string lang)
             {
                 return CreateAsync(lang).Result;
             }

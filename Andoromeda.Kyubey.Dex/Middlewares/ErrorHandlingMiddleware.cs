@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Andoromeda.Kyubey.Dex.Models;
+using Andoromeda.Framework.Logger;
 
 namespace Andoromeda.Kyubey.Dex.Middlewares
 {
@@ -32,12 +33,17 @@ namespace Andoromeda.Kyubey.Dex.Middlewares
         private static Task HandleExceptionAsync(
             HttpContext context, Exception exception)
         {
+            var exceptionMessage = exception.ToString();
+            var logger = (ILogger)context.RequestServices.GetService(typeof(ILogger));
+            logger.LogError(exceptionMessage);
+
             var code = HttpStatusCode.InternalServerError;
             var result = JsonConvert.SerializeObject(new ApiResult
             {
                 code = 500,
-                msg = exception.ToString()
+                msg = exceptionMessage
             });
+
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

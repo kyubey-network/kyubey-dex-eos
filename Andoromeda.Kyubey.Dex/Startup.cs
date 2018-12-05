@@ -31,6 +31,7 @@ namespace Andoromeda.Kyubey.Dex
                 x.DocInclusionPredicate((docName, apiDesc) => apiDesc.HttpMethod != null);
                 x.DescribeAllEnumsAsStrings();
             });
+            services.AddMySqlLogger("kyubey-dex");
 
             services.AddCors(c => c.AddPolicy("Kyubey", x =>
                 x.AllowCredentials()
@@ -38,6 +39,8 @@ namespace Andoromeda.Kyubey.Dex
                     .AllowAnyMethod()
                     .AllowAnyHeader()
             ));
+
+            services.AddEosNodeApiInvoker();
 
             services.AddTimedJob();
 
