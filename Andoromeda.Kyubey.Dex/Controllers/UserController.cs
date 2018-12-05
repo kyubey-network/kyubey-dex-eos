@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Andoromeda.Framework.EosNode;
+using Andoromeda.Framework.Logger;
 using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Andoromeda.Kyubey.Dex.Repository.TokenRespository;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
@@ -127,11 +130,77 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(userHistoryList.OrderByDescending(x => x.Time));
         }
 
-
         [HttpGet("/api/v1/lang/{lang}/user/{account}/wallet")]
-        public IActionResult GetWallet([FromServices] KyubeyContext db, string account)
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetWalletResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
+        public async Task<IActionResult> GetWalletAsync(string lang, string account, [FromServices] KyubeyContext db, [FromServices]TokenRepositoryFactory tokenRepositoryFactory, [FromServices]ILogger logger, [FromServices] NodeApiInvoker nodeApiInvoker, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException("");
+            var tokenRespository = await tokenRepositoryFactory.CreateAsync(lang);
+
+            var tokensCurrentPrice = await db.MatchReceipts.OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(g => new
+            {
+                TokenId = g.Key,
+                Price = g.FirstOrDefault().UnitPrice
+            }).ToListAsync(cancellationToken);
+
+            var buyList = await db.DexBuyOrders
+                            .Where(x => x.Account == account)
+                            .GroupBy(x => x.TokenId)
+                            .Select(x => new
+                            {
+                                TokenId = x.Key,
+                                FreezeEOS = x.Sum(s => s.Bid)
+                            }).ToListAsync(cancellationToken);
+
+            var sellList = await db.DexSellOrders
+                            .Where(x => x.Account == account)
+                            .GroupBy(x => x.TokenId)
+                            .Select(x => new
+                            {
+                                TokenId = x.Key,
+                                FreezeToken = x.Sum(s => s.Ask)
+                            }).ToListAsync(cancellationToken);
+
+            var tokens = buyList.Select(x => x.TokenId).Concat(sellList.Select(x => x.TokenId)).Distinct().ToList();
+
+            var responseData = new List<GetWalletResponse>();
+
+            tokens.ForEach(x =>
+                {
+                    var currentTokenBalance = 0.0;
+                    try
+                    {
+                        var tokenInfo = tokenRespository.GetSingle(x);
+                        if (tokenInfo != null)
+                        {
+                            currentTokenBalance = nodeApiInvoker.GetCurrencyBalanceAsync(account, tokenInfo?.Basic?.Contract?.Transfer, x, cancellationToken).Result;
+                        }
+                    }
+                    catch (Newtonsoft.Json.JsonSerializationException ex)
+                    {
+                        logger.LogError(ex.ToString());
+                    }
+                    finally
+                    {
+                        responseData.Add(new GetWalletResponse()
+                        {
+                            Valid = currentTokenBalance,
+                            Symbol = x,
+                            Freeze = sellList.FirstOrDefault(s => s.TokenId == x)?.FreezeToken ?? 0,
+                            UnitPrice = tokensCurrentPrice.FirstOrDefault(s => s.TokenId == x)?.Price ?? 0
+                        });
+                    }
+                });
+
+            responseData.Add(new GetWalletResponse()
+            {
+                Freeze = buyList.Sum(x => x.FreezeEOS),
+                Symbol = "EOS",
+                UnitPrice = 1,
+                Valid = nodeApiInvoker.GetCurrencyBalanceAsync(account, "eosio.token", "EOS", cancellationToken).Result
+            });
+
+            return ApiResult(responseData);
         }
     }
 }
