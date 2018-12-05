@@ -52,7 +52,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ">
-                        <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="scatterLogin()">{{$t('login_nav')}}</a></li>
+                        <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="login()">{{$t('login_nav')}}</a></li>
                         <li class="nav-item" v-if="isSignedIn"><span class="nav-link">欢迎您，{{ account.name }}</span></li>
                         <li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="scatterLogout()">注销</a></li>
                         <li class="nav-item dropdown">
@@ -159,6 +159,47 @@
                     <div class="modal-body" id="modalContent"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="background: rgba(0, 0, 0, 0.8)">
+                    <div class="modal-body" id="loginModalContent">
+                        <div class="container small" style="color: #B4B4B4;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true" style="color: #B4B4B4;">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 d-flex flex-column align-items-center justify-content-between">
+                                    <img class="mb-3" style="width: 3rem" src="/img/home-page/scatter_logo.png" alt="scatter_logo">
+                                    <button type="button" class="btn btn-outline-warning mb-3" @click="scatterLogin">scatter sign in</button>
+                                    <p class="text-center">Scatter是一款EOS钱包， 请您确定已经安装Scatter. 参考：https://get-scatter.com</p>
+                                </div>
+                                <div class="col-2 d-flex flex-column align-items-center justify-content-between">
+                                    <span class="my-line"></span>
+                                    <span>or</span>
+                                    <span class="my-line"></span>
+                                </div>
+                                <div class="col-5 d-flex flex-column align-items-center justify-content-between">
+                                    <p class="text-center mb-3">手机钱包扫码登录</p>
+                                    <div>
+                                        二维码
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <img style="width: 1.5rem" src="/img/home-page/pocket_logo.png" alt="pocket_logo">
+                                        <img style="width: 1.5rem" src="/img/home-page/math_logo.png" alt="math_logo">
+                                        <img style="width: 1.5rem" src="/img/home-page/meetone_logo.png" alt="meetone_logo">
+                                    </div>
+                                    <p class="text-center">请确保手机钱包为支持扫码授权的版本</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

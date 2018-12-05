@@ -103,3 +103,13 @@
     content: "\f005"; 
     color: #FFDC00;
 }
+.my-separator {
+    line-height: 100%;
+    text-align: center;
+}
+.my-line {
+    display: inline-block;
+    height: 42%;
+    width: 1px;
+    background: #313131;
+}

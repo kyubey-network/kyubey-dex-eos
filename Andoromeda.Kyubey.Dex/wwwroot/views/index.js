@@ -13,6 +13,9 @@
     watch: {
     },
     methods: {
+        login: function () {
+            $('#loginModal').modal('show');
+        },
         scatterLogin: function () {
             if (!('scatter' in window)) {
                 showModal('Scatter插件没有找到', 'Scatter是一款EOS钱包，运行在Chrome浏览器中，请您确定已经安装Scatter插件. 参考：https://www.jianshu.com/p/a2e1e6204023');
@@ -31,6 +34,7 @@
                     self.requiredFields = { accounts: [network] };
                 });
             }
+            $('#loginModal').modal('hide');
         },
         scatterLogout: function () {
             var self = this;
