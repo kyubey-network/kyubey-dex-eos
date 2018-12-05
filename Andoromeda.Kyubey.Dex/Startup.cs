@@ -42,7 +42,8 @@ namespace Andoromeda.Kyubey.Dex
             services.AddTimedJob();
 
             services.AddNewsRepositoryFactory()
-                .AddTokenRepositoryactory();
+                .AddTokenRepositoryactory()
+                .AddSlidesRepositoryFactory();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration)

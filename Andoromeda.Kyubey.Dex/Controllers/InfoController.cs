@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Andoromeda.Kyubey.Dex.Models;
-using Andoromeda.Kyubey.Models;
+using Andoromeda.Kyubey.Dex.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
@@ -14,35 +12,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         [HttpGet("api/v1/lang/{lang}/slides")]
         [ProducesResponseType(typeof(ApiResult<List<GetSlidesResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
-        public IActionResult Banner([FromServices] KyubeyContext db, [FromQuery]GetSlidesRequest request)
+        public async Task<IActionResult> Banner([FromServices] SlidesRepositoryFactory slidesRepositoryFactory, [FromQuery]GetSlidesRequest request)
         {
-            var testColumn = request.TestColumn;
-            var tokens = db.Tokens.ToList();
-            var responseData = new List<GetSlidesResponse> {
-                      new GetSlidesResponse(){
-                           Background="1.png",
-                           Foreground="2.png",
-                           Link="/token/exchange",
-                           Priority=99
-                      },
-                      new GetSlidesResponse(){
-                           Background="1.png",
-                           Foreground="2.png",
-                           Link="/token/exchange",
-                           Priority=98
-                      }
-                 };
-
+            var newSlides = await slidesRepositoryFactory.CreateAsync(request.Lang);
+            var responseData = newSlides.EnumerateAll()
+                .Select(x => new GetSlidesResponse()
+                {
+                    Background = $"/slides_assets/{x.Background}".Replace(@"\","/"),
+                    Foreground = $"/slides_assets/{x.Foreground}".Replace(@"\", "/")
+                });
             return ApiResult(responseData);
-        }
-
-        [HttpGet("api/v1/lang/{lang}/volume")]
-        [ProducesResponseType(typeof(ApiResult<double>), 200)]
-        [ProducesResponseType(typeof(ApiResult), 404)]
-        public async Task<IActionResult> Volume([FromServices] KyubeyContext db)
-        {
-            var volumeVal = await db.MatchReceipts.Where(x => x.Time > DateTime.Now.AddDays(-1)).SumAsync(x => x.Bid);
-            return ApiResult(volumeVal);
         }
     }
 }

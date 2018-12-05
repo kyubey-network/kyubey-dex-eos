@@ -11,8 +11,5 @@ namespace Andoromeda.Kyubey.Dex.Models
 
         public string Background { get; set; }
 
-        public string Link { get; set; }
-
-        public int Priority { get; set; }
     }
 }
