@@ -1,0 +1,121 @@
+﻿<div class="exchange-page mt-60px small">
+    <div class="container-fluid" style="padding: 0;">
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <div class="card my-card p-3 flex-row justify-content-between" style="margin-bottom: 10px;">
+                    <div class="d-flex align-items-center">
+                        <div class="token-logo">
+                            <img src="/img/KYUBEY_logo.png" style="width: 50px;margin-right: 20px;" alt=""> 
+                        </div>
+                        <div class="d-inline-block">
+                            <p>
+                                <span>KBY</span>
+                                <span>/EOS</span>
+                            </p>
+                            <button type="button" class="btn btn-warning" style="font-size: 12px;">币种简介</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p>最新价</p>
+                        <p>0.00207 EOS</p>
+                    </div>
+                    <div>
+                        <p>24H涨跌幅</p>
+                        <p>0.00207 EOS</p>
+                    </div>
+                    <div>
+                        <p>24H最高价</p>
+                        <p>0.00207 EOS</p>
+                    </div>
+                    <div>
+                        <p>24H最低价</p>
+                        <p>0.00207 EOS</p>
+                    </div>
+                    <div>
+                        <p>24H成交量</p>
+                        <p>0.00207 EOS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-md-12">
+                <div class="card my-card p-3 flex-row" style="margin-bottom: 10px;">
+                        <div class="d-inline-block w-50">
+                            <p>{{$t('token_introduction')}}</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci.</p>
+                        </div>
+                        <div class="d-inline-block w-25 pl-5">
+                            <p>{{$t('total_circulation')}}</p>
+                            <p>10,000,000,000</p>
+                            <p>{{$t('contract_name')}}</p>
+                            <p>fastwinadmin</p>
+                        </div>
+                        <div class="d-inline-block w-25">
+                            <p>{{$t('total_liquidity')}}</p>
+                            <p>2,750,000,000</p>
+                            <p>{{$t('official_website')}}</p>
+                            <a href="#">https://www.fastwin.io</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <div class="card my-card e-order-card" style="margin-right: 10px;">
+                    <div class="my-card-header">
+                        <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'mixed' }" title="Deep" v-on:click="control.order = 'mixed'"><img src="/img/order-mixed.png" /></a>
+                        <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'buy' }" title="Buy" v-on:click="control.order = 'buy'"><img src="/img/order-buy.png" /></a>
+                        <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'sell' }" title="Sell" v-on:click="control.order = 'sell'"><img src="/img/order-sell.png" /></a>
+                    </div>
+                    <table class="table e-order-table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Price</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="control.order !== 'buy'">
+                            <tr v-for="(x, i) in sellOrders" :key="i" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, black ' + getcolorOccupationRatio(x.amount,1000) + ', #292929 ' + getcolorOccupationRatio(x.amount,1000) + ')'">
+                                <td style="color: #E23030;">{{parseFloat(x.unitPrice).toFixed(5)}}</td>
+                                <td>{{parseFloat(x.amount).toFixed(4)}}</td>
+                                <td>{{parseFloat(x.total).toFixed(4)}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="e-orders-split">
+                                    <span >4307.80 ↓</span>
+                                    <span>¥29.898.20</span>
+                                </td>
+                            </tr>
+                            <tr v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, black ' + getcolorOccupationRatio(x.total,1000) + ', #292929 ' + getcolorOccupationRatio(x.total,1000) + ')'">
+                                <td style="color: #00B54F;">{{parseFloat(x.unitPrice).toFixed(5)}}</td>
+                                <td>{{parseFloat(x.amount).toFixed(4)}}</td>
+                                <td>{{parseFloat(x.total).toFixed(4)}}</td>
+                                <i style="width: 100%;height: 100%;background: red;"></i>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card my-card e-chart-card" style="margin-bottom: 10px;margin-right: 10px;">
+                    234
+                </div>
+                <div class="card my-card e-submit-card" style="margin-right: 10px;margin-right: 10px">
+                    345
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card my-card e-pair-card" style="margin-bottom: 10px;">
+                    234
+                </div>
+                <div class="card my-card e-transaction-card">
+                    345
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

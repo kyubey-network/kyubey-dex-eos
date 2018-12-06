@@ -1,4 +1,4 @@
-﻿<div class="home-page">
+﻿<div class="home-page mt-60px">
     <div class="clearfix" style="width: 100%;background: #313131;color:#ffffff;padding: 4rem 4rem 2rem 4rem;">
         <div class="continer">
             <div class="row">
@@ -14,10 +14,8 @@
         </div>
     </div>
     <div class="banner-box">
-        <div class="home-news">需要及时知道的新币通知标题 11-29</div>
-        <div class="home-news">需要及时知道的活动通知 11-29</div>
-        <div class="home-news">需要及时知道的新币通知 12-1</div>
-        <div class="more-text">更多>></div>
+        <div class="home-news" v-for="x in news">{{x.title}} {{formatTime(x.time)}}</div>
+        <div class="more-text">{{$t('more')}}>></div>
     </div>
     <section>
         <div class="table-container">
@@ -25,15 +23,15 @@
                 <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center mr-5">
                         <i class="fa fa-2x fa-star-o mr-2" style="color: #AFAFAF"></i>    
-                        <span>自选</span>
+                        <span>{{$t('optional')}}</span>
                     </div>
                     <div class="d-flex align-items-center">
                         <img src="/img/home-page/eos.png" alt="eos" class="eos-img mr-2" />
-                        <span>EOS交易</span>
+                        <span>{{$t('eos_trading')}}</span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center serach-btn">
-                    <input type="search" class="my-input" placeholder="通行证" name="name" v-model="searchText"/>
+                    <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText"/>
                     <button type="submit" @click="searchToken" @keyup.enter="searchToken">
                         <i class="fa fa-search"></i>
                     </button>
@@ -43,17 +41,17 @@
                 <thead>
                     <tr>
                         <th scope="col"></th>
-                        <th scope="col">交易对</th>
-                        <th scope="col">最新价</th>
+                        <th scope="col">{{$t('trading_pair')}}</th>
+                        <th scope="col">{{$t('latest_price')}}</th>
                         <th scope="col">
-                            24H涨跌幅
+                            {{$t('ups_downs_24H')}}
                             <i class="fa fa-caret-up"></i>
                             <i class="fa fa-caret-down"></i>
                         </th>
-                        <th scope="col">24H最高价</th>
-                        <th scope="col">24H最低价</th>
+                        <th scope="col">{{$t('highest_price_24H')}}</th>
+                        <th scope="col">{{$t('lowest_price_24H')}}</th>
                         <th scope="col">
-                            24H成交量
+                            {{$t('volume_24H')}}
                             <i class="fa fa-caret-up"></i>
                             <i class="fa fa-caret-down"></i>
                         </th>
@@ -75,7 +73,7 @@
             </table>
         </div>
         <div class="d-flex align-items-center justify-content-center mt-4">
-            <button type="button" class="btn btn-light small pl-5 pr-5" style="font-size: 12px;color: #999999;box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);">查看更多</button>
+            <button type="button" class="btn btn-light small pl-5 pr-5" style="font-size: 12px;color: #999999;box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);">{{$t('see_more')}}</button>
         </div>
     </section>
 </div>

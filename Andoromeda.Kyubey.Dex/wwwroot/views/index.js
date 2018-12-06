@@ -6,9 +6,15 @@
         account: null,
         eos: null,
         requiredFields: null,
+        volume: 0,
         lang: 'en'
     },
     created: function () {
+        qv.get(`/api/v1/lang/${this.lang}/volume`, {}).then(res => {
+            if (res.code === 200) {
+                this.volume = res.data;
+            }
+        })
     },
     watch: {
     },

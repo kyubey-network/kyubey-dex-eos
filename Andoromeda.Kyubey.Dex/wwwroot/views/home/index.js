@@ -27,8 +27,7 @@ component.created = function () {
 };
 
 component.methods = {
-    searchToken: function () { 
-        console.log('search token');
+    searchToken: function () {
         if (this.searchText !== '') {
             this.tokenTable = this.tokenTableSource.filter(item => {
                 return item.symbol.toUpperCase().includes(this.searchText.toUpperCase())
@@ -36,5 +35,8 @@ component.methods = {
         } else {
             this.tokenTable = this.tokenTableSource;
         }
+    },
+    formatTime(time) {
+        return moment(time).format('MM-DD');
     }
 };
