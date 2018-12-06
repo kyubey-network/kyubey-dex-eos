@@ -119,6 +119,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("/api/v1/lang/{lang}/token/{id}")]
+        [ProducesResponseType(typeof(ApiResult<GetTokenDetailResponse>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> TokenDetails(
             string id,
             [FromServices] KyubeyContext db,
@@ -144,24 +146,28 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
             var tokenRepository = await tokenRepositoryFactory.CreateAsync(request.Lang);
             var token = tokenRepository.GetSingle(id);
-     
-            var responseData =new GetTokenDetailResponse()
-                {
-                    Symbol = token.Id,
-                    CurrentPrice = todayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? yesterdayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? 0,
-                    MaxPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MaxPrice ?? 0,
-                    MinPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MinPrice ?? 0,
-                    VolumeRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.Volume ?? 0,
-                    IsRecommend = true,
-                    IconSrc = $"/token_assets/{token.Id}/icon.png",
-                    Priority = token.Priority,
-                    Description = tokenRepository.GetTokenIncubationDescription(id, request.Lang),
-                    TotalSupply = token.Basic?.Total_Supply ?? 0,
-                    TotalCirculate = token.Basic?.Total_Circulate ?? 0,
-                    Contract = token.Basic.Contract.Transfer,
-                    Website = token.Basic.Website
 
-                };
+            var responseData = new GetTokenDetailResponse()
+            {
+                Symbol = token.Id,
+                CurrentPrice = todayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? yesterdayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? 0,
+                MaxPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MaxPrice ?? 0,
+                MinPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MinPrice ?? 0,
+                VolumeRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.Volume ?? 0,
+                IsRecommend = true,
+                IconSrc = $"/token_assets/{token.Id}/icon.png",
+                Priority = token.Priority,
+                Description = tokenRepository.GetTokenIncubationDescription(id, request.Lang),
+                TotalSupply = token.Basic?.Total_Supply ?? 0,
+                TotalCirculate = token.Basic?.Total_Circulate ?? 0,
+                Contract = new GetTokenResultContract()
+                {
+                    Depot = token.Basic?.Contract?.Depot,
+                    Pricing = token.Basic?.Contract?.Pricing,
+                    Transfer = token.Basic?.Contract?.Transfer
+                },
+                Website = token.Basic.Website
+            };
             return ApiResult(responseData);
         }
 
@@ -189,7 +195,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 .ToListAsync(token);
 
             if (data.Count <= 1) return ApiResult(data.Where(x => x.Time >= begin).OrderBy(x => x.Time));
-     
+
             for (var i = begin; i < end; i = i.Add(ticks))
             {
                 if (data.Any(x => x.Time == i)) continue;
@@ -206,7 +212,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     Opening = prev.Closing,
                     Time = i,
                     Volume = 0
-                });   
+                });
             }
             return ApiResult(data.Where(x => x.Time >= begin).OrderBy(x => x.Time));
         }

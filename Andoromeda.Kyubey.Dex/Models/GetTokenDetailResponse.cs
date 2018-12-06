@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Andoromeda.Kyubey.Dex.Models
+﻿namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetTokenDetailResponse
     {
@@ -31,10 +26,17 @@ namespace Andoromeda.Kyubey.Dex.Models
 
         public double TotalCirculate { get; set; }
 
-        public string Contract { get; set; }
+        public GetTokenResultContract Contract { get; set; }
 
         public string Website { get; set; }
+    }
 
+    public class GetTokenResultContract
+    {
+        public string Transfer { get; set; }
 
+        public string Depot { get; set; }
+
+        public string Pricing { get; set; }
     }
 }
