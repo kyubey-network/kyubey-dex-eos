@@ -20,6 +20,7 @@ router.beforeEach(function (to, from, next) {
 
 router.afterEach((to, from) => {
     $(window).scrollTop(0);
+    $('#page-css').remove();
     if (to.matched.length && to.matched[0].instances.default) {
         var current = to.matched[0].instances.default;
         if (current && current.$options.created.length) {
@@ -155,6 +156,7 @@ LazyRouting._loadComponentAsync = function (rule, map) {
         return Promise.reject();
 
     var path = LazyRouting._convertToViewNameBase(rule);
+    var css = null;
 
     return LazyRouting._getHtmlAsync("/views" + path + ".html")
         .then(async (result) => {
@@ -164,6 +166,16 @@ LazyRouting._loadComponentAsync = function (rule, map) {
             }
             catch (ex) {
             }
+
+            try {
+                var testCss = await LazyRouting._getHtmlAsync("/views" + path + ".css");
+                if (testCss) {
+                    css = "/views" + path + ".css";
+                }
+            }
+            catch (ex) {
+            }
+
             return Promise.resolve(result);
         }, () => {
             return LazyRouting._getHtmlAsync("/views" + path + "/index.html");
@@ -172,6 +184,15 @@ LazyRouting._loadComponentAsync = function (rule, map) {
             try {
                 var js = await LazyRouting._getHtmlAsync("/views" + path + "/index.js");
                 LazyRouting._controlJs[rule] = js;
+            }
+            catch (ex) {
+            }
+            
+            try {
+                var testCss = await LazyRouting._getHtmlAsync("/views" + path + "/index.css");
+                if (testCss) {
+                    css = "/views" + path + "/index.css";
+                }
             }
             catch (ex) {
             }
@@ -203,6 +224,13 @@ LazyRouting._loadComponentAsync = function (rule, map) {
                 setTimeout(function () {
                     self.__initFinished = true;
                 }, 500);
+                if (css) {
+                    if (!$('#page-css').length) {
+                        $('head').append(`<link id="page-css" href="${css}" rel="stylesheet" />`);
+                    } else {
+                        $('#page-css').attr('href', `<link id="page-css" href="${css}" rel="stylesheet" />`);
+                    }
+                }
             };
             
             LazyRouting.__routeMap[rule] = { path: rule, name: rule, component: component };
