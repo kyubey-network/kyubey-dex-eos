@@ -14,6 +14,7 @@ using Andoromeda.Kyubey.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Andoromeda.Kyubey.Dex.Hubs;
 using Andoromeda.Kyubey.Dex.Middlewares;
 
 namespace Andoromeda.Kyubey.Dex
@@ -47,6 +48,8 @@ namespace Andoromeda.Kyubey.Dex
             services.AddNewsRepositoryFactory()
                 .AddTokenRepositoryactory()
                 .AddSlidesRepositoryFactory();
+
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration)
@@ -54,6 +57,11 @@ namespace Andoromeda.Kyubey.Dex
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
             app.DexStaticFiles(env, configuration);
+            
+            app.UseSignalR(x =>
+            {
+                x.MapHub<SimpleWalletHub>("/signalr/simplewallet");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
