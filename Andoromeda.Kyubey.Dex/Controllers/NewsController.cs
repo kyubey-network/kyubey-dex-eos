@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
+    [Route("api/v1/[controller]")]
     public class NewsController : BaseController
     {
-        [HttpGet("api/v1/lang/{lang}/news")]
+        [HttpGet]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetNewsListResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> List([FromServices] NewsRepositoryFactory newsRepositoryFactory, [FromQuery] GetNewsListRequest request)
@@ -32,7 +33,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("api/v1/lang/{lang}/news/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResult<GetNewsContentResponse>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Content([FromServices] NewsRepositoryFactory newsRepositoryFactory, [FromQuery] GetContentBaseRequest request)

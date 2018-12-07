@@ -13,9 +13,10 @@ using static Andoromeda.Kyubey.Dex.Repository.TokenRespository;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
+    [Route("api/v1/lang/{lang}/[controller]")]
     public class UserController : BaseController
     {
-        [HttpGet("/api/v1/lang/{lang}/user/{account}/favorite")]
+        [HttpGet("{account}/favorite")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetFavoriteResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
@@ -72,7 +73,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("/api/v1/lang/{lang}/user/{account}/current-delegate")]
+        [HttpGet("{account}/current-delegate")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetCurrentOrdersResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetCurrentDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
@@ -106,7 +107,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(ret.OrderByDescending(x => x.Time));
         }
 
-        [HttpGet("/api/v1/lang/{lang}/user/{account}/history-delegate")]
+        [HttpGet("{account}/history-delegate")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetHistoryOrdersResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetHistoryDelegate([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
@@ -130,7 +131,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(userHistoryList.OrderByDescending(x => x.Time));
         }
 
-        [HttpGet("/api/v1/lang/{lang}/user/{account}/wallet")]
+        [HttpGet("{account}/wallet")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetWalletResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetWalletAsync(string lang, string account, [FromServices] KyubeyContext db, [FromServices]TokenRepositoryFactory tokenRepositoryFactory, [FromServices]ILogger logger, [FromServices] NodeApiInvoker nodeApiInvoker, CancellationToken cancellationToken)

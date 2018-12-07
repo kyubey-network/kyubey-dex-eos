@@ -12,9 +12,10 @@ using static Andoromeda.Kyubey.Dex.Repository.TokenRespository;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
+    [Route("api/v1/lang/{lang}/[controller]")]
     public class NodeController : BaseController
     {
-        [HttpGet("/api/v1/lang/{lang}/node/{account}/balance/")]
+        [HttpGet("{account}/balance/")]
         [ProducesResponseType(typeof(ApiResult<Dictionary<string, double>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         [ProducesResponseType(typeof(ApiResult), 500)]
@@ -51,7 +52,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("/api/v1/lang/{lang}/node/{account}/table/{table}/code/{code}")]
+        [HttpGet("{account}/table/{table}/code/{code}")]
         [ProducesResponseType(typeof(ApiResult<object>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         [ProducesResponseType(typeof(ApiResult), 500)]
@@ -61,7 +62,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("/api/v1/lang/{lang}/node/{account}/action")]
+        [HttpGet("{account}/action")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetEOSActionsResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         [ProducesResponseType(typeof(ApiResult), 500)]

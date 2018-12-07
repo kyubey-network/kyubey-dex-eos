@@ -1,5 +1,5 @@
+using Andoromeda.Kyubey.Dex.Hubs;
 using Andoromeda.Kyubey.Dex.Middlewares;
-using Andoromeda.Kyubey.Dex.Lib;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,10 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.Extensions.FileProviders;
-using System.IO;
-using Andoromeda.Kyubey.Dex.Hubs;
-using Andoromeda.Kyubey.Dex.Middlewares;
 
 namespace Andoromeda.Kyubey.Dex
 {

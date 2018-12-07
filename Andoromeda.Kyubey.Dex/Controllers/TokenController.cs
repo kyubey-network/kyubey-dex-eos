@@ -11,10 +11,11 @@ using static Andoromeda.Kyubey.Dex.Repository.TokenRespository;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
+    [Route("api/v1/lang/{lang}/[controller]")]
     public class TokenController : BaseController
     {
-        [HttpGet("api/v1/lang/{lang}/token")]
-        [ProducesResponseType(typeof(ApiResult<GetTokenListResponse>), 200)]
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetTokenListResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> TokenList([FromServices] KyubeyContext db, CancellationToken cancellationToken)
         {
@@ -53,9 +54,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-
-        [HttpGet("api/v1/lang/{lang}/token/{tokenId}/buy-order")]
-        [ProducesResponseType(typeof(ApiResult<GetBaseOrderResponse>), 200)]
+        [HttpGet("{tokenId}/buy-order")]
+        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> BuyOrder([FromServices] KyubeyContext db, string tokenId, CancellationToken cancellationToken)
         {
@@ -76,8 +76,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("api/v1/lang/{lang}/token/{tokenId}/sell-order")]
-        [ProducesResponseType(typeof(ApiResult<GetBaseOrderResponse>), 200)]
+        [HttpGet("{tokenId}/sell-order")]
+        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> SellOrder([FromServices] KyubeyContext db, string tokenId, CancellationToken cancellationToken)
         {
@@ -99,7 +99,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("/api/v1/lang/{langId}/token/{tokenId}/match")]
+        [HttpGet("{tokenId}/match")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetRecentTransactionResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> RecentTransactionRecord([FromServices] KyubeyContext db, string tokenId, CancellationToken token)
@@ -118,7 +118,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             }));
         }
 
-        [HttpGet("/api/v1/lang/{lang}/token/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResult<GetTokenDetailResponse>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> TokenDetails(
@@ -172,7 +172,9 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
 
-        [HttpGet("/api/v1/lang/{lang}/token/{id}/candlestick")]
+        [HttpGet("{id}/candlestick")]
+        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetCandlestickResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Candlestick([FromServices] KyubeyContext db, GetCandlestickRequest Request, CancellationToken token)
         {
             var ticks = new TimeSpan(0, 0, Request.Period);
