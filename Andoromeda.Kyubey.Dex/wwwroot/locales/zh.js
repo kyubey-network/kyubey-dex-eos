@@ -10,7 +10,7 @@ const zh = {
     footer_warning: '市场有风险，投资需谨慎',
     contact_us: '联系我们',
     announcement_center: '公告中心',
-    API_Quotes: 'API 行情',
+    API_Quotes: 'API 文档',
     eos_trading: 'EOS交易',
     optional: '自选',
     token: '通证',

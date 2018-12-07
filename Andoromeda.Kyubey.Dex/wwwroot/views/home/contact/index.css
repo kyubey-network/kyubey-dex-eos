@@ -5,11 +5,11 @@
 }
 .paper {
     margin: 5px auto;
-    text-align:left;
-
+    text-align: left;
     font-family: 'FontAwesome';
     background-color: #FFFFFF;
     padding: 42px 64px 42px 64px;
+    box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
     max-width: 758px;
     min-height: 638px;
 }
