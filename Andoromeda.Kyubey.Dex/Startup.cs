@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Andoromeda.Kyubey.Dex.Middlewares;
+using Andoromeda.Kyubey.Dex.Lib;
+using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Andoromeda.Kyubey.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
@@ -33,6 +28,11 @@ namespace Andoromeda.Kyubey.Dex
                 x.DescribeAllEnumsAsStrings();
             });
             services.AddMySqlLogger("kyubey-dex");
+
+            services.AddNodeServices(x =>
+                x.ProjectPath = "./Node"
+            );
+            services.AddEosSignatureValidator();
 
             services.AddCors(c => c.AddPolicy("Kyubey", x =>
                 x.AllowCredentials()
