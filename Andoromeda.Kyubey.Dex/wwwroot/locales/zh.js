@@ -42,5 +42,10 @@ const zh = {
     unfilled: '未成交',
     operatio: '操作',
     details: '明细',
-    cancel: '取消'
+    cancel: '取消',
+    contact_us: '联系我们',
+    how_to_contact_us: '如何联系我们？',
+    contact_us_for_the_text1: '如果您在使用KyubeyDex时遇到问题需要帮助，或有建议想要提出，请发送邮件至邮箱：',
+    contact_us_for_the_text2: '我们会尽快为您进行处理。',
+    contact_us_for_the_text3: '感谢您对我们的支持！',
 };
