@@ -4,6 +4,7 @@
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
         host: 'nodes.get-scatter.com',
         account: null,
+        uuid: null,
         loginMode: null,
         eos: null,
         requiredFields: null,
@@ -28,7 +29,7 @@
     },
     methods: {
         getSimpleWalletUUID: function () {
-            return self.signalr.simplewallet.connection.id;
+            return this.uuid;
         },
         initSignalR: function () {
             var self = this;
@@ -45,7 +46,11 @@
                 self.loginMode = 'Simple Wallet';
             });
 
-            this.signalr.simplewallet.connection.start();
+            this.signalr.simplewallet.connection.start().then(function () {
+                return self.signalr.simplewallet.connection.invoke('getUUID').then(id => {
+                    self.uuid = id;
+                });
+            });
 
         },
         login: function () {
