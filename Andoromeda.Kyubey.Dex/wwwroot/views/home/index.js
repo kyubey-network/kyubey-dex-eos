@@ -4,7 +4,10 @@
         slides: [],
         tokenTable: [],
         tokenTableSource: [],
-        searchText: ''
+        searchText: '',
+        control: {
+            tab: 'eos'
+        }
     };
 };
 
@@ -38,5 +41,14 @@ component.methods = {
     },
     formatTime(time) {
         return moment(time).format('MM-DD');
+    },
+    toExchange(token) {
+        window.location.href=`/exchange?token=${token}`;
+    }
+};
+
+component.computed = {
+    isSignedIn: function () {
+        return !!app.account;
     }
 };

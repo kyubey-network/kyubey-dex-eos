@@ -4,76 +4,76 @@
             <div class="col-md-12">
                 <div class="card my-card p-3 flex-row justify-content-between" style="margin-bottom: 10px;">
                     <div class="d-flex align-items-center">
-                        <div class="token-logo">
-                            <img src="/img/KYUBEY_logo.png" style="width: 50px;margin-right: 20px;" alt=""> 
+                        <div class="token-logo" style="margin-right: 20px;">
+                            <img :src="baseInfo.iconSrc" style="width: 50px;" alt="logo"> 
                         </div>
                         <div class="d-inline-block">
                             <p>
-                                <span>KBY</span>
+                                <span>{{tokenId}}</span>
                                 <span>/EOS</span>
                             </p>
-                            <button type="button" class="btn btn-warning" style="font-size: 12px;">币种简介</button>
+                            <button @click="showIntroduction = !showIntroduction" type="button" class="btn btn-warning" style="font-size: 12px;">币种简介</button>
                         </div>
                     </div>
                     <div>
-                        <p>最新价</p>
-                        <p>0.00207 EOS</p>
+                        <p>{{$t('latest_price')}}</p>
+                        <p><span>{{parseFloat(baseInfo.currentPrice).toFixed(6)}}</span> EOS</p>
                     </div>
                     <div>
-                        <p>24H涨跌幅</p>
-                        <p>0.00207 EOS</p>
+                        <p>{{$t('ups_downs_24H')}}</p>
+                        <p><span>{{parseFloat(baseInfo.changeRecentDay).toFixed(6)}}</span> EOS</p>
                     </div>
                     <div>
-                        <p>24H最高价</p>
-                        <p>0.00207 EOS</p>
+                        <p>{{$t('highest_price_24H')}}</p>
+                        <p><span>{{parseFloat(baseInfo.maxPriceRecentDay).toFixed(6)}}</span> EOS</p>
                     </div>
                     <div>
-                        <p>24H最低价</p>
-                        <p>0.00207 EOS</p>
+                        <p>{{$t('lowest_price_24H')}}</p>
+                        <p><span>{{parseFloat(baseInfo.minPriceRecentDay).toFixed(6)}}</span> EOS</p>
                     </div>
                     <div>
-                        <p>24H成交量</p>
-                        <p>0.00207 EOS</p>
+                        <p>{{$t('volume_24H')}}</p>
+                        <p><span>{{parseFloat(baseInfo.volumeRecentDay).toFixed(4)}}</span> EOS</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row no-gutters">
+        <div class="row no-gutters" v-if="showIntroduction">
             <div class="col-md-12">
                 <div class="card my-card p-3 flex-row" style="margin-bottom: 10px;">
                         <div class="d-inline-block w-50">
                             <p>{{$t('token_introduction')}}</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci.</p>
+                            <p>{{baseInfo.description}}</p>
                         </div>
                         <div class="d-inline-block w-25 pl-5">
                             <p>{{$t('total_circulation')}}</p>
-                            <p>10,000,000,000</p>
+                            <p>{{baseInfo.totalSupply}}</p>
                             <p>{{$t('contract_name')}}</p>
-                            <p>fastwinadmin</p>
+                            <p>{{baseInfo.contract.transfer}}</p>
                         </div>
                         <div class="d-inline-block w-25">
                             <p>{{$t('total_liquidity')}}</p>
-                            <p>2,750,000,000</p>
+                            <p>{{baseInfo.totalCirculate}}</p>
                             <p>{{$t('official_website')}}</p>
-                            <a href="#">https://www.fastwin.io</a>
+                            <a href="#">{{baseInfo.website}}</a>
                         </div>
                 </div>
             </div>
         </div>
         <div class="row no-gutters">
             <div class="col-md-3">
-                <div class="card my-card e-order-card" style="margin-right: 10px;">
+                <div class="card my-card e-order-card">
                     <div class="my-card-header">
                         <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'mixed' }" title="Deep" v-on:click="control.order = 'mixed'"><img src="/img/order-mixed.png" /></a>
                         <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'buy' }" title="Buy" v-on:click="control.order = 'buy'"><img src="/img/order-buy.png" /></a>
                         <a class="order-filter-btn" :class="{ 'order-filter-btn-active': control.order === 'sell' }" title="Sell" v-on:click="control.order = 'sell'"><img src="/img/order-sell.png" /></a>
                     </div>
-                    <table class="table e-order-table table-sm table-hover">
+                    <table class="table e-table table-sm table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">Price</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Total</th>
+                                <th scope="col">{{$t('price')}}</th>
+                                <th scope="col">{{$t('amount')}}</th>
+                                <th scope="col">{{$t('total')}}</th>
                             </tr>
                         </thead>
                         <tbody v-if="control.order !== 'buy'">
@@ -101,19 +101,159 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card my-card e-chart-card" style="margin-bottom: 10px;margin-right: 10px;">
-                    234
+                <div class="card my-card e-chart-card">
+                    <div class="my-card-header header-text-color">
+                            {{$t('k_line')}}
+                    </div>
                 </div>
-                <div class="card my-card e-submit-card" style="margin-right: 10px;margin-right: 10px">
-                    345
+                <div class="card my-card e-submit-card">
+                    <div class="my-card-header header-text-color">
+                        <div @click="setTradeType('limit')" class="border-button d-inline-block" :class="{'border-button-active': control.trade === 'limit'}">限价交易</div>
+                        <div @click="setTradeType('market')" class="border-button d-inline-block" :class="{'border-button-active': control.trade === 'market'}">市价交易</div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6 mt-3 pl-4 pr-4" style="border-right: 1px solid #3E3E3E;">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-green" style="font-size: 16px"><b>{{$t('buy')}} KBY</b></span>
+                                    <span style="color: #626262;">{{$t('balance')}}: 0.0000 EOS</span>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('price')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_buy_price'):''" :disabled="control.trade === 'market' ? true:false">
+                                        <span class="e-input-suffix">EOS</span>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('amount')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">CMU</span>
+                                    </div>
+                                </div>
+                                <div class="mb-2" :class="{'dn':control.trade==='market'}">
+                                    <div style="margin-left: 30px;">
+                                        <input class="buySlider" id="buySlider" data-slider-id="buySlider" type="text" />
+                                    </div>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('total')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">EOS</span>
+                                    </div>
+                                </div>
+                                <div class="mb-2" :class="{'dn':control.trade==='limit'}">
+                                    <div style="margin-left: 30px;">
+                                        <input class="buySlider" id="buySlider2" data-slider-id="buySlider2" type="text" />
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div style="margin-left: 70px;">
+                                        <button type="button" class="btn w-100 bg-green text-white">{{$t('sign_trade')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mt-3 pl-4 pr-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-red" style="font-size: 16px"><b>{{$t('sell')}} KBY</b></span>
+                                    <span style="color: #626262;">{{$t('balance')}}: 0.0000 EOS</span>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('price')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_sell_price'):''" :disabled="control.trade === 'market' ? true:false">
+                                        <span class="e-input-suffix">EOS</span>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('amount')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">CMU</span>
+                                    </div>
+                                </div>
+                                <div class="mb-2" :class="{'dn':control.trade==='market'}">
+                                    <div style="margin-left: 30px;">
+                                        <input class="sellSilder" id="sellSilder" data-slider-id="sellSilder" type="text" />
+                                    </div>
+                                </div>
+                                <div style="font-size: 0;" class="mb-2">
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('total')}}</label>
+                                    <div class="e-input">
+                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">EOS</span>
+                                    </div>
+                                </div>
+                                <div class="mb-2" :class="{'dn':control.trade==='limit'}">
+                                    <div style="margin-left: 30px;">
+                                        <input class="sellSilder"  id="sellSilder" data-slider-id="sellSilder" type="text" />
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <div style="margin-left: 70px;">
+                                        <button type="button" class="btn w-100 bg-red text-white">{{$t('sign_trade')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card my-card e-pair-card" style="margin-bottom: 10px;">
-                    234
+                <div class="card my-card e-pair-card">
+                    <div class="my-card-header header-text-color" style="justify-content: space-between;">
+                        <div>
+                            <div @click="control.markets = 'favorite'" class="border-button d-inline-block" :class="{'border-button-active': control.markets !== 'eos'}"><i class="fa fa-star-o mr-1"></i>{{$t('favorite')}}</div>
+                            <div @click="control.markets = 'eos'" class="border-button d-inline-block" :class="{'border-button-active': control.markets === 'eos'}">EOS</div>
+                        </div>
+                        <div class="input-container">
+                            <input type="text" class="d-inline-block search-input">
+                            <button class="d-inline-block search-input-button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="table e-table table-sm table-hover pl-1 scroll-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 20px;"></th>
+                                <th scope="col">{{$t('market')}}</th>
+                                <th scope="col">{{$t('latest_price')}}</th>
+                                <th scope="col">{{$t('ups_downs')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height: 390px;">
+                            <tr v-for="(x, i) in favoriteList" :key="i">
+                                <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
+                                <td>{{x.symbol}}/EOS</td>
+                                <td>{{parseFloat(x.unitPrice).toFixed(4)}}</td>
+                                <td>{{parseFloat(x.change).toFixed(2)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="card my-card e-transaction-card">
-                    345
+                    <div class="my-card-header header-text-color">
+                        {{$t('latest_transactions')}}
+                    </div>
+                    <table class="table e-table table-sm table-hover pl-1 scroll-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{$t('price')}}</th>
+                                <th scope="col">{{$t('amount')}}</th>
+                                <th scope="col">{{$t('date')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody style="height:260px;">
+                            <tr v-for="(x, i) in historyOrders" :key="i">
+                                <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
+                                <td>{{parseFloat(x.amount).toFixed(4)}}</td>
+                                <td>{{formatTime(x.time)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
