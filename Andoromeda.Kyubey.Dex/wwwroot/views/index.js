@@ -31,6 +31,19 @@
         getSimpleWalletUUID: function () {
             return this.uuid;
         },
+        generateUUID: function () {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4";
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+            s[8] = s[13] = s[18] = s[23] = "-";
+
+            var uuid = s.join("");
+            return uuid;
+        },
         initSignalR: function () {
             var self = this;
             self.signalr.simplewallet.connection = new signalR.HubConnectionBuilder()
@@ -46,10 +59,9 @@
                 self.loginMode = 'Simple Wallet';
             });
 
-            this.signalr.simplewallet.connection.start().then(function () {
-                return self.signalr.simplewallet.connection.invoke('getUUID').then(id => {
-                    self.uuid = id;
-                });
+            self.signalr.simplewallet.connection.start().then(function () {
+                self.uuid = self.generateUUID();
+                return self.signalr.simplewallet.connection.invoke('bindUUID', self.uuid);
             });
 
         },

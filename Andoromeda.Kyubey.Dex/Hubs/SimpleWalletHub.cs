@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Text;
-using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Andoromeda.Kyubey.Dex.Hubs
 {
     public class SimpleWalletHub : Hub
     {
-        private static MD5 _md5 = new MD5CryptoServiceProvider();
-
-        private Guid ToGuid(string str)
+        public async Task BindUUID(Guid id)
         {
-            var bytes = Encoding.ASCII.GetBytes(str);
-            var result = _md5.ComputeHash(bytes);
-            var uuid = new Guid(result);
-            return uuid;
-        }
-
-        public Guid GetUUID()
-        {
-            return ToGuid(Context.ConnectionId);
+            var _id = id.ToString().ToLower();
+            await Groups.AddToGroupAsync(Context.ConnectionId, _id);
         }
     }
 }
