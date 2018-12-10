@@ -1,0 +1,60 @@
+﻿<div>
+    <div class="wallet-summary mt-60px">
+        <div class="wallet-avatar-outer">
+            <img src="/img/avatar.png" class="wallet-avatar" />
+            <span class="wallet-account-name">account_name</span>
+        </div>
+        <div class="wallet-evaluated-outer">
+            <strong>{{ parseFloat(totalEvaluated).toFixed(8) }}</strong> EOS
+        </div>
+        <div class="wallet-subline-outer">
+            当前总估值
+        </div>
+    </div>
+
+    <div class="home-page">
+        <section>
+            <div class="table-container">
+                <div class="table-title-container">
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center my-tab p-2">
+                            我的账户
+                        </div>
+                    </div>
+                    <div class="m-2">
+                        <div class="d-flex align-items-center serach-btn">
+                            <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText" />
+                            <button type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">币种</th>
+                            <th scope="col">可用余额</th>
+                            <th scope="col">冻结余额</th>
+                            <th scope="col">估值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="cursor: pointer;" v-for="(item, index) in tokens" :key="index"
+                            @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
+                            <td scope="row" v-if="isSignedIn">
+                                <i class="my-star"></i>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
