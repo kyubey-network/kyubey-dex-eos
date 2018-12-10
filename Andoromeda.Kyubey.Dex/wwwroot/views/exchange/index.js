@@ -32,7 +32,7 @@
 };
 
 component.created = function () {
-    this.tokenId = this.$route.query.token;
+    this.tokenId = router.history.current.params.id;
     this.getSellOrders();
     this.getBuyOrders();
     this.getTokenInfo();

@@ -62,7 +62,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"  @click="toExchange(item.symbol)">
+                    <tr style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
+                        @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
                         <td scope="row" v-if="isSignedIn">
                             <i class="my-star"></i>        
                         </td>
