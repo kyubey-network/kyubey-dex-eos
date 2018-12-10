@@ -8,14 +8,14 @@
                     <p style="margin-bottom: 10px;">No deposit / No withdrawal / Safe assets / Open & transparency</p>
                 </div>
                 <div class="col-4">
-                    <img style="width: 20rem;" src="/img/home-page//conputer.png" alt="dex" />
+                    <img style="width: 20rem;" src="/img/home-page/conputer.png" alt="dex" />
                 </div>
             </div>
         </div>
     </div>
     <div class="banner-box">
-        <div class="home-news" v-for="x in news">{{x.title}} {{formatTime(x.time)}}</div>
-        <div class="more-text" v-on:click="app.redirect('/home/news')">{{$t('more')}}>></div>
+        <div class="home-news" v-for="x in news" v-on:click="$root.redirect('/home/news')">{{x.title}} {{formatTime(x.time)}}</div>
+        <div class="more-text" v-on:click="$root.redirect('/home/news')">{{$t('more')}}>></div>
     </div>
     <section>
         <div class="table-container">
