@@ -33,6 +33,19 @@ component.methods = {
                             self.news.filter(z => z.id === id)[0].content = app.marked(y.data.content);
                         });
                 }
+
+                var time = new Date(item.time);
+                item.time = time.getFullYear()
+                    + '-'
+                    + (time.getMonth() + 1)
+                    + '-'
+                    + time.getDate()
+                    + ' '
+                    + time.getHours()
+                    + ':'
+                    + time.getMinutes()
+                    + ':'
+                    + time.getSeconds();
             });
     }
 };

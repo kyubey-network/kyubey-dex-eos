@@ -1,6 +1,12 @@
 ﻿<div class="bottoming">
     <div class="paper">
-        <h1>公告中心</h1>
+        <h1>{{$t('announcement_center')}}</h1>
+        <div class="search bar">
+            <form>
+                <input type="text" >
+                <button type="submit"></button>
+            </form>
+        </div>
         <template v-for="x in news">
             <h2>{{ x.title }} <span class="news-right">{{ x.time }}</span></h2>
             <div v-html="x.content"></div>
