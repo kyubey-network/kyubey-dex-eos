@@ -2,13 +2,13 @@
     <div class="wallet-summary mt-60px">
         <div class="wallet-avatar-outer">
             <img src="/img/avatar.png" class="wallet-avatar" />
-            <span class="wallet-account-name">account_name</span>
+            <span class="wallet-account-name">{{account.name}}</span>
         </div>
         <div class="wallet-evaluated-outer">
             <strong>{{ parseFloat(totalEvaluated).toFixed(8) }}</strong> EOS
         </div>
         <div class="wallet-subline-outer">
-            当前总估值
+            {{$t('current_total_valuation')}}
         </div>
     </div>
 
@@ -18,13 +18,13 @@
                 <div class="table-title-container">
                     <div class="d-flex align-items-center">
                         <div class="d-flex align-items-center my-tab p-2">
-                            我的账户
+                            {{$t('my_account')}}
                         </div>
                     </div>
                     <div class="m-2">
                         <div class="d-flex align-items-center serach-btn">
                             <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText" />
-                            <button type="submit">
+                            <button type="submit" @click="searchToken" @keyup.enter="searchToken">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -33,24 +33,28 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">币种</th>
-                            <th scope="col">可用余额</th>
-                            <th scope="col">冻结余额</th>
-                            <th scope="col">估值</th>
+                            <th scope="col">{{$t('token')}}</th>
+                            <th scope="col">{{$t('available_balance')}}</th>
+                            <th scope="col">{{$t('freeze_balance')}}</th>
+                            <th scope="col">{{$t('valuation')}}</th>
+                            <th scope="col">{{$t('operating')}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="cursor: pointer;" v-for="(item, index) in tokens" :key="index"
-                            @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
+                        <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
+                            @click="goToEosExchange(item.symbol)">
                             <td scope="row" v-if="isSignedIn">
                                 <i class="my-star"></i>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><font size="3">{{item.symbol}}</font></td>
+                            <td><font size="3" color="#FFB500">{{item.valid}}</font></td>
+                            <td><font size="3" >{{item.freeze}}</font></td>
+                            <td><font size="3" >{{item.eos}}</font></td>
+                            <td>
+                                <button class="button" @click="goToEosExchange(item.symbol)">
+                                    <font color="#FFB500">{{$t('go_to_trade')}}</font>
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

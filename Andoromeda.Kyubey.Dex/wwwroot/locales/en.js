@@ -18,5 +18,15 @@ const en = {
     exchange_sell: "Sell",
     exchange_sellprice: "Price",
     exchange_sellamount: "Amount",
-    announcement_center: 'Announcement center'
+    announcement_center: 'Announcement center',
+    wallet: 'Wallet',
+    announcement_center: 'Announcement center',
+    current_total_valuation: 'Current total valuation',
+    my_account: 'My account',
+    token: "Token",
+    available_balance: 'Available Balance',
+    freeze_balance: 'Freeze Balance',
+    valuation: 'Valuation',
+    operating: 'Operating',
+    go_to_trade: 'Go to trade'
 };

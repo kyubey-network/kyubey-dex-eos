@@ -18,5 +18,14 @@ const zh_tw = {
     exchange_sell: "賣出",
     exchange_sellprice: "賣出價",
     exchange_sellamount: "賣出量",
-    announcement_center: '公告中心'
+    announcement_center: '公告中心',
+    wallet: '錢包',
+    announcement_center: '公告中心',
+    current_total_valuation: '當前總估值',
+    my_account: '我的帳戶',
+    available_balance: '可用餘額',
+    freeze_balance: '凍結餘額',
+    valuation: '估值',
+    operating: '操作',
+    go_to_trade: '去交易'
 };

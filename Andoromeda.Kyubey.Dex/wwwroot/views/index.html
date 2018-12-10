@@ -56,8 +56,19 @@
                     </ul>
                     <ul class="navbar-nav ">
                         <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="login()">{{$t('login_nav')}}</a></li>
-                        <li class="nav-item" v-if="isSignedIn"><span class="nav-link">{{$t('welcome_nav')}}，{{ account.name }}</span></li>
-                        <li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="scatterLogout()">{{$t('logout_nav')}}</a></li>
+
+                        <li class="nav-item dropdown" v-if="isSignedIn">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{$t('welcome_nav')}}，{{ account.name }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item">
+                                     <router-link to="/wallet" style="color: black">{{$t('wallet')}}</router-link>
+                                </a>
+                                <a class="dropdown-item" @click="scatterLogout()">{{$t('logout_nav')}}</a>
+                            </div>
+                        </li>
+        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{$t('lang')}}

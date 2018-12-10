@@ -77,5 +77,13 @@ const zh = {
     exchange_tip: "扫码完成交易委托",
     exchange_sell: "卖出",
     exchange_sellprice: "卖出价",
-    exchange_sellamount: "卖出量"
+    exchange_sellamount: "卖出量",
+    wallet: '钱包',
+    current_total_valuation: '当前总估值',
+    my_account: '我的账户',
+    available_balance: '可用余额',
+    freeze_balance: '冻结余额',
+    valuation: '估值',
+    operating: '操作',
+    go_to_trade: '去交易'
 };
