@@ -8,6 +8,7 @@
         loginMode: null,
         eos: null,
         requiredFields: null,
+        _currentHost: location.protocol + "//" + location.host,
         volume: 0,
         lang: 'en',
         signalr: {
@@ -25,9 +26,38 @@
             }
         });
     },
+    mounted: function () {
+    },
     watch: {
     },
     methods: {
+        _getLoginRequestObj: function (uuid) {
+            var _this = this;
+            var loginObj = {
+                "protocol": "SimpleWallet",
+                "version": "1.0",
+                "dappName": "Kyubey",
+                "dappIcon": `${_this._currentHost}/img/KYUBEY_logo.png`,
+                "action": "login",
+                "uuID": uuid,
+                "loginUrl": `${_this._currentHost}/api/simplewallet/callback/login`,
+                "expired": new Date().getTime() + (3 * 60 * 1000),
+                "loginMemo": "kyubey login"
+            };
+            return loginObj;
+        },
+        generateLoginQRCode: function (idSelector, uuid) {
+            $("#" + idSelector).empty();
+            var loginObj = this._getLoginRequestObj(uuid);
+            var qrcode = new QRCode(idSelector, {
+                text: JSON.stringify(loginObj),
+                width: 114,
+                height: 114,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        },
         getSimpleWalletUUID: function () {
             return this.uuid;
         },
@@ -53,20 +83,27 @@
                 .build();
 
             // TODO: Receiving some signals for updating query view.
-
             self.signalr.simplewallet.connection.on('simpleWalletLoginSucceeded', (account) => {
-                self.account = account;
+                self.account = {
+                    name: account
+                };
                 self.loginMode = 'Simple Wallet';
+                $('#loginModal').modal('hide');
+            });
+
+            self.signalr.simplewallet.connection.on('simpleWalletExchangeSucceeded', () => {
+                $('#exchangeModal').modal('hide');
+                alert('恭喜,委托成功');
             });
 
             self.signalr.simplewallet.connection.start().then(function () {
                 self.uuid = self.generateUUID();
                 return self.signalr.simplewallet.connection.invoke('bindUUID', self.uuid);
             });
-
         },
         login: function () {
             $('#loginModal').modal('show');
+            this.generateLoginQRCode("loginQRCode", this.getSimpleWalletUUID());
         },
         scatterLogin: function () {
             if (!('scatter' in window)) {
@@ -107,7 +144,7 @@
                 path = name;
             LazyRouting.RedirectTo(name, path, params, query);
         },
-        setLang: function (param) { 
+        setLang: function (param) {
             this.$i18n.locale = param;
         },
         marked: function (md) {

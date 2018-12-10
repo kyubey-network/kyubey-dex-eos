@@ -5,7 +5,7 @@
                 <div class="card my-card p-3 flex-row justify-content-between" style="margin-bottom: 10px;">
                     <div class="d-flex align-items-center">
                         <div class="token-logo" style="margin-right: 20px;">
-                            <img :src="baseInfo.iconSrc" style="width: 50px;" alt="logo"> 
+                            <img :src="baseInfo.iconSrc" style="width: 50px;" alt="logo">
                         </div>
                         <div class="d-inline-block">
                             <p>
@@ -41,22 +41,22 @@
         <div class="row no-gutters" v-if="showIntroduction">
             <div class="col-md-12">
                 <div class="card my-card p-3 flex-row" style="margin-bottom: 10px;">
-                        <div class="d-inline-block w-50">
-                            <p>{{$t('token_introduction')}}</p>
-                            <p>{{baseInfo.description}}</p>
-                        </div>
-                        <div class="d-inline-block w-25 pl-5">
-                            <p>{{$t('total_circulation')}}</p>
-                            <p>{{baseInfo.totalSupply}}</p>
-                            <p>{{$t('contract_name')}}</p>
-                            <p>{{baseInfo.contract.transfer}}</p>
-                        </div>
-                        <div class="d-inline-block w-25">
-                            <p>{{$t('total_liquidity')}}</p>
-                            <p>{{baseInfo.totalCirculate}}</p>
-                            <p>{{$t('official_website')}}</p>
-                            <a href="#">{{baseInfo.website}}</a>
-                        </div>
+                    <div class="d-inline-block w-50">
+                        <p>{{$t('token_introduction')}}</p>
+                        <p>{{baseInfo.description}}</p>
+                    </div>
+                    <div class="d-inline-block w-25 pl-5">
+                        <p>{{$t('total_circulation')}}</p>
+                        <p>{{baseInfo.totalSupply}}</p>
+                        <p>{{$t('contract_name')}}</p>
+                        <p>{{baseInfo.contract.transfer}}</p>
+                    </div>
+                    <div class="d-inline-block w-25">
+                        <p>{{$t('total_liquidity')}}</p>
+                        <p>{{baseInfo.totalCirculate}}</p>
+                        <p>{{$t('official_website')}}</p>
+                        <a href="#">{{baseInfo.website}}</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@
                         <tbody>
                             <tr>
                                 <td colspan="3" class="e-orders-split">
-                                    <span >4307.80 ↓</span>
+                                    <span>4307.80 ↓</span>
                                     <span>¥29.898.20</span>
                                 </td>
                             </tr>
@@ -103,7 +103,7 @@
             <div class="col-md-6">
                 <div class="card my-card e-chart-card">
                     <div class="my-card-header header-text-color">
-                            {{$t('k_line')}}
+                        {{$t('k_line')}}
                     </div>
                 </div>
                 <div class="card my-card e-submit-card">
@@ -188,7 +188,7 @@
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='limit'}">
                                     <div style="margin-left: 30px;">
-                                        <input class="sellSilder"  id="sellSilder" data-slider-id="sellSilder" type="text" />
+                                        <input class="sellSilder" id="sellSilder" data-slider-id="sellSilder" type="text" />
                                     </div>
                                 </div>
                                 <div class="mb-2">
@@ -258,4 +258,59 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <dv class="modal-content" style="background: rgba(0, 0, 0, 0.8)">
+                <div class="close-btn text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: #B4B4B4;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-top text-center">
+                    <div class="modal-body">
+                        <p class="p1 text-center">
+                            {{$t('exchange_tip')}}
+                        </p>
+                        <div id="exchangeQRCodeBox" class="qrcode-img"></div>
+                        <p class="p2 text-center">
+                            {{$t('exchange_account')}}<br />
+                            {{account==null ? "":account.name}}
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-bottom text-center">
+                    <div class="modal-body text-left" v-if="exchange.type=='buy'">
+                        <p class="p3 text-success">
+                            {{$t('exchange_buy')}} {{exchange.taretSymbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_price')}}：{{exchange.amount/exchange.taretAmount}} EOS
+                        </p>
+                        <p>
+                            {{$t('exchange_amount')}}：{{exchange.taretAmount}} {{exchange.taretSymbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                        </p>
+                    </div>
+                    <div class="modal-body text-left" v-if="exchange.type=='sell'">
+                        <p class="p3 text-danger">
+                            {{$t('exchange_sell')}} {{exchange.symbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_sellprice')}}：{{exchange.amount/exchange.taretAmount}} EOS
+                        </p>
+                        <p>
+                            {{$t('exchange_sellamount')}}：{{exchange.taretAmount}} {{exchange.symbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                        </p>
+                    </div>
+                </div>
+            </dv>
+        </div>
+    </div>
 </div>
+
+

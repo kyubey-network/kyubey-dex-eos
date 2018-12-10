@@ -64,5 +64,14 @@ const zh = {
     sign_trade: '登录后进行交易',
     best_buy_price: '以市场最优价格买入',
     best_sell_price: '以市场最优价格卖出',
-    k_line: 'k线图'
+    k_line: 'k线图',
+    exchange_buy: "买入",
+    exchange_price: "买入价",
+    exchange_amount: "买入量",
+    exchange_total: "交易额",
+    exchange_account: "EOS账户名",
+    exchange_tip: "扫码完成交易委托",
+    exchange_sell: "卖出",
+    exchange_sellprice: "卖出价",
+    exchange_sellamount: "卖出量"
 };

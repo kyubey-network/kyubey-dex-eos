@@ -45,6 +45,7 @@ namespace Andoromeda.Kyubey.Dex
                 .AddTokenRepositoryactory()
                 .AddSlidesRepositoryFactory();
 
+            services.AddAesCrypto();
             services.AddSignalR();
         }
 

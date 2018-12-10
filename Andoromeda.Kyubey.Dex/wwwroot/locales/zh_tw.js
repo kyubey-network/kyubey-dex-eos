@@ -9,5 +9,14 @@ const zh_tw = {
     contact_us_for_the_text1: '如果您在使用KyubeyDex時遇到問題需要幫助，或有建議想要提出，請發送郵件至郵箱：',
     contact_us_for_the_text2: '我們會盡快為您進行處理。',
     contact_us_for_the_text3: '感謝您對我們的支持！',
+    exchange_buy: "買入",
+    exchange_price: "買入價",
+    exchange_amount: "買入量",
+    exchange_total: "交易額",
+    exchange_account: "EOS帳戶名",
+    exchange_tip: "掃碼完成交易委託",
+    exchange_sell: "賣出",
+    exchange_sellprice: "賣出價",
+    exchange_sellamount: "賣出量",
     announcement_center: '公告中心'
 };

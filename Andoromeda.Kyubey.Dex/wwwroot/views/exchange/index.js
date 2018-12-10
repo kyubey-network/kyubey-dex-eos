@@ -7,6 +7,17 @@
             markets: 'eos', // 自选和eos
             trade: 'limit' // 限价交易和市价交易
         },
+        exchange: {
+            type: "buy",
+            from: null,
+            to: null,
+            amount: 0,
+            contract: null,
+            symbol: null,
+            precision: 0,
+            taretSymbol: null,
+            taretAmount: 0
+        },
         inputs: {
             pair: null,
             buyPrice: 0,
@@ -40,7 +51,7 @@ component.created = function () {
     this.getFavoriteList();
     this.getCandlestick();
 };
-component.mounted = function() {
+component.mounted = function () {
     ['.buySlider', '.sellSilder'].forEach((item) => {
         $(item).slider({
             ticks: [0, 25, 50, 75, 100],
@@ -48,8 +59,61 @@ component.mounted = function() {
             ticks_snap_bounds: 1
         });
     })
+
+    //sample
+    //this.simpleWalletExchange("buy", "qinxiaowen11", "kyubeydex.bp", 0.001, "eosio.token", 5, "KBY", "EOS", 4);
+    //this.simpleWalletExchange("sell", "qinxiaowen11", "kyubeydex.bp", 1, "dacincubator", 1, "EOS", "KBY", 4);
 }
 component.methods = {
+    simpleWalletExchange: function (type, from, to, amount, contract, taretAmount, taretSymbol, symbol, precision) {
+        $('#exchangeModal').modal('show');
+        this.exchange.type = type;
+        this.exchange.from = from;
+        this.exchange.to = to;
+        this.exchange.amount = amount;
+        this.exchange.contract = contract;
+        this.exchange.symbol = symbol;
+        this.exchange.taretSymbol = taretSymbol;
+        this.exchange.precision = precision;
+        this.exchange.taretAmount = taretAmount;
+        this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
+    },
+    _getExchangeSign: function (uuid) {
+        return uuid;
+    },
+    _getExchangeRequestObj: function (from, to, amount, contract, symbol, precision, uuid, dappData) {
+        var _this = this;
+        var loginObj = {
+            "protocol": "SimpleWallet",
+            "version": "1.0",
+            "dappName": "Kyubey",
+            "dappIcon": `${app._currentHost}/img/KYUBEY_logo.png`,
+            "action": "transfer",
+            "from": from,
+            "to": to,
+            "amount": amount,
+            "contract": contract,
+            "symbol": symbol,
+            "precision": precision,
+            "dappData": dappData,
+            "desc": `${symbol} exchange`,
+            "expired": new Date().getTime() + (3 * 60 * 1000),
+            "callback": `${app._currentHost}/api/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
+        };
+        return loginObj;
+    },
+    generateExchangeQRCode: function (idSelector, from, to, amount, contract, symbol, precision, uuid, dappData) {
+        $("#" + idSelector).empty();
+        var reqObj = this._getExchangeRequestObj(from, to, amount, contract, symbol, precision, uuid, dappData);
+        var qrcode = new QRCode(idSelector, {
+            text: JSON.stringify(reqObj),
+            width: 114,
+            height: 114,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.L
+        });
+    },
     getSellOrders() {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000).fetch(res => {
             if (res.code === 200) {
