@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Andoromeda.Kyubey.Dex.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/lang/{lang}/[controller]")]
     public class NewsController : BaseController
     {
         [HttpGet]

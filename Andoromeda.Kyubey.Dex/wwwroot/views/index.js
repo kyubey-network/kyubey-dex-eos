@@ -109,6 +109,9 @@
         },
         setLang: function (param) { 
             this.$i18n.locale = param;
+        },
+        marked: function (md) {
+            return marked(md); 
         }
     },
     computed: {

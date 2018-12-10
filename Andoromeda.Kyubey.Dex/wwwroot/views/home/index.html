@@ -15,7 +15,7 @@
     </div>
     <div class="banner-box">
         <div class="home-news" v-for="x in news">{{x.title}} {{formatTime(x.time)}}</div>
-        <div class="more-text">{{$t('more')}}>></div>
+        <div class="more-text" v-on:click="app.redirect('/home/news')">{{$t('more')}}>></div>
     </div>
     <section>
         <div class="table-container">

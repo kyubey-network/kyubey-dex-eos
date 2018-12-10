@@ -1,0 +1,13 @@
+﻿<div class="bottoming">
+    <div class="paper">
+        <h1>公告中心</h1>
+        <template v-for="x in news">
+            <h2>{{ x.title }} <span class="news-right">{{ x.time }}</span></h2>
+            <div v-html="x.content"></div>
+        </template>
+
+        <div class="btn-outer" v-if="!noMore">
+            <a href="javascript:;" v-on:click="loadMore()" class="btn btn-default">加载更多</a>
+        </div>
+    </div>
+</div>
