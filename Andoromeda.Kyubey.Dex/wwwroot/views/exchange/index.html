@@ -1,5 +1,5 @@
 ﻿<div class="exchange-page mt-60px small">
-    <div class="container-fluid" style="padding: 0;">
+    <div class="page-container container" style="padding: 1rem 0;">
         <div class="row no-gutters">
             <div class="col-md-12">
                 <div class="card my-card p-3 flex-row justify-content-between" style="margin-bottom: 10px;">
@@ -86,8 +86,7 @@
                         <tbody>
                             <tr>
                                 <td colspan="3" class="e-orders-split">
-                                    <span>4307.80 ↓</span>
-                                    <span>¥29.898.20</span>
+                                    <span >4307.80 ↓</span>
                                 </td>
                             </tr>
                             <tr v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, black ' + getcolorOccupationRatio(x.total,1000) + ', #292929 ' + getcolorOccupationRatio(x.total,1000) + ')'">
@@ -115,85 +114,87 @@
                         <div class="row">
                             <div class="col-sm-6 mt-3 pl-4 pr-4" style="border-right: 1px solid #3E3E3E;">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-green" style="font-size: 16px"><b>{{$t('buy')}} KBY</b></span>
+                                    <span class="text-green" style="font-size: 16px"><b>{{$t('buy')}} {{tokenId}}</b></span>
                                     <span style="color: #626262;">{{$t('balance')}}: 0.0000 EOS</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('price')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_buy_price'):''" :disabled="control.trade === 'market' ? true:false">
+                                        <input @input="handlePriceChange" v-model="inputs.buyPrice" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_buy_price'):''" :disabled="control.trade === 'market' ? true:false">
                                         <span class="e-input-suffix">EOS</span>
                                     </div>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('amount')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
-                                        <span class="e-input-suffix">CMU</span>
+                                        <input @input="handleAmountChange" v-model="inputs.buyAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">{{tokenId}}</span>
                                     </div>
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='market'}">
-                                    <div style="margin-left: 30px;">
-                                        <input class="buySlider" id="buySlider" data-slider-id="buySlider" type="text" />
+                                    <div style="margin-left: 70px;" class="d-flex justify-content-between">
+                                        <div v-for="x in [0.25, 0.50, 0.75, 1.00]" class="outline-button" @click="buyPrecent=x" :class="{'outline-button-active': buyPrecent===x}">{{x*100}}%</div>
                                     </div>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('total')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <input @input="handleTotalChange" v-model="inputs.buyTotal" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <span class="e-input-suffix">EOS</span>
                                     </div>
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='limit'}">
-                                    <div style="margin-left: 30px;">
-                                        <input class="buySlider" id="buySlider2" data-slider-id="buySlider2" type="text" />
+                                    <div style="margin-left: 70px;" class="d-flex justify-content-between">
+                                        <div v-for="x in [0.25, 0.50, 0.75, 1.00]" class="outline-button" @click="buyPrecent=x" :class="{'outline-button-active': buyPrecent===x}">{{x*100}}%</div>
                                     </div>
                                 </div>
                                 <div class="mb-2">
                                     <div style="margin-left: 70px;">
-                                        <button type="button" class="btn w-100 bg-green text-white">{{$t('sign_trade')}}</button>
+                                        <button v-if="isSignedIn" @click="scatterBuy" type="button" class="btn w-100 bg-green text-white">{{$t('buy')}}</button>
+                                        <button v-else @click="login" type="button" class="btn w-100 bg-green text-white">{{$t('sign_trade')}}</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 mt-3 pl-4 pr-4">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-red" style="font-size: 16px"><b>{{$t('sell')}} KBY</b></span>
+                                    <span class="text-red" style="font-size: 16px"><b>{{$t('sell')}} {{tokenId}}</b></span>
                                     <span style="color: #626262;">{{$t('balance')}}: 0.0000 EOS</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('price')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_sell_price'):''" :disabled="control.trade === 'market' ? true:false">
+                                        <input v-model="inputs.sellPrice" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner" :placeholder="control.trade === 'market'?$t('best_sell_price'):''" :disabled="control.trade === 'market' ? true:false">
                                         <span class="e-input-suffix">EOS</span>
                                     </div>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('amount')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
-                                        <span class="e-input-suffix">CMU</span>
+                                        <input v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <span class="e-input-suffix">{{tokenId}}</span>
                                     </div>
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='market'}">
-                                    <div style="margin-left: 30px;">
-                                        <input class="sellSilder" id="sellSilder" data-slider-id="sellSilder" type="text" />
+                                    <div style="margin-left: 70px;" class="d-flex justify-content-between">
+                                        <div v-for="x in [0.25, 0.50, 0.75, 1.00]" class="outline-button" @click="sellPrecent=x" :class="{'outline-button-active': sellPrecent===x}">{{x*100}}%</div>
                                     </div>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('total')}}</label>
                                     <div class="e-input">
-                                        <input type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <input v-model="inputs.sellTotal" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <span class="e-input-suffix">EOS</span>
                                     </div>
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='limit'}">
-                                    <div style="margin-left: 30px;">
-                                        <input class="sellSilder" id="sellSilder" data-slider-id="sellSilder" type="text" />
+                                    <div style="margin-left: 70px;" class="d-flex justify-content-between">
+                                        <div v-for="x in [0.25, 0.50, 0.75, 1.00]" class="outline-button" @click="sellPrecent=x" :class="{'outline-button-active': sellPrecent===x}">{{x*100}}%</div>
                                     </div>
                                 </div>
                                 <div class="mb-2">
                                     <div style="margin-left: 70px;">
-                                        <button type="button" class="btn w-100 bg-red text-white">{{$t('sign_trade')}}</button>
+                                        <button @click="scatterSell" v-if="isSignedIn" type="button" class="btn w-100 bg-red text-white">{{$t('sell')}}</button>
+                                        <button v-else @click="login" type="button" class="btn w-100 bg-red text-white">{{$t('sign_trade')}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +220,7 @@
                         <thead>
                             <tr>
                                 <th scope="col" style="width: 20px;"></th>
-                                <th scope="col">{{$t('market')}}</th>
+                                <th scope="col" class="text-left">{{$t('market')}}</th>
                                 <th scope="col">{{$t('latest_price')}}</th>
                                 <th scope="col">{{$t('ups_downs')}}</th>
                             </tr>
@@ -227,7 +228,7 @@
                         <tbody style="height: 390px;">
                             <tr v-for="(x, i) in favoriteList" :key="i">
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
-                                <td>{{x.symbol}}/EOS</td>
+                                <td class="text-left">{{x.symbol}}/EOS</td>
                                 <td>{{parseFloat(x.unitPrice).toFixed(4)}}</td>
                                 <td>{{parseFloat(x.change).toFixed(2)}}</td>
                             </tr>

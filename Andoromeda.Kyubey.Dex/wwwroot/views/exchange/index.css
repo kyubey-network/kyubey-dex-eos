@@ -1,7 +1,19 @@
 .exchange-page {
     background: #232323;
     color: #DEDEDE;
-    padding: 1rem 4rem;
+}
+.exchange-page-container {
+    max-width: 1260px;
+    min-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem 0;
+}
+@media screen and (max-width: 1280px){
+    .exchange-page-container {
+        max-width: 1200px;
+        min-width: 1000px;
+        padding: 1rem 0;
+    }
 }
 .my-card {
     background: #292929;
@@ -217,4 +229,18 @@ input::-webkit-inner-spin-button{
 }
 .dn {
     display: none;
+}
+.outline-button {
+    width: 40px;
+    font-size: 12px;
+    text-align: center;
+    padding: 4px 0;
+    border: 1px solid #1f1f1f;
+    cursor: pointer;
+}
+.outline-button-active, .outline-button:hover {
+    border: 1px solid #278eda;
+}
+.exchange-page th, .exchange-page td {
+    text-align: right;
 }

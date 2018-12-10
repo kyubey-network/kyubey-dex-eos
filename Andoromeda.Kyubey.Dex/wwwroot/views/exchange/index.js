@@ -3,9 +3,9 @@
         sellOrders: [],
         buyOrders: [],
         control: {
-            order: 'mixed', // 订单类型控制
-            markets: 'eos', // 自选和eos
-            trade: 'limit' // 限价交易和市价交易
+            order: 'mixed',
+            markets: 'eos',
+            trade: 'limit'
         },
         exchange: {
             type: "buy",
@@ -20,7 +20,7 @@
         },
         inputs: {
             pair: null,
-            buyPrice: 0,
+            buyPrice: 0, 
             sellPrice: 0,
             buyAmount: 0,
             sellAmount: 0,
@@ -38,7 +38,9 @@
         baseInfo: {},
         showIntroduction: false,
         historyOrders: [],
-        favoriteList: []
+        favoriteList: [],
+        buyPrecent: 0,
+        sellPrecent: 0
     };
 };
 
@@ -49,22 +51,118 @@ component.created = function () {
     this.getTokenInfo();
     this.getMatchList();
     this.getFavoriteList();
-    this.getCandlestick();
 };
 component.mounted = function () {
-    ['.buySlider', '.sellSilder'].forEach((item) => {
-        $(item).slider({
-            ticks: [0, 25, 50, 75, 100],
-            ticks_labels: ['0%', '25%', '50%', '75%', '100%'],
-            ticks_snap_bounds: 1
-        });
-    })
-
     //sample
     //this.simpleWalletExchange("buy", "qinxiaowen11", "kyubeydex.bp", 0.001, "eosio.token", 5, "KBY", "EOS", 4);
     //this.simpleWalletExchange("sell", "qinxiaowen11", "kyubeydex.bp", 1, "dacincubator", 1, "EOS", "KBY", 4);
 }
 component.methods = {
+    scatterBuy() {
+        const {account, requiredFields, eos} = app;
+        const $t = this.$t.bind(this);
+        if (this.control.trade === 'limit') {
+            var price = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(4));
+            var ask = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
+            var bid = parseFloat(ask * price);
+            eos.contract('eosio.token', { requiredFields })
+                .then(contract => {
+                    return contract.transfer(
+                        account.name,
+                        'kyubeydex.bp',
+                        bid.toFixed(4) + ' EOS',
+                        ask.toFixed(4) + ' ' + this.tokenId,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                })
+                .then(() => {
+                    self.getCurrentOrders();
+                    self.getOrders();
+                    self.getBalances();
+                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                })
+                .catch(error => {
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                });
+        } 
+        else if (this.control.trade === 'market') {
+            eos.contract('eosio.token', { requiredFields })
+            .then(contract => {
+                return contract.transfer(
+                    account.name,
+                    'kyubeydex.bp',
+                    parseFloat(this.inputs.buyTotal).toFixed(4) + ' EOS',
+                    'market',
+                    {
+                        authorization: [`${account.name}@${account.authority}`]
+                    });
+            })
+            .then(() => {
+                self.getCurrentOrders();
+                self.getOrders();
+                self.getBalances();
+                showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+            })
+            .catch(error => {
+                showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+            });
+        }
+    },
+    scatterSell() {
+        const {account, requiredFields, eos} = app;
+        const $t = this.$t.bind(this);
+        if (this.control.trade === 'limit') {
+            var price = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
+            var bid = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
+            var ask = parseFloat(bid * price);
+            eos.contract('dacincubator', { requiredFields })
+                .then(contract => {
+                    return contract.transfer(
+                        account.name,
+                        'kyubeydex.bp',
+                        bid.toFixed(4) + ' ' + this.tokenId,
+                        ask.toFixed(4) + ' EOS',
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                })
+                .then(() => {
+                    self.getCurrentOrders();
+                    self.getOrders();
+                    self.getBalances();
+                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                })
+                .catch(error => {
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                });
+        } 
+        else if (this.control.trade === 'market') {
+            eos.contract('dacincubator', { requiredFields })
+                .then(contract => {
+                    return contract.transfer(
+                        account.name,
+                        'kyubeydex.bp',
+                        parseFloat(this.inputs.sellAmount).toFixed(4) + ' ' + this.tokenId,
+                        'market',
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                })
+                .then(() => {
+                    self.getCurrentOrders();
+                    self.getOrders();
+                    self.getBalances();
+                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                })
+                .catch(error => {
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                });
+        }
+    },
+    handlePriceChange(e) {},
+    handleAmountChange() {},
+    handleTotalChange() {},
     simpleWalletExchange: function (type, from, to, amount, contract, taretAmount, taretSymbol, symbol, precision) {
         $('#exchangeModal').modal('show');
         this.exchange.type = type;
@@ -158,7 +256,7 @@ component.methods = {
         return moment(time + 'Z').format('MM-DD HH:mm:ss')
     },
     getFavoriteList() {
-        qv.get(`/api/v1/lang/${app.lang}/user/${account}/favorite`, {}).then(res => {
+        qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
             if (res.code === 200) {
                 this.favoriteList = res.data || [];
             }
@@ -172,5 +270,81 @@ component.methods = {
     },
     setTradeType(type) {
         this.control.trade = type;
+    },
+    login() {
+        $('#loginModal').modal('show');
+    },
+    isValidInput: function (value, precision) {
+        if (precision!=null&&precision == 4) {
+            if (! /^\d*(?:\.\d{0,4})?$/.test(value)) {
+                return false;
+            }
+        }
+        else
+        {
+            if (! /^\d*(?:\.\d{0,8})?$/.test(value)) {
+                return false;
+            }
+        }
+        return true;
     }
+};
+component.computed = {
+    isSignedIn: function () {
+        return !!app.account;
+    }
+};
+component.watch = {
+    'inputs.pair': function () {
+        this.getPairs();
+    },
+    'inputs.buyPrice': function (val) {
+        if (!this.isValidInput(val)) {
+            this.inputs.buyPrice = this.inputs.vaildbuyPriceInput;
+            val = this.inputs.vaildbuyPriceInput;
+        }
+        this.inputs.vaildbuyPriceInput = val;
+        this.inputs.buyTotal = val * this.inputs.buyAmount;
+    },
+    'inputs.buyAmount': function (val) {
+        if (!this.isValidInput(val,4)) {
+            this.inputs.buyAmount = this.inputs.vaildbuyAmountInput;
+            val = this.inputs.vaildbuyAmountInput;
+        }
+        this.inputs.vaildbuyAmountInput = val;
+        this.inputs.buyTotal = val * this.inputs.buyPrice;
+    },
+    'inputs.buyTotal': function (val) {
+        if (isNaN(val)) {
+            return;
+        }
+        if (this.control.trade === 'limit') {
+            this.inputs.buyPrice = val / (this.inputs.buyAmount || 1);
+        }
+    },
+    'inputs.sellPrice': function (val) {
+        if (!this.isValidInput(val)) {
+            this.inputs.sellPrice = this.inputs.vaildsellPriceInput;
+            val = this.inputs.vaildsellPriceInput;
+        }
+        this.inputs.vaildsellPriceInput = val;
+        this.inputs.sellTotal = val * this.inputs.sellAmount;
+    },
+    'inputs.sellAmount': function (val) {
+        if (!this.isValidInput(val, 4)) {
+            this.inputs.sellAmount = this.inputs.vaildsellAmountInput;
+            val = this.inputs.vaildsellAmountInput;
+        }
+        this.inputs.vaildsellAmountInput = val;
+        this.inputs.sellTotal = val * this.inputs.sellPrice;
+    },
+    'inputs.sellTotal': function (val) {
+        if (isNaN(val)) {
+            return;
+        }
+        if (this.control.trade === 'limit') {
+            this.inputs.sellPrice = val / (this.inputs.sellAmount || 1);
+        }
+    },
+    deep: true
 };

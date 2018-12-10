@@ -1368,6 +1368,17 @@ section {
     margin-top: 60px;
 }
 
+.page-container {
+    max-width: 1260px;
+    min-width: 1000px;
+    margin: 0 auto;
+}
+@media screen and (max-width: 1280px){
+    .page-container {
+        max-width: 1200px;
+        min-width: 1000px;
+    }
+}
 #exchangeModal .modal-content {
     width: 495px;
     height: 373px;
