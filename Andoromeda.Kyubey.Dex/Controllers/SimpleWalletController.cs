@@ -1,4 +1,5 @@
 ﻿using Andoromeda.Framework.EosNode;
+using Andoromeda.Framework.Logger;
 using Andoromeda.Kyubey.Dex.Extensions;
 using Andoromeda.Kyubey.Dex.Hubs;
 using Andoromeda.Kyubey.Dex.Lib;
@@ -6,6 +7,7 @@ using Andoromeda.Kyubey.Dex.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading;
@@ -28,8 +30,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             [FromServices] NodeApiInvoker nodeApiInvoker,
             [FromServices] EosSignatureValidator eosSignatureValidator,
             [FromServices] IHubContext<SimpleWalletHub> hubContext,
+            [FromServices]ILogger logger,
             CancellationToken cancellationToken)
         {
+            logger.LogInfo(JsonConvert.SerializeObject(request));
             var accountInfo = await nodeApiInvoker.GetAccountAsync(request.Account, cancellationToken);
             var keys = accountInfo.Permissions.Select(x => x.RequiredAuth).SelectMany(x => x.Keys).Select(x => x.Key).ToList();
             var data = request.Timestamp + request.Account + request.UUID + request.Ref;

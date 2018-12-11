@@ -20,7 +20,7 @@
         },
         inputs: {
             pair: null,
-            buyPrice: 0, 
+            buyPrice: 0,
             sellPrice: 0,
             buyAmount: 0,
             sellAmount: 0,
@@ -33,6 +33,24 @@
             vaildsellAmountInput: 0,
             vaildsellTotalInput: 0
         },
+        chart: {
+            fullscreen: true,
+            timezone: "Asia/Shanghai",
+            container_id: "tv_chart_container",
+            datafeed: new FeedBase(),
+            library_path: "/js/candlestick/charting_library/",
+            locale: app.lang,
+            disabled_features: ["control_bar", "timeframes_toolbar", "main_series_scale_menu", "symbol_search_hot_key", "header_symbol_search", "header_resolutions", "header_settings", "save_chart_properties_to_local_storage", "header_chart_type", "header_compare", "header_undo_redo", "header_screenshot", "use_localstorage_for_settings", "volume_force_overlay"],
+            enabled_features: ["keep_left_toolbar_visible_on_small_screens", "side_toolbar_in_fullscreen_mode", "hide_left_toolbar_by_default", "left_toolbar", "keep_left_toolbar_visible_on_small_screens", "hide_last_na_study_output", "move_logo_to_main_pane", "dont_show_boolean_study_arguments"],
+            custom_css_url: "chart.css",
+            studies_overrides: {
+                "volume.precision": 0
+            },
+
+            interval: 240,
+            symbol: ''
+        },
+        chartWidget: null,
         tokenId: '',
         account: '',
         baseInfo: {},
@@ -46,20 +64,60 @@
 
 component.created = function () {
     this.tokenId = router.history.current.params.id;
+    this.chart.symbol = this.tokenId;
     this.getSellOrders();
     this.getBuyOrders();
     this.getTokenInfo();
     this.getMatchList();
     this.getFavoriteList();
 };
-component.mounted = function () {
-    //sample
-    //this.simpleWalletExchange("buy", "qinxiaowen11", "kyubeydex.bp", 0.001, "eosio.token", 5, "KBY", "EOS", 4);
-    //this.simpleWalletExchange("sell", "qinxiaowen11", "kyubeydex.bp", 1, "dacincubator", 1, "EOS", "KBY", 4);
-}
+
 component.methods = {
+    dateObjToString: function (date) {
+        return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
+    },
+    initCandlestick: function () {
+        var self = this;
+        this.chartWidget = new window.TradingView.widget(this.chart);
+        FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
+            self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
+                var data = apiResult.data;
+                if (data && Array.isArray(data)) {
+                    var meta = { noData: false };
+                    var bars = [];
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i += 1) {
+                            bars.push({
+                                time: Number(new Date(data[i].time)),
+                                close: data[i].closing,
+                                open: data[i].opening,
+                                high: data[i].max,
+                                low: data[i].min,
+                                volume: data[i].volume
+                            });
+                        }
+                    } else {
+                        meta = { noData: true };
+                    }
+                    onResult(bars, meta);
+                }
+            });
+        }
+    },
+    getCandlestickData: function (tokenId, startDate, endDate, period, callback) {
+        var _this = this;
+        var begin = _this.dateObjToString(startDate);
+        var end = _this.dateObjToString(endDate);
+        qv.get(`/api/v1/lang/${app.lang}/token/${tokenId}/candlestick`, {
+            begin: begin,
+            end: end,
+            period: period
+        }).then(x => {
+            callback(x);
+        });
+    },
     scatterBuy() {
-        const {account, requiredFields, eos} = app;
+        const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
         if (this.control.trade === 'limit') {
             var price = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(4));
@@ -85,32 +143,32 @@ component.methods = {
                 .catch(error => {
                     showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
                 });
-        } 
+        }
         else if (this.control.trade === 'market') {
             eos.contract('eosio.token', { requiredFields })
-            .then(contract => {
-                return contract.transfer(
-                    account.name,
-                    'kyubeydex.bp',
-                    parseFloat(this.inputs.buyTotal).toFixed(4) + ' EOS',
-                    'market',
-                    {
-                        authorization: [`${account.name}@${account.authority}`]
-                    });
-            })
-            .then(() => {
-                self.getCurrentOrders();
-                self.getOrders();
-                self.getBalances();
-                showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
-            })
-            .catch(error => {
-                showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
-            });
+                .then(contract => {
+                    return contract.transfer(
+                        account.name,
+                        'kyubeydex.bp',
+                        parseFloat(this.inputs.buyTotal).toFixed(4) + ' EOS',
+                        'market',
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                })
+                .then(() => {
+                    self.getCurrentOrders();
+                    self.getOrders();
+                    self.getBalances();
+                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                })
+                .catch(error => {
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                });
         }
     },
     scatterSell() {
-        const {account, requiredFields, eos} = app;
+        const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
         if (this.control.trade === 'limit') {
             var price = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
@@ -136,7 +194,7 @@ component.methods = {
                 .catch(error => {
                     showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
                 });
-        } 
+        }
         else if (this.control.trade === 'market') {
             eos.contract('dacincubator', { requiredFields })
                 .then(contract => {
@@ -160,9 +218,9 @@ component.methods = {
                 });
         }
     },
-    handlePriceChange(e) {},
-    handleAmountChange() {},
-    handleTotalChange() {},
+    handlePriceChange(e) { },
+    handleAmountChange() { },
+    handleTotalChange() { },
     simpleWalletExchange: function (type, from, to, amount, contract, taretAmount, taretSymbol, symbol, precision) {
         $('#exchangeModal').modal('show');
         this.exchange.type = type;
@@ -185,7 +243,7 @@ component.methods = {
             "protocol": "SimpleWallet",
             "version": "1.0",
             "dappName": "Kyubey",
-            "dappIcon": `${app._currentHost}/img/KYUBEY_logo.png`,
+            "dappIcon": `${app.currentHost}/img/KYUBEY_logo.png`,
             "action": "transfer",
             "from": from,
             "to": to,
@@ -196,7 +254,7 @@ component.methods = {
             "dappData": dappData,
             "desc": `${symbol} exchange`,
             "expired": new Date().getTime() + (3 * 60 * 1000),
-            "callback": `${app._currentHost}/api/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
+            "callback": `${app.currentHost}/api/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
         };
         return loginObj;
     },
@@ -275,13 +333,12 @@ component.methods = {
         $('#loginModal').modal('show');
     },
     isValidInput: function (value, precision) {
-        if (precision!=null&&precision == 4) {
+        if (precision != null && precision == 4) {
             if (! /^\d*(?:\.\d{0,4})?$/.test(value)) {
                 return false;
             }
         }
-        else
-        {
+        else {
             if (! /^\d*(?:\.\d{0,8})?$/.test(value)) {
                 return false;
             }
@@ -295,6 +352,10 @@ component.computed = {
     }
 };
 component.watch = {
+    'chart.interval': function (v) {
+        //this.chartWidget.chart().setResolution(v);
+        this.initCandlestick();
+    },
     'inputs.pair': function () {
         this.getPairs();
     },
@@ -307,7 +368,7 @@ component.watch = {
         this.inputs.buyTotal = val * this.inputs.buyAmount;
     },
     'inputs.buyAmount': function (val) {
-        if (!this.isValidInput(val,4)) {
+        if (!this.isValidInput(val, 4)) {
             this.inputs.buyAmount = this.inputs.vaildbuyAmountInput;
             val = this.inputs.vaildbuyAmountInput;
         }

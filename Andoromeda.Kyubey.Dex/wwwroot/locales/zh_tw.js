@@ -27,5 +27,13 @@ const zh_tw = {
     freeze_balance: '凍結餘額',
     valuation: '估值',
     operating: '操作',
-    go_to_trade: '去交易'
+    go_to_trade: '去交易',
+    k_1m: '1分',
+    k_5m: '5分',
+    k_15m: '15分',
+    k_30m: '30分',
+    k_1H: '1小時',
+    k_4H: '4小時',
+    k_6H: '6小時',
+    k_1D: '1天'
 };

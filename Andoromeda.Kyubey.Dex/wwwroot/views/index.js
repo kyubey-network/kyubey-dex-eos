@@ -8,7 +8,7 @@
         loginMode: null,
         eos: null,
         requiredFields: null,
-        _currentHost: location.protocol + "//" + location.host,
+        currentHost: location.protocol + "//" + location.host,
         volume: 0,
         lang: 'en',
         signalr: {
@@ -37,10 +37,10 @@
                 "protocol": "SimpleWallet",
                 "version": "1.0",
                 "dappName": "Kyubey",
-                "dappIcon": `${_this._currentHost}/img/KYUBEY_logo.png`,
+                "dappIcon": `${_this.currentHost}/img/KYUBEY_logo.png`,
                 "action": "login",
                 "uuID": uuid,
-                "loginUrl": `${_this._currentHost}/api/simplewallet/callback/login`,
+                "loginUrl": `${_this.currentHost}/api/simplewallet/callback/login`,
                 "expired": new Date().getTime() + (3 * 60 * 1000),
                 "loginMemo": "kyubey login"
             };

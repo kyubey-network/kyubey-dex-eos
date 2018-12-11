@@ -28,5 +28,13 @@ const en = {
     freeze_balance: 'Freeze Balance',
     valuation: 'Valuation',
     operating: 'Operating',
-    go_to_trade: 'Go to trade'
+    go_to_trade: 'Go to trade',
+    k_1m: '1min',
+    k_5m: '5min',
+    k_15m: '15min',
+    k_30m: '30min',
+    k_1H: '1hour',
+    k_4H: '4hour',
+    k_6H: '6hour',
+    k_1D: '1day'
 };

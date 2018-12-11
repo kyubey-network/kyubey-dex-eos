@@ -33,3 +33,11 @@ function showModal(title, content) {
     $('#modalContent').text(content);
     $('#modal').modal('show');
 }
+
+$(document).bind('DOMNodeInserted', function (e) {
+    var dom = $(e.target);
+    if (dom.find('#tv_chart_container').length) {
+        var component = LazyRouting.GetCurrentComponent();
+        component.initCandlestick();
+    }
+});
