@@ -87,16 +87,14 @@
     }
 
     .bar input {
-        border: none;
         outline: none;
-        height: 39px;
         padding-left: 13px;
-        width: 183px;
-        border-radius: 39px;
-        border: 1px solid #D3D3D3;
-        background: #FFFFFF;
         transition: .3s linear;
         float: right;
+        width: 183px;
+        height: 39px;
+        border-radius: 8px;
+        border: 1px solid #D3D3D3;
     }
 
     .bar button {
@@ -112,6 +110,5 @@
 
         .bar button:before {
             content: "\f002";
-            font-family: FontAwesome;
             color: #D3D3D3;
         }

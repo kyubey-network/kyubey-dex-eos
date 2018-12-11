@@ -1463,3 +1463,7 @@ section {
 #loginQRCode {
     margin-bottom: 12px;
 }
+
+a:not([href]):not([tabindex]) {
+    color: #AFAFAF;
+}
