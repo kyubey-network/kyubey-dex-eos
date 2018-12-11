@@ -1,16 +1,24 @@
-* {
-    background: none!important;
+body {
+    background: none !important;
 }
 
 .chart-page .chart-container {
-  border: none !important;
+    border: none !important;
 }
 
 .button {
-    background: none!important;
-    border-color: #aaa!important;
+    background: none !important;
+    border-color: #aaa !important;
 }
 
 .pane-legend-item-value, .apply-overflow-tooltip {
     color: #ccc !important;
 }
+
+canvas, .chart-markup-table {
+    background: #232323 !important;
+}
+
+    .chart-markup-table canvas {
+        display: none;
+    }
