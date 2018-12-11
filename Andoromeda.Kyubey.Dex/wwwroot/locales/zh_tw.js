@@ -35,5 +35,6 @@ const zh_tw = {
     k_1H: '1小時',
     k_4H: '4小時',
     k_6H: '6小時',
-    k_1D: '1天'
+    k_1D: '1天',
+    screening_market: '市場過濾'
 };

@@ -31,7 +31,8 @@
             vaildbuyTotalInput: 0,
             vaildsellPriceInput: 0,
             vaildsellAmountInput: 0,
-            vaildsellTotalInput: 0
+            vaildsellTotalInput: 0,
+            tokenSearchInput: '',
         },
         chart: {
             fullscreen: true,

@@ -229,10 +229,7 @@
                             <div @click="control.markets = 'eos'" class="border-button d-inline-block" :class="{'border-button-active': control.markets === 'eos'}">EOS</div>
                         </div>
                         <div class="input-container">
-                            <input type="text" class="d-inline-block search-input">
-                            <button class="d-inline-block search-input-button">
-                                <i class="fa fa-search"></i>
-                            </button>
+                            <input type="text" class="d-inline-block search-input" v-model="inputs.tokenSearchInput" :placeholder="$t('screening_market')" />
                         </div>
                     </div>
                     <table class="table e-table table-sm table-hover pl-1 scroll-table">
@@ -245,7 +242,7 @@
                             </tr>
                         </thead>
                         <tbody style="height: 390px;">
-                            <tr v-for="(x, i) in favoriteList" :key="i">
+                            <tr v-for="(x, i) in favoriteList.filter(x => x.symbol.indexOf(inputs.tokenSearchInput) >= 0)" :key="i">
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
                                 <td>{{parseFloat(x.unitPrice).toFixed(4)}}</td>

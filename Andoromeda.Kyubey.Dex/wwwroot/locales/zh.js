@@ -93,5 +93,6 @@ const zh = {
     k_1H: '1小时',
     k_4H: '4小时',
     k_6H: '6小时',
-    k_1D: '1天'
+    k_1D: '1天',
+    screening_market: '市场筛选'
 };
