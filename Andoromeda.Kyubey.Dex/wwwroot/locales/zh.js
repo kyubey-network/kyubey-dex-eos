@@ -40,7 +40,7 @@ const zh = {
     status: '状态',
     cancelled: '已取消',
     unfilled: '未成交',
-    operatio: '操作',
+    operation: '操作',
     details: '明细',
     cancel: '取消',
     contact_us: '联系我们',
@@ -86,6 +86,13 @@ const zh = {
     valuation: '估值',
     operating: '操作',
     go_to_trade: '去交易',
+    currency: '币种',
+    type: '类型',
+    transaction_volume: '成交总量',
+    transaction_money: '成交金额',
+    transaction_time: '成交时间',
+    open_orders: '当前委托',
+    order_history: '历史委托',
     k_1m: '1分',
     k_5m: '5分',
     k_15m: '15分',
@@ -94,5 +101,6 @@ const zh = {
     k_4H: '4小时',
     k_6H: '6小时',
     k_1D: '1天',
-    screening_market: '市场筛选'
+    screening_market: '市场筛选',
+    noData: '暂无数据'
 };

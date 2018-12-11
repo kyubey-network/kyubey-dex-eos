@@ -1,6 +1,8 @@
 ﻿component.data = function () {
     return {
         sellOrders: [],
+        maxAmountSellOrder: 0,
+        maxAmountBuyOrder: 0,
         buyOrders: [],
         control: {
             order: 'mixed',
@@ -56,24 +58,37 @@
         account: '',
         baseInfo: {},
         showIntroduction: false,
-        historyOrders: [],
+        latestTransactions: [],
         favoriteList: [],
         buyPrecent: 0,
-        sellPrecent: 0
+        sellPrecent: 0,
+        openOrders: [],
+        orderHistory: [],
+        executeControl: {
+            buy: 0,
+            sell: 0
+        },
+        eosBalance: 0,
+        tokenBalance: 0,
+        appAccount: app.account
     };
 };
 
 component.created = function () {
     this.tokenId = router.history.current.params.id;
     this.chart.symbol = this.tokenId;
-    this.getSellOrders();
-    this.getBuyOrders();
+    this.getOrders();
     this.getTokenInfo();
-    this.getMatchList();
     this.getFavoriteList();
 };
 
 component.methods = {
+    getOrders() {
+        this.getSellOrders();
+        this.getBuyOrders();
+        this.getMatchList();
+    },
+    getCurrentOrders() {},
     dateObjToString: function (date) {
         return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
     },
@@ -136,7 +151,7 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders();
+                    self.getCurrentOrders()
                     self.getOrders();
                     self.getBalances();
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
@@ -219,9 +234,6 @@ component.methods = {
                 });
         }
     },
-    handlePriceChange(e) { },
-    handleAmountChange() { },
-    handleTotalChange() { },
     simpleWalletExchange: function (type, from, to, amount, contract, taretAmount, taretSymbol, symbol, precision) {
         $('#exchangeModal').modal('show');
         this.exchange.type = type;
@@ -275,6 +287,14 @@ component.methods = {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000).fetch(res => {
             if (res.code === 200) {
                 this.sellOrders = res.data || [];
+                let maxAmountSellOrder = 0;
+                res.data.forEach(item => {
+                    maxAmountSellOrder = Math.max(maxAmountSellOrder, item.amount)
+                })
+                this.maxAmountSellOrder = maxAmountSellOrder;
+                // just excete once
+                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length-1].unitPrice).toFixed(6);
+                this.executeControl.sell++;
             }
         })
     },
@@ -282,21 +302,33 @@ component.methods = {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/buy-order`, {}, 6000).fetch(res => {
             if (res.code === 200) {
                 this.buyOrders = res.data || [];
+                let maxAmountBuyOrder = 0;
+                res.data.forEach(item => {
+                    maxAmountBuyOrder = Math.max(maxAmountBuyOrder, item.amount)
+                })
+                this.maxAmountBuyOrder = maxAmountBuyOrder;
+                // just excete once
+                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length-1].unitPrice).toFixed(6);
+                this.executeControl.buy++;
             }
         })
     },
     getTokenInfo() {
         qv.get(`/api/v1/lang/${app.lang}/token/${this.tokenId}`, {}).then(res => {
-            if (res.code - 0 === 200) {
+            if (res.code === 200) {
                 this.baseInfo = res.data || {};
             }
         })
     },
     setPublish(price, amount) {
+        price = parseFloat(price).toFixed(6)
+        amount = parseFloat(amount).toFixed(4)
         this.inputs.buyPrice = price;
-        this.inputs.buyAmount = amount;
         this.inputs.sellPrice = price;
-        this.inputs.sellAmount = amount;
+        if (this.isSignedIn) {
+            this.inputs.buyAmount = amount;
+            this.inputs.sellAmount = amount;
+        }
     },
     getcolorOccupationRatio: function (nowTotalPrice, historyTotalPrice) {
         var now = parseFloat(nowTotalPrice);
@@ -307,7 +339,7 @@ component.methods = {
     getMatchList() {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/match`, {}, 6000).fetch(res => {
             if (res.code === 200) {
-                this.historyOrders = res.data || [];
+                this.latestTransactions = res.data || [];
             }
         })
     },
@@ -327,9 +359,6 @@ component.methods = {
             }
         })
     },
-    setTradeType(type) {
-        this.control.trade = type;
-    },
     login() {
         $('#loginModal').modal('show');
     },
@@ -345,6 +374,56 @@ component.methods = {
             }
         }
         return true;
+    },
+    getBalances: function () {
+        if (this.isSignedIn) {
+            var self = this;
+            qv.get(`/api/v1/lang/${app.lang}/Node/${app.account.name}/balance`, {}).then(res => {
+                if (res.code - 0 === 200) {
+                    self.eosBalance = parseFloat(res.data['EOS'] || 0);
+                    self.tokenBalance = parseFloat(res.data[this.tokenId.toUpperCase()] || 0);
+                }
+            })
+        }
+    },
+    handlePriceChange(type) {
+        if (type === 'buy') {
+            this.inputs.buyTotal = parseFloat(this.inputs.buyAmount * this.inputs.buyPrice).toFixed(4)
+        } else {
+            this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4)
+        }
+    },
+    handleAmountChange(type) {
+        if (type === 'buy') {
+            this.inputs.buyTotal = parseFloat(this.inputs.buyAmount * this.inputs.buyPrice).toFixed(4)
+        } else {
+            this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4)
+        }
+    },
+    handleTotalChange(type) {
+        if (type === 'buy') {
+            let isZero = this.inputs.buyPrice === '0.000000';
+            this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(5);
+        } else {
+            let isZero = this.inputs.buyPrice === '0.000000';
+            this.inputs.sellAmount = isZero ? '0.00000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(5);
+        }
+    },
+    handleBlur(n, m=6) {
+        this.inputs[n] = parseFloat(this.inputs[n]).toFixed(m);
+    },
+    handlePrecentChange (n, x) {
+        if (this.isSignedIn) {
+            this[n] = x;
+            if (n === 'buyPrecent') {
+                let isZero = this.inputs.buyPrice === '0.000000';
+                this.inputs.buyTotal = parseFloat(this.eosBalance * x).toFixed(4);
+                this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(5);
+            } else {
+                this.inputs.sellAmount = parseFloat(this.eosBalance * x).toFixed(5);
+                this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4);
+            }
+        }
     }
 };
 component.computed = {
@@ -357,56 +436,8 @@ component.watch = {
         //this.chartWidget.chart().setResolution(v);
         this.initCandlestick();
     },
-    'inputs.pair': function () {
-        this.getPairs();
-    },
-    'inputs.buyPrice': function (val) {
-        if (!this.isValidInput(val)) {
-            this.inputs.buyPrice = this.inputs.vaildbuyPriceInput;
-            val = this.inputs.vaildbuyPriceInput;
-        }
-        this.inputs.vaildbuyPriceInput = val;
-        this.inputs.buyTotal = val * this.inputs.buyAmount;
-    },
-    'inputs.buyAmount': function (val) {
-        if (!this.isValidInput(val, 4)) {
-            this.inputs.buyAmount = this.inputs.vaildbuyAmountInput;
-            val = this.inputs.vaildbuyAmountInput;
-        }
-        this.inputs.vaildbuyAmountInput = val;
-        this.inputs.buyTotal = val * this.inputs.buyPrice;
-    },
-    'inputs.buyTotal': function (val) {
-        if (isNaN(val)) {
-            return;
-        }
-        if (this.control.trade === 'limit') {
-            this.inputs.buyPrice = val / (this.inputs.buyAmount || 1);
-        }
-    },
-    'inputs.sellPrice': function (val) {
-        if (!this.isValidInput(val)) {
-            this.inputs.sellPrice = this.inputs.vaildsellPriceInput;
-            val = this.inputs.vaildsellPriceInput;
-        }
-        this.inputs.vaildsellPriceInput = val;
-        this.inputs.sellTotal = val * this.inputs.sellAmount;
-    },
-    'inputs.sellAmount': function (val) {
-        if (!this.isValidInput(val, 4)) {
-            this.inputs.sellAmount = this.inputs.vaildsellAmountInput;
-            val = this.inputs.vaildsellAmountInput;
-        }
-        this.inputs.vaildsellAmountInput = val;
-        this.inputs.sellTotal = val * this.inputs.sellPrice;
-    },
-    'inputs.sellTotal': function (val) {
-        if (isNaN(val)) {
-            return;
-        }
-        if (this.control.trade === 'limit') {
-            this.inputs.sellPrice = val / (this.inputs.sellAmount || 1);
-        }
+    'isSignedIn': function() {
+        this.getBalances()
     },
     deep: true
-};
+}
