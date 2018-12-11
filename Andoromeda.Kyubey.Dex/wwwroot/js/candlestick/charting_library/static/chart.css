@@ -1,7 +1,16 @@
+* {
+    background: none!important;
+}
+
 .chart-page .chart-container {
   border: none !important;
 }
 
-.chart-page {
-  background-color: #fff !important;
+.button {
+    background: none!important;
+    border-color: #aaa!important;
+}
+
+.pane-legend-item-value, .apply-overflow-tooltip {
+    color: #ccc !important;
 }
