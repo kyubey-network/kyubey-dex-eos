@@ -38,5 +38,7 @@ const en = {
     k_6H: '6hour',
     k_1D: '1day',
     screening_market: 'Market filter',
+    expand_text: 'Expand text',
+    less_full_text: 'Less full text',
     switch: 'Switch'
 };

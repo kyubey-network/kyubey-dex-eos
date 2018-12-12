@@ -25,12 +25,17 @@ component.methods = {
 
                 for (var i = 0; i < x.data.length; i++) {
                     var item = x.data[i];
+                    item.expand = false;
                     item.content = '';
                     self.news.push(item);
                     var id = x.data[i].id;
                     qv.get(`/api/v1/lang/${app.lang}/news/${id}`)
                         .then(y => {
+                            var summaryLines = y.data.content.split('\n').slice(0, 3);
+                            var targetItem = self.news.filter(z => z.id === id)[0];
+                            Vue.set(targetItem, 'summary', app.marked(summaryLines.join('\n')));
                             self.news.filter(z => z.id === id)[0].content = app.marked(y.data.content);
+                            item.expand = true;
                         });
                 }
 

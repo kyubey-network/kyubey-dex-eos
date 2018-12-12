@@ -11,7 +11,8 @@
     background-color: #FFFFFF;
     padding: 42px 64px 42px 64px;
     box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
-    max-width: 758px;
+    max-width: 998px;
+    min-height: 638px;
 }
     .paper h1 {
         display: inline-block;
@@ -112,3 +113,21 @@
             content: "\f002";
             color: #D3D3D3;
         }
+
+.Inline-class {
+    display: inline-block;
+}
+
+.content-group a:not([href]):not([tabindex]) {
+    width: 48px;
+    height: 17px;
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    color: rgba(245,182,35,1);
+    line-height: 17px;
+}
+
+.expand-outer {
+    margin-top: -20px;
+}

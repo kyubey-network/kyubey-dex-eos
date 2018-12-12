@@ -9,7 +9,14 @@
         </div>
         <template v-for="x in news">
             <h2>{{ x.title }} <span class="news-right">{{ x.time }}</span></h2>
-            <div v-html="x.content"></div>
+            <div class="content-group" v-if="x.expand">
+                <p class="Inline-class" v-html="x.summary"></p>
+                <div class="expand-outer"><a @click="x.expand = !x.expand">{{$t('expand_text')}}<i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
+            </div>
+            <div class="content-group" v-else>
+                <p class="Inline-class" v-html="x.content"></p>
+                <div class="expand-outer"><a @click="x.expand = !x.expand">{{$t('less_full_text')}}<i class="fa fa-caret-up" aria-hidden="true"></i></a></div>
+            </div>
         </template>
 
         <div class="btn-outer" v-if="!noMore">

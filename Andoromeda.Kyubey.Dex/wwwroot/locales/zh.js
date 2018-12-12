@@ -102,6 +102,8 @@ const zh = {
     k_6H: '6小时',
     k_1D: '1天',
     screening_market: '市场筛选',
+    expand_text: '展开全文',
+    less_full_text: '收起全文',
     noData: '暂无数据',
     switch: '切换'
 };

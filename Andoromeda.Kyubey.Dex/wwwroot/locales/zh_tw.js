@@ -37,5 +37,7 @@ const zh_tw = {
     k_6H: '6小時',
     k_1D: '1天',
     screening_market: '市場過濾',
-    switch:'切換'
+    switch:'切換',
+    less_full_text: '收起全文',
+    expand_text: '展開全文'
 };
