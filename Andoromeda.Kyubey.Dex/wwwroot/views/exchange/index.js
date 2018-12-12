@@ -457,6 +457,15 @@ component.methods = {
                 this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4);
             }
         }
+    },
+    pricePrecision(n) {
+        return parseFloat(n).toFixed(8);
+    },
+    amountPrecision(n) {
+        return parseFloat(n).toFixed(4);
+    },
+    totalPrecision(n) {
+        return parseFloat(n).toFixed(4);
     }
 };
 component.computed = {

@@ -1,15 +1,15 @@
-.home-page section {
+.market-page section {
     padding: 2rem 4rem;
 }
-.home-page .table-container {
+.market-page .table-container {
     background: #ffffff;
     border: 1px solid #dee2e6;
     box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
 }
-.home-page table {
+.market-page table {
     font-size:12px;
 }
-.home-page thead {
+.market-page thead {
     background: rgba(242,242,242,1);
 }
 .table-title-container {
@@ -21,7 +21,7 @@
     justify-content: space-between;
     align-content: center;
 }
-.home-page td, .home-page th {
+.market-page td, .market-page th {
     text-align: center!important;
 }
 .eos-img {
@@ -42,39 +42,6 @@
     outline: none;
     padding: 0 0.7rem;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-}
-.banner-box {
-    background: #242424;
-    color: #fff;
-}
-.banner-box-inner {
-    width: 100%;
-    display: flex;
-    padding: 10px 0;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 10px;
-}
-.more-text {
-    color: #FFB500;
-    height: 25px;
-    line-height: 25px;
-    cursor: pointer;
-}
-.home-news {
-    height: 25px;
-    line-height: 25px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    cursor: pointer;
-}
-.home-news::before {
-    font-family: 'FontAwesome';
-    content: "\f06a";
-    color: #5E9FCD;
-    font-size: 18px;
-    margin-right: 5px;
 }
 .serach-btn {
     position: relative;
