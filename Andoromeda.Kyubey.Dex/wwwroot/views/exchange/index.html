@@ -21,7 +21,7 @@
                     </div>
                     <div>
                         <p>{{$t('ups_downs_24H')}}</p>
-                        <p><span>{{parseFloat(baseInfo.changeRecentDay).toFixed(6)}}</span> EOS</p>
+                        <p><span>{{parseFloat(baseInfo.changeRecentDay).toFixed(6)}}</span> %</p>
                     </div>
                     <div>
                         <p>{{$t('highest_price_24H')}}</p>
@@ -170,7 +170,7 @@
                                 </div>
                                 <div class="mb-2">
                                     <div style="margin-left: 70px;">
-                                        <button v-if="isSignedIn" @click="scatterBuy" type="button" class="btn w-100 bg-green text-white">{{$t('buy')}}</button>
+                                        <button v-if="isSignedIn" @click="exchangeBuy" type="button" class="btn w-100 bg-green text-white">{{$t('buy')}}</button>
                                         <button v-else @click="login" type="button" class="btn w-100 bg-green text-white">{{$t('sign_trade')}}</button>
                                     </div>
                                 </div>
@@ -214,7 +214,7 @@
                                 </div>
                                 <div class="mb-2">
                                     <div style="margin-left: 70px;">
-                                        <button @click="scatterSell" v-if="isSignedIn" type="button" class="btn w-100 bg-red text-white">{{$t('sell')}}</button>
+                                        <button @click="exchangeSell" v-if="isSignedIn" type="button" class="btn w-100 bg-red text-white">{{$t('sell')}}</button>
                                         <button v-else @click="login" type="button" class="btn w-100 bg-red text-white">{{$t('sign_trade')}}</button>
                                     </div>
                                 </div>
@@ -354,7 +354,7 @@
                         <div id="exchangeQRCodeBox" class="qrcode-img"></div>
                         <p class="p2 text-center">
                             {{$t('exchange_account')}}<br />
-                            {{account==null ? "":account.name}}
+                            {{$root.account==null ? "":$root.account.name}}
                         </p>
                     </div>
                 </div>
@@ -364,7 +364,7 @@
                             {{$t('exchange_buy')}} {{exchange.taretSymbol}}
                         </p>
                         <p>
-                            {{$t('exchange_price')}}：{{exchange.amount/exchange.taretAmount}} EOS
+                            {{$t('exchange_price')}}：{{exchange.price}} EOS
                         </p>
                         <p>
                             {{$t('exchange_amount')}}：{{exchange.taretAmount}} {{exchange.taretSymbol}}
@@ -378,7 +378,7 @@
                             {{$t('exchange_sell')}} {{exchange.symbol}}
                         </p>
                         <p>
-                            {{$t('exchange_sellprice')}}：{{exchange.amount/exchange.taretAmount}} EOS
+                            {{$t('exchange_sellprice')}}：{{exchange.price}} EOS
                         </p>
                         <p>
                             {{$t('exchange_sellamount')}}：{{exchange.taretAmount}} {{exchange.symbol}}

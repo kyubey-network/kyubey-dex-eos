@@ -33,8 +33,7 @@
             vaildbuyTotalInput: 0,
             vaildsellPriceInput: 0,
             vaildsellAmountInput: 0,
-            vaildsellTotalInput: 0,
-            tokenSearchInput: '',
+            vaildsellTotalInput: 0
         },
         chart: {
             fullscreen: true,
@@ -88,7 +87,7 @@ component.methods = {
         this.getBuyOrders();
         this.getMatchList();
     },
-    getCurrentOrders() {},
+    getCurrentOrders() { },
     dateObjToString: function (date) {
         return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
     },
@@ -132,6 +131,22 @@ component.methods = {
             callback(x);
         });
     },
+    exchangeBuy() {
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterBuy();
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            this.simpleWalletBuy();
+        }
+    },
+    simpleWalletBuy() {
+        var buySymbol = this.tokenId
+        var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
+        var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
+        var buyEosTotal = parseFloat(buyAmount * buyPrice);
+
+        this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+    },
     scatterBuy() {
         const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
@@ -151,7 +166,7 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders()
+                    self.getCurrentOrders();
                     self.getOrders();
                     self.getBalances();
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
@@ -182,6 +197,22 @@ component.methods = {
                     showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
                 });
         }
+    },
+    exchangeSell() {
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterSell();
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            this.simpleWalletSell();
+        }
+    },
+    simpleWalletSell() {
+        var sellSymbol = this.tokenId
+        var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
+        var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
+        var sellTotal = parseFloat(sellPrice * sellAmount);
+
+        this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
     },
     scatterSell() {
         const { account, requiredFields, eos } = app;
@@ -234,7 +265,7 @@ component.methods = {
                 });
         }
     },
-    simpleWalletExchange: function (type, from, to, amount, contract, taretAmount, taretSymbol, symbol, precision) {
+    simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, taretAmount, taretSymbol, symbol, precision) {
         $('#exchangeModal').modal('show');
         this.exchange.type = type;
         this.exchange.from = from;
@@ -245,6 +276,8 @@ component.methods = {
         this.exchange.taretSymbol = taretSymbol;
         this.exchange.precision = precision;
         this.exchange.taretAmount = taretAmount;
+        this.exchange.price = targetPrice;
+
         this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
     },
     _getExchangeSign: function (uuid) {
@@ -267,7 +300,7 @@ component.methods = {
             "dappData": dappData,
             "desc": `${symbol} exchange`,
             "expired": new Date().getTime() + (3 * 60 * 1000),
-            "callback": `${app.currentHost}/api/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
+            "callback": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
         };
         return loginObj;
     },
@@ -276,8 +309,8 @@ component.methods = {
         var reqObj = this._getExchangeRequestObj(from, to, amount, contract, symbol, precision, uuid, dappData);
         var qrcode = new QRCode(idSelector, {
             text: JSON.stringify(reqObj),
-            width: 114,
-            height: 114,
+            width: 160,
+            height: 160,
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.L
@@ -293,7 +326,7 @@ component.methods = {
                 })
                 this.maxAmountSellOrder = maxAmountSellOrder;
                 // just excete once
-                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length-1].unitPrice).toFixed(6);
+                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1].unitPrice).toFixed(6);
                 this.executeControl.sell++;
             }
         })
@@ -308,7 +341,7 @@ component.methods = {
                 })
                 this.maxAmountBuyOrder = maxAmountBuyOrder;
                 // just excete once
-                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length-1].unitPrice).toFixed(6);
+                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1].unitPrice).toFixed(6);
                 this.executeControl.buy++;
             }
         })
@@ -409,10 +442,10 @@ component.methods = {
             this.inputs.sellAmount = isZero ? '0.00000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(5);
         }
     },
-    handleBlur(n, m=6) {
+    handleBlur(n, m = 6) {
         this.inputs[n] = parseFloat(this.inputs[n]).toFixed(m);
     },
-    handlePrecentChange (n, x) {
+    handlePrecentChange(n, x) {
         if (this.isSignedIn) {
             this[n] = x;
             if (n === 'buyPrecent') {
@@ -436,7 +469,7 @@ component.watch = {
         //this.chartWidget.chart().setResolution(v);
         this.initCandlestick();
     },
-    'isSignedIn': function() {
+    'isSignedIn': function () {
         this.getBalances()
     },
     deep: true

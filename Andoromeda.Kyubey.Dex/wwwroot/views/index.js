@@ -40,7 +40,7 @@
                 "dappIcon": `${_this.currentHost}/img/KYUBEY_logo.png`,
                 "action": "login",
                 "uuID": uuid,
-                "loginUrl": `${_this.currentHost}/api/simplewallet/callback/login`,
+                "loginUrl": `${_this.currentHost}/api/v1/simplewallet/callback/login`,
                 "expired": new Date().getTime() + (3 * 60 * 1000),
                 "loginMemo": "kyubey login"
             };
@@ -51,8 +51,8 @@
             var loginObj = this._getLoginRequestObj(uuid);
             var qrcode = new QRCode(idSelector, {
                 text: JSON.stringify(loginObj),
-                width: 114,
-                height: 114,
+                width: 160,
+                height: 160,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.L
@@ -160,7 +160,7 @@
             this.$i18n.locale = param;
         },
         marked: function (md) {
-            return marked(md); 
+            return marked(md);
         }
     },
     computed: {

@@ -1373,22 +1373,24 @@ section {
     min-width: 1000px;
     margin: 0 auto;
 }
-@media screen and (max-width: 1280px){
+
+@media screen and (max-width: 1280px) {
     .page-container {
         max-width: 1200px;
         min-width: 1000px;
     }
 }
+
 #exchangeModal .modal-content {
     width: 495px;
-    height: 373px;
+    height: 432px;
     border: 0;
     color: #C1C1C1;
 }
 
 #exchangeModal .modal-top {
     width: 100%;
-    height: 231px;
+    height: 290px;
     background-color: rgba(255,255,255,0.16);
     border: 0;
     border-top-left-radius: .3rem;
@@ -1406,7 +1408,7 @@ section {
 
 #exchangeModal .modal-content .p2 {
     font-size: 12px;
-    margin-top: 12px;
+    margin-top: 20px;
 }
 
 #exchangeModal .modal-content .p3 {
@@ -1447,8 +1449,8 @@ section {
     }
 
 .qrcode-img {
-    width: 114px;
-    height: 114px;
+    width: 160px;
+    height: 160px;
 }
 
 #exchangeQRCodeBox {
