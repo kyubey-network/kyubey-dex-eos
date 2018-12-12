@@ -139,6 +139,18 @@
                 self.loginMode = null;
             }
         },
+        switchAccount: function () {
+            self = this;
+            if (self.loginMode == null) return;
+            if (self.loginMode === 'Simple Wallet') {
+                account = null;
+            } else {
+                if (self.loginMode === 'Scatter Addons' || self.loginMode === 'Scatter Desktop') {
+                    this.scatterLogout();
+                }
+            }
+            this.login();
+        },
         redirect: function (name, path, params, query) {
             if (name && !path)
                 path = name;

@@ -102,5 +102,6 @@ const zh = {
     k_6H: '6小时',
     k_1D: '1天',
     screening_market: '市场筛选',
-    noData: '暂无数据'
+    noData: '暂无数据',
+    switch: '切换'
 };

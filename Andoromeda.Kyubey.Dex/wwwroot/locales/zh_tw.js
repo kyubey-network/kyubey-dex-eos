@@ -36,5 +36,6 @@ const zh_tw = {
     k_4H: '4小時',
     k_6H: '6小時',
     k_1D: '1天',
-    screening_market: '市場過濾'
+    screening_market: '市場過濾',
+    switch:'切換'
 };

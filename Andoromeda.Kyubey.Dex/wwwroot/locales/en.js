@@ -37,5 +37,6 @@ const en = {
     k_4H: '4hour',
     k_6H: '6hour',
     k_1D: '1day',
-    screening_market: 'Market filter'
+    screening_market: 'Market filter',
+    switch: 'Switch'
 };

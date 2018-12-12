@@ -45,9 +45,7 @@
                 <a class="navbar-brand" href="/">
                     <img style="width: 50px;" src="/img/KYUBEY_logo.png" alt="" />
                 </a>
-                <router-link to="/exchange" class="my-nav-link">{{$t('exchange_nav')}}</router-link>
                 <router-link to="/" class="my-nav-link">{{$t('market_nav')}}</router-link>
-                <router-link to="/" class="my-nav-link">{{$t('contract_nav')}}</router-link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -59,19 +57,9 @@
                     </ul>
                     <ul class="navbar-nav ">
                         <li class="nav-item" v-if="!isSignedIn"><a class="nav-link" v-on:click="login()">{{$t('login_nav')}}</a></li>
-
-                        <li class="nav-item dropdown" v-if="isSignedIn">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{$t('welcome_nav')}}，{{ account.name }}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item">
-                                     <router-link to="/wallet" style="color: black">{{$t('wallet')}}</router-link>
-                                </a>
-                                <a class="dropdown-item" @click="scatterLogout()">{{$t('logout_nav')}}</a>
-                            </div>
-                        </li>
-        
+                        <li class="nav-item" v-if="isSignedIn"><router-link to="/wallet" class="nav-link">{{$t('welcome_nav')}}，{{ account.name }}</router-link></li>
+                        <li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="switchAccount()">{{$t('switch')}}</a></li>
+                        <li class="nav-item" v-if="isSignedIn"><a class="nav-link" v-on:click="scatterLogout()">{{$t('logout_nav')}}</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{$t('lang')}}
@@ -148,7 +136,7 @@
                 <div>
                     <div class="pt-2"><a class="footer-text-color small" @click="$root.redirect('/home/contact')">{{$t('contact_us')}}</a></div>
                     <div class="pt-2"><a class="footer-text-color small" @click="$root.redirect('/home/news')">{{$t('announcement_center')}}</a></div>
-                    <div class="pt-2"><a class="footer-text-color small" href="/swagger">{{$t('API_Quotes')}}</a></div>
+                    <div class="pt-2"><a class="footer-text-color small" href="/swagger" style="text-decoration: none;" >{{$t('API_Quotes')}}</a></div>
                 </div>
             </div>
             <div class="container pt-2">
