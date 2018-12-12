@@ -49,6 +49,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     responseData.Add(x, currentTokenBalance);
                 }
             });
+            responseData.Add("EOS", await nodeApiInvoker.GetCurrencyBalanceAsync(account, "eosio.token", "EOS", cancellationToken));
             return ApiResult(responseData);
         }
 
