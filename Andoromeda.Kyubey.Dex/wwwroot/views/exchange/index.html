@@ -244,7 +244,7 @@
                             </tr>
                         </thead>
                         <tbody style="height: 390px;">
-                            <tr v-for="(x, i) in favoriteList.filter(x => x.symbol.indexOf(inputs.tokenSearchInput) >= 0)" :key="i" 
+                            <tr v-for="(x, i) in favoriteList.filter(x => x.symbol.indexOf(inputs.tokenSearchInput.toUpperCase()) >= 0)" :key="i" 
                                 @click="$root.redirect('/exchange/:id', '/exchange/' + x.symbol, { id: x.symbol }, {})">
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
