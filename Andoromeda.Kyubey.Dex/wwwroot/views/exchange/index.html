@@ -77,7 +77,7 @@
                             </tr>
                         </thead>
                         <tbody v-if="control.order !== 'buy'">
-                            <tr v-for="(x, i) in sellOrders" :key="i" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.1) ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ')'">
+                            <tr v-for="(x, i) in sellOrders" :key="i" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.2) ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ')'">
                                 <td style="color: #E23030;">{{parseFloat(x.unitPrice).toFixed(6)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}}</td>
                                 <td>{{parseFloat(x.total).toFixed(4)}}</td>
@@ -89,7 +89,7 @@
                                     <span class="text-red">{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(6)}}</span>
                                 </td>
                             </tr>
-                            <tr v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.1) ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ')'">
+                            <tr v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, RGBA(82,177,109,.2) ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ')'">
                                 <td style="color: #00B54F;">{{parseFloat(x.unitPrice).toFixed(6)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}}</td>
                                 <td>{{parseFloat(x.total).toFixed(4)}}</td>
@@ -134,7 +134,7 @@
                                             {{$t('buy')}} {{tokenId}}
                                         </b>
                                     </span>
-                                    <span style="color: #626262;">{{$t('balance')}}: {{eosBalance}} EOS</span>
+                                    <span style="color: #626262;">{{$t('balance')}}: {{parseFloat(eosBalance).toFixed(4)}} EOS</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_price')}}</label>
@@ -178,10 +178,10 @@
                             <div class="col-sm-6 mt-3 pl-4 pr-4">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-red" style="font-size: 16px"><b>{{$t('sell')}} {{tokenId}}</b></span>
-                                    <span style="color: #626262;">{{$t('balance')}}: {{tokenBalance}} {{tokenId}}</span>
+                                    <span style="color: #626262;">{{$t('balance')}}: {{parseFloat(tokenBalance).toFixed(4)}} {{tokenId}}</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
-                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_price')}}</label>
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_sellprice')}}</label>
                                     <div class="e-input">
                                         <input v-if="control.trade === 'limit'" @blur="handleBlur('sellPrice')" @input="handlePriceChange('sell')" v-model="inputs.sellPrice" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <input v-else class="e-input-inner" :placeholder="$t('best_sell_price')" disabled="true">
@@ -189,7 +189,7 @@
                                     </div>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
-                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_amount')}}</label>
+                                    <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_sellamount')}}</label>
                                     <div class="e-input">
                                         <input @blur="handleBlur('sellAmount', 5)" @input="handleAmountChange('sell')" v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <span class="e-input-suffix">{{tokenId}}</span>
@@ -249,7 +249,10 @@
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
                                 <td>{{parseFloat(x.unitPrice).toFixed(4)}}</td>
-                                <td>{{parseFloat(x.change).toFixed(2)}}</td>
+                                <td>{{parseFloat(x.change*100).toFixed(2)}}%</td>
+                            </tr>
+                            <tr v-if="favoriteListFilter.length === 0">
+                                <td class="nodata text-center" colspan="3">{{$t('noData')}}</td>
                             </tr>
                             <tr v-if="favoriteListFilter.length === 0">
                                 <td class="nodata text-center" colspan="3">{{$t('noData')}}</td>
@@ -280,7 +283,7 @@
                 </div>
             </div>
         </div>
-        <div class="row no-gutters mt-2">
+        <div class="row no-gutters mt-2" v-if="isSignedIn">
             <div class="col-md-12">
                 <div class="card my-card">
                     <div class="my-card-header">{{$t('open_orders')}}</div>
@@ -310,7 +313,7 @@
                 </div>
             </div>
         </div>
-        <div class="row no-gutters mt-2">
+        <div class="row no-gutters mt-2" v-if="isSignedIn">
             <div class="col-md-12">
                 <div class="card my-card">
                     <div class="my-card-header">{{$t('order_history')}}</div>

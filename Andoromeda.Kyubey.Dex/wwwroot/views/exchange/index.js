@@ -167,6 +167,9 @@ component.methods = {
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
+                    if (typeof error === 'string') {
+                        error = JSON.parse(error)
+                    }
                     showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
                 });
         }
