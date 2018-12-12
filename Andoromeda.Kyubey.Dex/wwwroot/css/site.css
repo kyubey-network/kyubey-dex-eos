@@ -1476,3 +1476,6 @@ section {
 a:not([href]):not([tabindex]) {
     color: #AFAFAF;
 }
+.nodata {
+    color: #909399!important;
+}

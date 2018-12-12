@@ -86,7 +86,7 @@
                         <tbody>
                             <tr>
                                 <td colspan="3" class="e-orders-split text-center">
-                                    <span class="text-red">{{parseFloat(latestTransactions[0].unitPrice).toFixed(6)}}</span>
+                                    <span class="text-red">{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(6)}}</span>
                                 </td>
                             </tr>
                             <tr v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.1) ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ')'">
@@ -134,7 +134,7 @@
                                             {{$t('buy')}} {{tokenId}}
                                         </b>
                                     </span>
-                                    <span style="color: #626262;">{{$t('balance')}}: 0.0000 EOS</span>
+                                    <span style="color: #626262;">{{$t('balance')}}: {{eosBalance}} EOS</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_price')}}</label>
@@ -178,7 +178,7 @@
                             <div class="col-sm-6 mt-3 pl-4 pr-4">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-red" style="font-size: 16px"><b>{{$t('sell')}} {{tokenId}}</b></span>
-                                    <span style="color: #626262;">{{$t('balance')}}: 0.0000 {{tokenId}}</span>
+                                    <span style="color: #626262;">{{$t('balance')}}: {{tokenBalance}} {{tokenId}}</span>
                                 </div>
                                 <div style="font-size: 0;" class="mb-2">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_price')}}</label>
@@ -231,7 +231,7 @@
                             <div @click="control.markets = 'eos'" class="border-button d-inline-block" :class="{'border-button-active': control.markets === 'eos'}">EOS</div>
                         </div>
                         <div class="input-container">
-                            <input type="text" class="d-inline-block search-input" v-model="inputs.tokenSearchInput" :placeholder="$t('screening_market')" />
+                            <input type="text" class="d-inline-block search-input" v-model="inputs.tokenSearchInput" :placeholder="$t('screening_market')"/>
                         </div>
                     </div>
                     <table class="table e-table table-sm table-hover pl-1 scroll-table">
@@ -244,12 +244,15 @@
                             </tr>
                         </thead>
                         <tbody style="height: 390px;">
-                            <tr v-for="(x, i) in favoriteList.filter(x => x.symbol.indexOf(inputs.tokenSearchInput.toUpperCase()) >= 0)" :key="i" 
+                            <tr v-for="(x, i) in favoriteListFilter" :key="i" 
                                 @click="$root.redirect('/exchange/:id', '/exchange/' + x.symbol, { id: x.symbol }, {})">
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
                                 <td>{{parseFloat(x.unitPrice).toFixed(4)}}</td>
                                 <td>{{parseFloat(x.change).toFixed(2)}}</td>
+                            </tr>
+                            <tr v-if="favoriteListFilter.length === 0">
+                                <td class="nodata text-center" colspan="3">{{$t('noData')}}</td>
                             </tr>
                         </tbody>
                     </table>

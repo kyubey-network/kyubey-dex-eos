@@ -28,12 +28,6 @@
             sellAmount: 0,
             buyTotal: 0,
             sellTotal: 0,
-            vaildbuyPriceInput: 0,
-            vaildbuyAmountInput: 0,
-            vaildbuyTotalInput: 0,
-            vaildsellPriceInput: 0,
-            vaildsellAmountInput: 0,
-            vaildsellTotalInput: 0,
             tokenSearchInput: ''
         },
         chart: {
@@ -327,7 +321,7 @@ component.methods = {
                 })
                 this.maxAmountSellOrder = maxAmountSellOrder;
                 // just excete once
-                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1].unitPrice).toFixed(6);
+                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(6);
                 this.executeControl.sell++;
             }
         })
@@ -342,7 +336,7 @@ component.methods = {
                 })
                 this.maxAmountBuyOrder = maxAmountBuyOrder;
                 // just excete once
-                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1].unitPrice).toFixed(6);
+                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(6);
                 this.executeControl.buy++;
             }
         })
@@ -472,6 +466,13 @@ component.methods = {
 component.computed = {
     isSignedIn: function () {
         return !!app.account;
+    },
+    favoriteListFilter() {
+        if (this.inputs.tokenSearchInput === '') {
+            return this.favoriteList
+        } else {
+            return this.favoriteList.filter(x => x.symbol.includes(this.inputs.tokenSearchInput.toUpperCase()))
+        }
     }
 };
 component.watch = {
