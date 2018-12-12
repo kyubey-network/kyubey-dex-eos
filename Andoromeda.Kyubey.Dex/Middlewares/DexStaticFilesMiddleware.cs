@@ -56,8 +56,7 @@ namespace Andoromeda.Kyubey.Dex.Middlewares
                 }
                 app.UseStaticFiles(new StaticFileOptions()
                 {
-                    FileProvider = new PhysicalFileProvider(filesFolder),
-                    RequestPath = new PathString("/news_assets")
+                    FileProvider = new PhysicalFileProvider(filesFolder)
                 });
             }
 

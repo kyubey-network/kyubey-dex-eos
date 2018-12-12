@@ -486,5 +486,9 @@ component.watch = {
     'isSignedIn': function () {
         this.getBalances()
     },
+     //reload multi language ajax method
+    '$root.lang': function () {
+        this.getTokenInfo();
+    },
     deep: true
 }

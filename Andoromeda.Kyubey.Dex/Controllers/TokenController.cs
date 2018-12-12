@@ -69,8 +69,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 .Select(x => new GetBaseOrderResponse
                 {
                     UnitPrice = x.UnitPrice,
-                    Amount = x.Bid,
-                    Total = x.Ask
+                    Amount = x.Ask,
+                    Total = x.Bid
                 });
 
             return ApiResult(responseData);

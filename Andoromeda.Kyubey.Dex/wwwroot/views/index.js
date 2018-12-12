@@ -10,7 +10,6 @@
         requiredFields: null,
         currentHost: location.protocol + "//" + location.host,
         volume: 0,
-        lang: 'en',
         signalr: {
             simplewallet: {
                 connection: null,
@@ -166,6 +165,9 @@
     computed: {
         isSignedIn: function () {
             return !!this.account;
+        },
+        lang: function () {
+            return this.$i18n.locale;
         }
     },
     i18n: i18n
