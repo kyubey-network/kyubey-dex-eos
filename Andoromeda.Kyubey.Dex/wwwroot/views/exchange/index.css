@@ -207,10 +207,6 @@
     display: block;
     overflow-y: scroll;
 }
-
-.scroll-table thead {
-    width: calc( 100% - 1em )
-}
 /* tbody滚动条样式 */
 tbody::-webkit-scrollbar {
     width: 5px;

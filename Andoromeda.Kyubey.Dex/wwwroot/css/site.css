@@ -1484,3 +1484,14 @@ a:not([href]):not([tabindex]) {
 .nodata {
     color: #909399 !important;
 }
+
+.container {
+    max-width: 1280px;
+}
+.footer-logo {
+    align-items: flex-start !important;
+}
+
+.pt-2 {
+    text-align: right;
+}

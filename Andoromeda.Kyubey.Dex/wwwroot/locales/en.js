@@ -3,7 +3,7 @@ const en = {
     exchange_nav: 'Exchange',
     market_nav: 'Markets',
     contract_nav: 'Contract',
-    login_nav: 'login',
+    login_nav: 'Login',
     contact_us: 'Contact us',
     how_to_contact_us: 'How can I contact us?',
     contact_us_for_the_text1: 'If you need help with KyubeyDex, or if you have any suggestions, please send an email to:',
@@ -70,4 +70,7 @@ const en = {
     transaction_money: 'Total',
     open_orders: 'Open Orders',
     order_history: 'Order History',
+    buy: 'Buy',
+    sell: 'Sell',
+    ups_downs: 'Ups downs',
 };
