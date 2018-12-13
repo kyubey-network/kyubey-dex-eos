@@ -9,5 +9,7 @@ namespace Andoromeda.Kyubey.Dex.Models
         public double Amount { get; set; }
 
         public DateTime Time { get; set; }
+
+        public bool Growing { get; set; }
     }
 }

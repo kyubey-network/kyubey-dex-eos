@@ -64,7 +64,7 @@ const zh = {
     sign_trade: '登录后进行交易',
     best_buy_price: '以市场最优价格买入',
     best_sell_price: '以市场最优价格卖出',
-    k_line: 'k线图',
+    k_line: 'K线图',
     'Transaction Succeeded': '交易成功',
     'Transaction Failed': '交易失败',
     'Please contact us if you have any questions': '如有任何问题请与我们联系',

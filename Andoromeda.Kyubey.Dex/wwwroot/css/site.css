@@ -8,6 +8,10 @@
         color: rgba(255,255,255,0.8) !important;
     }
 
+[v-cloak] {
+    display: none;
+}
+
 .exchange {
     background: #fff;
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -1476,6 +1480,7 @@ section {
 a:not([href]):not([tabindex]) {
     color: #AFAFAF;
 }
+
 .nodata {
-    color: #909399!important;
+    color: #909399 !important;
 }

@@ -143,10 +143,11 @@ component.methods = {
         this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
     },
     scatterBuy() {
+        var self = this;
         const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
         if (this.control.trade === 'limit') {
-            var price = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(4));
+            var price = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
             var ask = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
             var bid = parseFloat(ask * price);
             eos.contract('eosio.token', { requiredFields })
@@ -167,10 +168,7 @@ component.methods = {
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    if (typeof error === 'string') {
-                        error = JSON.parse(error)
-                    }
-                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                    self.handleScatterException(error);
                 });
         }
         else if (this.control.trade === 'market') {
@@ -192,9 +190,20 @@ component.methods = {
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                    self.handleScatterException(error);
                 });
         }
+    },
+    handleScatterException(error) {
+        const $t = this.$t.bind(this);
+        if (typeof error === 'string') {
+            error = JSON.parse(error)
+        }
+        if (error.error != null && error.error.code != null) {
+            showModal($t('Transaction Failed'), $t(error.error.what));
+        }
+        else
+            showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
     },
     exchangeSell() {
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
@@ -213,6 +222,7 @@ component.methods = {
         this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
     },
     scatterSell() {
+        var self = this;
         const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
         if (this.control.trade === 'limit') {
@@ -265,6 +275,7 @@ component.methods = {
     },
     simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, taretAmount, taretSymbol, symbol, precision) {
         $('#exchangeModal').modal('show');
+
         this.exchange.type = type;
         this.exchange.from = from;
         this.exchange.to = to;
@@ -275,8 +286,12 @@ component.methods = {
         this.exchange.precision = precision;
         this.exchange.taretAmount = taretAmount;
         this.exchange.price = targetPrice;
-
-        this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
+        if (this.control.trade === 'limit') {
+            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
+        }
+        else if (this.control.trade === 'market') {
+            alert('to be continued');
+        }
     },
     _getExchangeSign: function (uuid) {
         return uuid;
@@ -324,7 +339,7 @@ component.methods = {
                 })
                 this.maxAmountSellOrder = maxAmountSellOrder;
                 // just excete once
-                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(6);
+                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(8);
                 this.executeControl.sell++;
             }
         })
@@ -339,7 +354,7 @@ component.methods = {
                 })
                 this.maxAmountBuyOrder = maxAmountBuyOrder;
                 // just excete once
-                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(6);
+                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(8);
                 this.executeControl.buy++;
             }
         })
@@ -352,7 +367,7 @@ component.methods = {
         })
     },
     setPublish(price, amount) {
-        price = parseFloat(price).toFixed(6)
+        price = parseFloat(price).toFixed(8)
         amount = parseFloat(amount).toFixed(4)
         this.inputs.buyPrice = price;
         this.inputs.sellPrice = price;
@@ -389,9 +404,6 @@ component.methods = {
             if (res.code === 200) {
             }
         })
-    },
-    login() {
-        $('#loginModal').modal('show');
     },
     isValidInput: function (value, precision) {
         if (precision != null && precision == 4) {
@@ -440,7 +452,7 @@ component.methods = {
             this.inputs.sellAmount = isZero ? '0.00000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(5);
         }
     },
-    handleBlur(n, m = 6) {
+    handleBlur(n, m = 8) {
         this.inputs[n] = parseFloat(this.inputs[n]).toFixed(m);
     },
     handlePrecentChange(n, x) {
@@ -486,7 +498,7 @@ component.watch = {
     'isSignedIn': function () {
         this.getBalances()
     },
-     //reload multi language ajax method
+    //reload multi language ajax method
     '$root.lang': function () {
         this.getTokenInfo();
     },

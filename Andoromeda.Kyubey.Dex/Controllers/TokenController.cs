@@ -107,14 +107,15 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var responseData = await db.MatchReceipts
                 .Where(x => x.TokenId == tokenId)
                 .OrderByDescending(x => x.Time)
-                .Take(20)
+                .Take(21)
                 .ToListAsync(token);
 
-            return ApiResult(responseData.Select(x => new GetRecentTransactionResponse
+            return ApiResult(responseData.Take(20).Select(x => new GetRecentTransactionResponse
             {
                 UnitPrice = x.UnitPrice,
                 Amount = x.Ask,
-                Time = x.Time
+                Time = x.Time,
+                Growing = x.UnitPrice > (responseData.FirstOrDefault(g => g.Time < x.Time)?.UnitPrice ?? x.UnitPrice)
             }));
         }
 
