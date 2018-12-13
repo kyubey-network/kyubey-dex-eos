@@ -5,7 +5,7 @@
             <span class="wallet-account-name">{{account.name}}</span>
         </div>
         <div class="wallet-evaluated-outer">
-            <strong>{{ parseFloat(totalEvaluated).toFixed(8) }}</strong> EOS
+            <strong>{{ parseFloat(totalEvaluated).toFixed(4) }}</strong> EOS
         </div>
         <div class="wallet-subline-outer">
             {{$t('current_total_valuation')}}
@@ -46,9 +46,9 @@
                                 <i class="my-star"></i>
                             </td>
                             <td><font size="3">{{item.symbol}}</font></td>
-                            <td><font size="3" color="#FFB500">{{item.valid}}</font></td>
-                            <td><font size="3" >{{item.freeze}}</font></td>
-                            <td><font size="3" >{{item.eos}}</font></td>
+                            <td><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
+                            <td><font size="3">{{parseFloat(item.freeze).toFixed(4)}}</font></td>
+                            <td><font size="3">{{parseFloat(item.eos).toFixed(4)}} EOS</font></td>
                         </tr>
                     </tbody>
                 </table>
