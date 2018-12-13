@@ -106,5 +106,7 @@ const zh = {
     less_full_text: '收起全文',
     noData: '暂无数据',
     switch: '切换',
-    search: '搜索'
+    search: '搜索',
+    limit_order: '限价交易',
+    market_order: '市价交易',
 };
