@@ -78,7 +78,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             {
                 Code = 1,
                 Error = "sign error"
-            });
+            });       
         }
     }
 }

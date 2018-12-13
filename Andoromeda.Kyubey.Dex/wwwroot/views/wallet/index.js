@@ -34,9 +34,12 @@ component.computed = {
         if (!this.tokens.length) {
             return 0;
         }
-        var values = this.tokens.map(x => x.valid);
-        return values.reduce(function (prev, curr) {
+        var valuesValid = this.tokens.map(x => x.valid);
+        var valuesFreeze = this.tokens.map(x => x.freeze);
+        return valuesValid.reduce(function (prev, curr) {
             return prev + curr;
+        }) + valuesFreeze.reduce(function (prev, curr) {
+            perv + curr;
         });
     }
 };

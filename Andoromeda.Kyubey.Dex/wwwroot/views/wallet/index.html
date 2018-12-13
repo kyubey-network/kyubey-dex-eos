@@ -40,7 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="cursor: pointer;" v-if="item.symbol != 'EOS'"  v-for="(item, index) in listWithFiter" :key="index"
+                        <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
                             @click="goToEosExchange(item.symbol)">
                             <td scope="row" v-if="isSignedIn">
                                 <i class="my-star"></i>
