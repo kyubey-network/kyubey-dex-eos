@@ -11,14 +11,3 @@ body {
     border-color: #aaa !important;
 }
 
-.pane-legend-item-value, .apply-overflow-tooltip {
-    color: #ccc !important;
-}
-
-canvas, .chart-markup-table {
-    background: #232323 !important;
-}
-
-    .chart-markup-table canvas {
-        display: none;
-    }

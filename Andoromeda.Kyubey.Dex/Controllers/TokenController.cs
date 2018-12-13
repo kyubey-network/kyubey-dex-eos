@@ -176,13 +176,13 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         [HttpGet("{id}/candlestick")]
         [ProducesResponseType(typeof(ApiResult<IEnumerator<GetCandlestickResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
-        public async Task<IActionResult> Candlestick([FromServices] KyubeyContext db, GetCandlestickRequest Request, CancellationToken token)
+        public async Task<IActionResult> Candlestick([FromServices] KyubeyContext db, GetCandlestickRequest request, CancellationToken token)
         {
-            var ticks = new TimeSpan(0, 0, Request.Period);
-            var begin = new DateTime(Request.Begin.Ticks / ticks.Ticks * ticks.Ticks);
-            var end = new DateTime(Request.End.Ticks / ticks.Ticks * ticks.Ticks);
+            var ticks = new TimeSpan(0, 0, request.Period);
+            var begin = new DateTime(request.Begin.Ticks / ticks.Ticks * ticks.Ticks);
+            var end = new DateTime(request.End.Ticks / ticks.Ticks * ticks.Ticks);
             var data = await db.MatchReceipts
-                .Where(x => x.TokenId == Request.Id)
+                .Where(x => x.TokenId == request.Id)
                 .Where(x => x.Time < end)
                 .OrderBy(x => x.Time)
                 .GroupBy(x => x.Time >= begin ? x.Time.Ticks / ticks.Ticks * ticks.Ticks : 0)
@@ -199,6 +199,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
             if (data.Count <= 1) return ApiResult(data.Where(x => x.Time >= begin).OrderBy(x => x.Time));
 
+            //repair data by ticks
             for (var i = begin; i < end; i = i.Add(ticks))
             {
                 if (data.Any(x => x.Time == i)) continue;
