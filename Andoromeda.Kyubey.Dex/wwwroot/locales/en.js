@@ -40,5 +40,6 @@ const en = {
     screening_market: 'Market filter',
     expand_text: 'Expand text',
     less_full_text: 'Less full text',
-    switch: 'Switch'
+    switch: 'Switch',
+    search: 'Search'
 };

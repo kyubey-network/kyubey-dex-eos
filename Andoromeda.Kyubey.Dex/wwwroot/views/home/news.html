@@ -3,11 +3,10 @@
         <h1>{{$t('announcement_center')}}</h1>
         <div class="search bar">
             <form>
-                <input type="text" >
-                <button type="submit"></button>
+                <input type="text" v-model="keyWords" :placeholder="$t('search')">
             </form>
         </div>
-        <template v-for="x in news">
+        <template v-for="x in newsForm">
             <h2>{{ x.title }} <span class="news-right">{{ x.time }}</span></h2>
             <div class="content-group" v-if="x.expand">
                 <p class="Inline-class" v-html="x.summary"></p>

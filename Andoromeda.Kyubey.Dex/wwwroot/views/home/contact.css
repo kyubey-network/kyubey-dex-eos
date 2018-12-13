@@ -40,3 +40,8 @@
 .paper p {
     font-size: 12px;
 }
+
+.paper a:hover {
+    color: #0059B9;
+    text-decoration: underline;
+} 

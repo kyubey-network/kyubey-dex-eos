@@ -5,5 +5,6 @@ const jp = {
     contract_nav: '契約取引',
     login_nav: 'ログイン',
     announcement_center: 'アナウンスセンター',
-    screening_market: '市場ろ過'
+    screening_market: '市場ろ過',
+    search: '検索'
 };

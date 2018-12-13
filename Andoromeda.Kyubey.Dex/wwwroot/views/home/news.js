@@ -2,7 +2,8 @@
     return {
         news: [],
         page: -1,
-        noMore: false
+        noMore: false,
+        keyWords: '',
     };
 };
 
@@ -54,3 +55,24 @@ component.methods = {
             });
     }
 };
+
+component.computed = {
+    newsForm: function () {
+        if (this.keyWords != '') {
+            return this.news.filter(x => {
+                if (x.title.includes(this.keyWords)) {
+                    return true;
+                }
+                else if (x.content.includes(this.keyWords)) {
+                    return true;
+                }
+                else if (x.time.includes(this.keyWords)) {
+                    return true;
+                }
+            });
+        }
+        else {
+            return this.news;
+        }
+    }
+}

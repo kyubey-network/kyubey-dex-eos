@@ -105,5 +105,6 @@ const zh = {
     expand_text: '展开全文',
     less_full_text: '收起全文',
     noData: '暂无数据',
-    switch: '切换'
+    switch: '切换',
+    search: '搜索'
 };
