@@ -304,12 +304,24 @@
                                 <th scope="col">{{$t('operation')}}</th>
                             </tr>
                         </thead>
-                        <tbody v-if="openOrders.length === 0">
-                            <tr>
+                        <tbody>
+                            <tr v-for="(x, i) in openOrders" :key="i">
+                                <td>{{x.symbol}}/EOS</td>
+                                <td :class="{'text-red': x.type === 'sell', 'text-green': x.type === 'buy'}">{{x.type === 'sell' ? '卖出':'买入'}}</td>
+                                <td>{{parseFloat(x.price).toFixed(6)}}</td>
+                                <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
+                                <!-- todo：transaction_number -->
+                                <td>——</td>
+                                <td>{{parseFloat(x.total).toFixed(4)}} {{x.symbol}}</td>
+                                <td>{{formatTime(x.time)}}</td>
+                                <!-- todo：status -->
+                                <td>——</td>
+                                <td>{{$t('cancel')}}</td>
+                            </tr>
+                            <tr v-if="openOrders.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>
                             </tr>
                         </tbody>
-                        <tbody v-else></tbody>
                     </table>
                 </div>
             </div>
@@ -332,12 +344,24 @@
                                 <th scope="col">{{$t('operation')}}</th>
                             </tr>
                         </thead>
-                        <tbody v-if="openOrders.length === 0">
-                            <tr>
+                        <tbody>
+                            <tr v-for="(x, i) in orderHistory" :key="i">
+                                <td>{{x.symbol}}/EOS</td>
+                                <td :class="{'text-red': x.type === 'sell', 'text-green': x.type === 'buy'}">{{x.type === 'sell' ? '卖出':'买入'}}</td>
+                                <td>{{formatTime(x.time)}}</td>
+                                <td>{{parseFloat(x.unitPrice).toFixed(6)}}</td>
+                                <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
+                                <!-- todo：transaction_number -->
+                                <td>——</td>
+                                <td>——</td>
+                                <!-- todo：status -->
+                                <td>——</td>
+                                <td>{{$t('cancel')}}</td>
+                            </tr>
+                            <tr v-if="openOrders.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>
                             </tr>
                         </tbody>
-                        <tbody v-else></tbody>
                     </table>
                 </div>
             </div>

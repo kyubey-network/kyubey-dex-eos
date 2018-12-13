@@ -486,6 +486,20 @@ component.methods = {
     },
     totalPrecision(n) {
         return parseFloat(n).toFixed(4);
+    },
+    getOpenOrders() {
+        qv.get(`/api/v1/lang/${app.lang}/User/${app.account}/current-delegate`, {}).then(res => {
+            if (res.code === 200) {
+                this.openOrders = res.data || [];
+            }
+        })
+    },
+    getHistroyOrders() {
+        qv.get(`/api/v1/lang/${app.lang}/User/${app.account}/history-delegate`, {}).then(res => {
+            if (res.code === 200) {
+                this.orderHistory = res.data || [];
+            }
+        })
     }
 };
 component.computed = {
@@ -505,8 +519,12 @@ component.watch = {
         //this.chartWidget.chart().setResolution(v);
         this.initCandlestick();
     },
-    'isSignedIn': function () {
-        this.getBalances()
+    '$root.isSignedIn': function (val) {
+        if (val === true) {
+            this.getBalances()
+            this.getOpenOrders();
+            this.getHistroyOrders();
+        }
     },
     //reload multi language ajax method
     '$root.lang': function () {
