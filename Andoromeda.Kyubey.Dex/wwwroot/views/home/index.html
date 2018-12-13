@@ -46,17 +46,29 @@
                         </th>
                         <th scope="col">{{$t('trading_pair')}}</th>
                         <th scope="col">{{$t('latest_price')}}</th>
-                        <th scope="col">
-                            {{$t('ups_downs_24H')}}
-                            <i class="fa fa-caret-up"></i>
-                            <i class="fa fa-caret-down"></i>
+                        <th scope="col" class="d-flex align-items-center justify-content-center">
+                            <span>{{$t('ups_downs_24H')}}</span>
+                            <div class="d-flex flex-column align-items-center ml-1">
+                                <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === false&&sortControl.row === 'change_recent_day'}" @click="sortToken('change_recent_day', false)">
+                                    <i class="fa fa-caret-up"></i>
+                                </div>
+                                <div class="p-0 m-0 down-icon" style="height: auto;" :class="{'sort-icon-active': sortControl.desc === true&&sortControl.row === 'change_recent_day'}" @click="sortToken('change_recent_day', true)">
+                                    <i class="fa fa-caret-down"></i>
+                                </div>
+                            </div>
                         </th>
                         <th scope="col">{{$t('highest_price_24H')}}</th>
                         <th scope="col">{{$t('lowest_price_24H')}}</th>
-                        <th scope="col">
-                            {{$t('volume_24H')}}
-                            <i class="fa fa-caret-up"></i>
-                            <i class="fa fa-caret-down"></i>
+                        <th scope="col" class="d-flex align-items-center justify-content-center">
+                            <span>{{$t('volume_24H')}}</span>
+                            <div class="d-flex flex-column align-items-center ml-1">
+                                <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === false&&sortControl.row === 'volume_recent_day'}" @click="sortToken('volume_recent_day', false)">
+                                    <i class="fa fa-caret-up"></i>
+                                </div>
+                                <div class="p-0 m-0 down-icon" style="height: auto;" :class="{'sort-icon-active': sortControl.desc === true&&sortControl.row === 'volume_recent_day'}" @click="sortToken('volume_recent_day', true)">
+                                    <i class="fa fa-caret-down"></i>
+                                </div>
+                            </div>
                         </th>
                     </tr>
                 </thead>

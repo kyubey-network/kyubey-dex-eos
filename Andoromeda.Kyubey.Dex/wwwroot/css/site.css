@@ -1485,6 +1485,13 @@ a:not([href]):not([tabindex]) {
     color: #909399 !important;
 }
 
+.up-icon, .down-icon {
+    cursor: pointer;
+}
+
+.sort-icon-active, .up-icon:hover, .down-icon:hover {
+    color: #FFB500;
+}
 .container {
     max-width: 1280px;
 }

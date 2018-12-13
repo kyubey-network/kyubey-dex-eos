@@ -7,6 +7,10 @@
         searchText: '',
         control: {
             tab: 'eos'
+        },
+        sortControl: {
+            desc: null,
+            row: null
         }
     };
 };
@@ -41,6 +45,20 @@ component.methods = {
     },
     formatTime(time) {
         return moment(time).format('MM-DD');
+    },
+    sortToken(row, desc) {
+        this.sortControl.row = row;
+        this.sortControl.desc = desc;
+        if (this.sortControl.desc === true){
+            this.tokenTable.sort((a, b)=>{
+                return parseFloat(b[row])-parseFloat(a[row])
+            })
+        }
+        if (this.sortControl.desc === false) {
+            this.tokenTable.sort((a, b)=>{
+                return parseFloat(a[row])-parseFloat(b[row])
+            })
+        }
     }
 };
 

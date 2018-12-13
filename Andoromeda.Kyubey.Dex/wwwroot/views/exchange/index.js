@@ -376,14 +376,34 @@ component.methods = {
             }
         })
     },
-    setPublish(price, amount) {
-        price = parseFloat(price).toFixed(8)
-        amount = parseFloat(amount).toFixed(4)
+    setPublish(price, amount, total) {
+        price = parseFloat(price).toFixed(8);
+        amount = parseFloat(amount).toFixed(4);
+        total = parseFloat(total).toFixed(4);
         this.inputs.buyPrice = price;
         this.inputs.sellPrice = price;
         if (this.isSignedIn) {
-            this.inputs.buyAmount = amount;
-            this.inputs.sellAmount = amount;
+            // calculate buyTotal & buyAmount
+            if (total > parseFloat(this.eosBalance)) {
+                this.inputs.buyTotal = parseFloat(this.eosBalance).toFixed(4);
+                this.inputs.buyAmount = parseFloat(this.inputs.buyTotal/this.inputs.buyPrice).toFixed(4);
+            } else {
+                this.inputs.buyTotal = total;
+                this.inputs.buyAmount = amount;
+            }
+            // calculate sellTotal & sellAmount
+            if (amount > parseFloat(this.tokenBalance)) {
+                this.inputs.sellAmount = parseFloat(this.tokenBalance).toFixed(4);
+                this.inputs.sellTotal = parseFloat(this.inputs.sellAmount*this.inputs.sellPrice).toFixed(4);
+            } else {
+                this.inputs.sellAmount = amount;
+                this.inputs.sellTotal = total;
+            }
+        } else {
+            this.inputs.buyAmount = '0.0000';
+            this.inputs.sellAmount = '0.0000';
+            this.inputs.buyTotal = '0.0000';
+            this.inputs.sellTotal = '0.0000';
         }
     },
     getcolorOccupationRatio: function (nowTotalPrice, historyTotalPrice) {
@@ -500,6 +520,9 @@ component.methods = {
                 this.orderHistory = res.data || [];
             }
         })
+    },
+    redirectToDetail(token) {
+        window.location.href = '/exchange/'+token
     }
 };
 component.computed = {
