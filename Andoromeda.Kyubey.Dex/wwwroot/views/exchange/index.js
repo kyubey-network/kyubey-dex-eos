@@ -98,31 +98,31 @@ component.methods = {
     },
     initCandlestick: function () {
         var self = this;
-            this.chartWidget = new window.TradingView.widget(this.chart);
-            FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
-                self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
-                    var data = apiResult.data;
-                    if (data && Array.isArray(data)) {
-                        var meta = { noData: false };
-                        var bars = [];
-                        if (data.length) {
-                            for (var i = 0; i < data.length; i += 1) {
-                                bars.push({
-                                    time: Number(new Date(data[i].time)),
-                                    close: data[i].closing,
-                                    open: data[i].opening,
-                                    high: data[i].max,
-                                    low: data[i].min,
-                                    volume: data[i].volume
-                                });
-                            }
-                        } else {
-                            meta = { noData: true };
+        this.chartWidget = new window.TradingView.widget(this.chart);
+        FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
+            self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
+                var data = apiResult.data;
+                if (data && Array.isArray(data)) {
+                    var meta = { noData: false };
+                    var bars = [];
+                    if (data.length) {
+                        for (var i = 0; i < data.length; i += 1) {
+                            bars.push({
+                                time: Number(new Date(data[i].time)),
+                                close: data[i].closing,
+                                open: data[i].opening,
+                                high: data[i].max,
+                                low: data[i].min,
+                                volume: data[i].volume
+                            });
                         }
-                        onResult(bars, meta);
+                    } else {
+                        meta = { noData: true };
                     }
-                });
-            }
+                    onResult(bars, meta);
+                }
+            });
+        }
     },
     getCandlestickData: function (tokenId, startDate, endDate, period, callback) {
         var _this = this;
@@ -402,7 +402,7 @@ component.methods = {
             // calculate buyTotal & buyAmount
             if (total > parseFloat(this.eosBalance)) {
                 this.inputs.buyTotal = parseFloat(this.eosBalance).toFixed(4);
-                this.inputs.buyAmount = parseFloat(this.inputs.buyTotal/this.inputs.buyPrice).toFixed(4);
+                this.inputs.buyAmount = parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
             } else {
                 this.inputs.buyTotal = total;
                 this.inputs.buyAmount = amount;
@@ -410,7 +410,7 @@ component.methods = {
             // calculate sellTotal & sellAmount
             if (amount > parseFloat(this.tokenBalance)) {
                 this.inputs.sellAmount = parseFloat(this.tokenBalance).toFixed(4);
-                this.inputs.sellTotal = parseFloat(this.inputs.sellAmount*this.inputs.sellPrice).toFixed(4);
+                this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4);
             } else {
                 this.inputs.sellAmount = amount;
                 this.inputs.sellTotal = total;
@@ -436,7 +436,7 @@ component.methods = {
         })
     },
     formatTime(time) {
-        return moment(time + 'Z').format('MM-DD HH:mm:ss')
+        return moment(time + 'Z').format('YYYY-MM-DD HH:mm:ss')
     },
     getFavoriteList() {
         qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
@@ -524,26 +524,26 @@ component.methods = {
         return parseFloat(n).toFixed(4);
     },
     getOpenOrders() {
-        qv.get(`/api/v1/lang/${app.lang}/User/${app.account}/current-delegate`, {}).then(res => {
+        qv.get(`/api/v1/lang/${app.lang}/User/${app.account.name}/current-delegate`, {}).then(res => {
             if (res.code === 200) {
                 this.openOrders = res.data || [];
             }
         })
     },
     getHistroyOrders() {
-        qv.get(`/api/v1/lang/${app.lang}/User/${app.account}/history-delegate`, {}).then(res => {
+        qv.get(`/api/v1/lang/${app.lang}/User/${app.account.name}/history-delegate`, {}).then(res => {
             if (res.code === 200) {
                 this.orderHistory = res.data || [];
             }
         })
     },
     redirectToDetail(token) {
-        window.location.href = '/exchange/'+token
+        window.location.href = '/exchange/' + token
     }
 };
 component.computed = {
     isSignedIn: function () {
-        return !!app.account;
+        return !(app.account == null || app.account.name == null);
     },
     favoriteListFilter() {
         if (this.inputs.tokenSearchInput === '') {
@@ -568,6 +568,7 @@ component.watch = {
     //reload multi language ajax method
     '$root.lang': function () {
         this.getTokenInfo();
+        //this.initCandlestick();
     },
     deep: true
 }

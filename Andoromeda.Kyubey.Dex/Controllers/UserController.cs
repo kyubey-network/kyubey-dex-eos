@@ -22,21 +22,23 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         public async Task<IActionResult> GetFavorite([FromServices] KyubeyContext db, string account, CancellationToken cancellationToken)
         {
             var last = await db.MatchReceipts
+                .OrderByDescending(x => x.Time)
                 .GroupBy(x => x.TokenId)
                 .Select(x => new
                 {
                     TokenId = x.Key,
-                    Last = x.LastOrDefault()
+                    Last = x.FirstOrDefault()
                 })
                 .ToListAsync(cancellationToken);
 
             var last24 = await db.MatchReceipts
                 .Where(y => y.Time < DateTime.UtcNow.AddDays(-1))
+                .OrderByDescending(x => x.Time)
                 .GroupBy(x => x.TokenId)
                 .Select(x => new
                 {
                     TokenId = x.Key,
-                    Last = x.LastOrDefault()
+                    Last = x.FirstOrDefault()
                 })
                 .ToListAsync(cancellationToken);
 
@@ -88,8 +90,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             ret.AddRange(buy.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
-                Token = x.TokenId,
-                Type = "Buy",
+                Symbol = x.TokenId,
+                Type = "buy",
                 Amount = x.Ask,
                 Price = x.UnitPrice,
                 Total = x.Bid,
@@ -99,8 +101,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             ret.AddRange(sell.Select(x => new GetCurrentOrdersResponse
             {
                 Id = x.Id,
-                Token = x.TokenId,
-                Type = "Sell",
+                Symbol = x.TokenId,
+                Type = "sell",
                 Amount = x.Bid,
                 Price = x.UnitPrice,
                 Total = x.Ask,

@@ -189,7 +189,7 @@
     },
     computed: {
         isSignedIn: function () {
-            return !!this.account;
+            return !(app.account == null || app.account.name == null);
         },
         lang: function () {
             return this.$i18n.locale;

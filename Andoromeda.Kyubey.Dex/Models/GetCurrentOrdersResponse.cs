@@ -14,7 +14,7 @@ namespace Andoromeda.Kyubey.Dex.Models
 
         public double Total { get; set; }
 
-        public string Token { get; set; }
+        public string Symbol { get; set; }
 
         public DateTime Time { get; set; }
     }

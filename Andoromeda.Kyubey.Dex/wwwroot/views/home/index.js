@@ -69,6 +69,6 @@ component.methods = {
 
 component.computed = {
     isSignedIn: function () {
-        return !!app.account;
+        return !(app.account == null || app.account.name == null);
     }
 };

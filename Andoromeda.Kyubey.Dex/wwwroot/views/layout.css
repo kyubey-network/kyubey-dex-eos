@@ -12,6 +12,15 @@
     display: none;
 }
 
+#navbarResponsive .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+
+    #navbarResponsive .dropdown-menu a {
+        color: #212529;
+    }
+
 .login-app-icon-container img {
     margin: 0 8px 8px 8px;
 }
@@ -25,6 +34,7 @@
     color: #D9D9D9;
     font-size: 14px;
 }
+
 .qrcode-exchange-mask {
     width: 172px;
     height: 172px;
@@ -37,13 +47,14 @@
     right: 0;
     margin: auto;
 }
-    .qrcode-mask p {
-        margin-bottom: 4px;
-    }
 
-    .qrcode-mask a {
-        color: #FFB500 !important;
-    }
+.qrcode-mask p {
+    margin-bottom: 4px;
+}
+
+.qrcode-mask a {
+    color: #FFB500 !important;
+}
 
 .exchange {
     background: #fff;
@@ -1522,12 +1533,14 @@ a:not([href]):not([tabindex]) {
     cursor: pointer;
 }
 
-.sort-icon-active, .up-icon:hover, .down-icon:hover {
-    color: #FFB500;
-}
+    .sort-icon-active, .up-icon:hover, .down-icon:hover {
+        color: #FFB500;
+    }
+
 .container {
     max-width: 1280px;
 }
+
 .footer-logo {
     align-items: flex-start !important;
 }

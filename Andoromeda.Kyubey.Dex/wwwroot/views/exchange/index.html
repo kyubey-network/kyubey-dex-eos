@@ -253,7 +253,7 @@
                                 @click="redirectToDetail(x.symbol)">
                                 <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
-                                <td v-bind:class="{'text-success':x.change>0,'text-danger':x.change<0}">{{parseFloat(x.unitPrice).toFixed(4)}}</td>
+                                <td v-bind:class="{'text-success':x.change>0,'text-danger':x.change<0}">{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td v-bind:class="{'text-success':x.change>0,'text-danger':x.change<0}">
                                     <span v-if="x.change>0">+</span>{{parseFloat(x.change*100).toFixed(2)}}%
                                 </td>
@@ -294,30 +294,30 @@
                     <table class="table e-table table-sm table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">{{$t('currency')}}</th>
-                                <th scope="col">{{$t('type')}}</th>
+                                <th class="text-center" scope="col">{{$t('currency')}}</th>
+                                <th class="text-center" scope="col">{{$t('type')}}</th>
                                 <th scope="col">{{$t('unit_price')}}</th>
                                 <th scope="col">{{$t('quantity')}}</th>
                                 <th scope="col">{{$t('transaction_number')}}</th>
                                 <th scope="col">{{$t('total_price')}}</th>
                                 <th scope="col">{{$t('release_time')}}</th>
-                                <th scope="col">{{$t('status')}}</th>
-                                <th scope="col">{{$t('operation')}}</th>
+                                <th class="text-center" scope="col">{{$t('status')}}</th>
+                                <th class="text-center" scope="col">{{$t('operation')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(x, i) in openOrders" :key="i">
-                                <td>{{x.symbol}}/EOS</td>
-                                <td :class="{'text-red': x.type === 'sell', 'text-green': x.type === 'buy'}">{{x.type === 'sell' ? '卖出':'买入'}}</td>
-                                <td>{{parseFloat(x.price).toFixed(6)}}</td>
+                                <td class="text-center">{{x.symbol}}/EOS</td>
+                                <td class="text-center" :class="{'text-danger': x.type === 'sell', 'text-success': x.type === 'buy'}">{{x.type === 'sell' ? $t('sell'): $t('buy')}}</td>
+                                <td>{{parseFloat(x.price).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
                                 <!-- todo：transaction_number -->
                                 <td>——</td>
-                                <td>{{parseFloat(x.total).toFixed(4)}} {{x.symbol}}</td>
+                                <td>{{parseFloat(x.total).toFixed(4)}} EOS</td>
                                 <td>{{formatTime(x.time)}}</td>
                                 <!-- todo：status -->
-                                <td>——</td>
-                                <td>{{$t('cancel')}}</td>
+                                <td class="text-center">——</td>
+                                <td class="text-center text-warning">{{$t('cancel')}}</td>
                             </tr>
                             <tr v-if="openOrders.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>
@@ -334,30 +334,30 @@
                     <table class="table e-table table-sm table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">{{$t('currency')}}</th>
-                                <th scope="col">{{$t('type')}}</th>
+                                <th class="text-center" scope="col">{{$t('currency')}}</th>
+                                <th class="text-center" scope="col">{{$t('type')}}</th>
                                 <th scope="col">{{$t('release_time')}}</th>
                                 <th scope="col">{{$t('unit_price')}}</th>
                                 <th scope="col">{{$t('quantity')}}</th>
                                 <th scope="col">{{$t('transaction_number')}}</th>
                                 <th scope="col">{{$t('transaction_money')}}</th>
                                 <th scope="col">{{$t('status')}}</th>
-                                <th scope="col">{{$t('operation')}}</th>
+                                <th class="text-center" scope="col">{{$t('operation')}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(x, i) in orderHistory" :key="i">
-                                <td>{{x.symbol}}/EOS</td>
-                                <td :class="{'text-red': x.type === 'sell', 'text-green': x.type === 'buy'}">{{x.type === 'sell' ? '卖出':'买入'}}</td>
+                                <td class="text-center">{{x.symbol}}/EOS</td>
+                                <td class="text-center" :class="{'text-danger': x.type === 'sell', 'text-success': x.type === 'buy'}">{{x.type === 'sell' ? $t('sell'): $t('buy')}}</td>
                                 <td>{{formatTime(x.time)}}</td>
-                                <td>{{parseFloat(x.unitPrice).toFixed(6)}}</td>
+                                <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
                                 <!-- todo：transaction_number -->
                                 <td>——</td>
                                 <td>——</td>
                                 <!-- todo：status -->
                                 <td>——</td>
-                                <td>{{$t('cancel')}}</td>
+                                <td class="text-center text-warning">{{$t('detail')}}</td>
                             </tr>
                             <tr v-if="openOrders.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>
