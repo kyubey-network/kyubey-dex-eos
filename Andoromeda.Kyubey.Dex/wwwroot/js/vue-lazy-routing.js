@@ -20,7 +20,6 @@ router.beforeEach(function (to, from, next) {
 
 router.afterEach((to, from) => {
     $(window).scrollTop(0);
-    $('#page-css').remove();
     if (to.matched.length && to.matched[0].instances.default) {
         var current = to.matched[0].instances.default;
         if (current && current.$options.created.length) {
@@ -77,8 +76,31 @@ LazyRouting._documentReadyPromise = new Promise(function (resolve, reject) {
                     router.push('/404');
                 }
 
-                app.$mount('#app');
-                resolve();
+                while (!window.innerWidth);
+
+                if (window.innerWidth < 768) {
+                    $.get('/views/layout.m.html', {}, function (template) {
+                        Vue.component('render-layout', {
+                            template: template,
+                            created: function () {
+                                $('head').append(`<link id="layout-css" href="/views/layout.m.css" rel="stylesheet" />`);
+                            }
+                        });
+                        app.$mount('#app');
+                        resolve();
+                    });
+                } else {
+                    $.get('/views/layout.html', {}, function (template) {
+                        Vue.component('render-layout', {
+                            template: template,
+                            created: function () {
+                                $('head').append(`<link id="layout-css" href="/views/layout.css" rel="stylesheet" />`);
+                            }
+                        });
+                        app.$mount('#app');
+                        resolve();
+                    });
+                }
             });
     });
 });
@@ -151,102 +173,160 @@ LazyRouting._liftCreate = function (obj, key) {
     }
 }
 
-LazyRouting._loadComponentAsync = function (rule, map) {
+LazyRouting._loadComponentAsync = async function (rule, map) {
     if (LazyRouting.__mirror.some(x => x.src == rule))
-        return Promise.reject();
+        throw 'This is a mirror rule.';
 
     var path = LazyRouting._convertToViewNameBase(rule);
-    var css = null;
+    var css, dcss, mcss;
+    var mobile, desktop, js;
 
-    return LazyRouting._getHtmlAsync("/views" + path + ".html")
-        .then(async (result) => {
-            try {
-                var js = await LazyRouting._getHtmlAsync("/views" + path + ".js");
-                LazyRouting._controlJs[rule] = js;
+    try {
+        desktop = await LazyRouting._getHtmlAsync("/views" + path + ".html");
+        try {
+            var testCss = await LazyRouting._getHtmlAsync("/views" + path + ".css");
+            if (testCss) {
+                dcss = "/views" + path + ".css";
             }
-            catch (ex) {
+        } catch { }
+    } catch {
+        desktop = await LazyRouting._getHtmlAsync("/views" + path + "/index.html");
+        try {
+            var testCss = await LazyRouting._getHtmlAsync("/views" + path + "/index.css");
+            if (testCss) {
+                dcss = "/views" + path + "/index.css";
             }
-
+        } catch { }
+    }
+    try {
+        mobile = await LazyRouting._getHtmlAsync("/views" + path + ".m.html");
+        try {
+            var testCss = await LazyRouting._getHtmlAsync("/views" + path + ".m.css");
+            if (testCss) {
+                mcss = "/views" + path + ".m.css";
+            }
+        } catch { }
+    } catch {
+        try {
+            mobile = await LazyRouting._getHtmlAsync("/views" + path + "/index.m.html");
             try {
-                var testCss = await LazyRouting._getHtmlAsync("/views" + path + ".css");
+                var testCss = await LazyRouting._getHtmlAsync("/views" + path + "/index.m.css");
                 if (testCss) {
-                    css = "/views" + path + ".css";
+                    mcss = "/views" + path + "/index.m.css";
                 }
-            }
-            catch (ex) {
-            }
+            } catch { }
+        } catch {
+            mobile = desktop;
+            mcss = dcss;
+        }
+    }
+    try {
+        js = await LazyRouting._getHtmlAsync("/views" + path + ".js");
+        LazyRouting._controlJs[rule] = js;
+    } catch {
+        try {
+            js = await LazyRouting._getHtmlAsync("/views" + path + "/index.js");
+            LazyRouting._controlJs[rule] = js;
+        } catch { }
+    }
 
-            return Promise.resolve(result);
-        }, () => {
-            return LazyRouting._getHtmlAsync("/views" + path + "/index.html");
-        })
-        .then(async (result) => {
+    var component = { };
+
+    component.render = function () {
+        return;
+    };
+
+    if (LazyRouting._controlJs[rule]) {
+        eval(LazyRouting._controlJs[rule]);
+    }
+
+    if (component.watch) {
+        for (var x in component.watch) {
+            var watchFunc = component.watch[x];
+            if (typeof watchFunc === 'function') {
+                var str = watchFunc.toString().replace('{', '{\r\n if(!this.__initFinished)return;\r\n');
+                eval('component.watch[x]=' + str);
+            }
+        }
+    } else {
+        component.watch = {};
+    }
+
+    if (!component.computed) {
+        component.computed = [];
+    }
+
+    component.computed.__template = function () {
+        if (app._width < 768) {
+            return mobile;
+        } else {
+            return desktop;
+        }
+    };
+
+    var func = component.created;
+    component.created = function () {
+        $(window).scrollTop(0);
+        var data = LazyRouting._parseQueryString(this.$options.data, router.history.current.query)();
+        Object.assign(this.$data, data);
+        if (func)
+            func.call(this);
+        var self = this;
+        setTimeout(function () {
+            self.__initFinished = true;
+        }, 500);
+
+        if (window.innerWidth < 768) {
+            css = mcss;
+        } else {
+            css = dcss;
+        }
+
+        if (css) {
+            if (!$('#page-css').length) {
+                $('head').append(`<link id="page-css" href="${css}" rel="stylesheet" />`);
+            } else {
+                $('#page-css').attr('href', css);
+            }
+        } else {
+            $('#page-css').remove();
+        }
+    };
+    
+    component.render = function (_, ref) {
+        var h = _;
+        if (app._width < 768) {
+            return h({
+                template: mobile,
+                data: component.data || emptyFunc,
+                computed: component.computed || {},
+                watch: component.watch || {},
+                created: component.created || emptyFunc,
+                methods: component.methods || {}
+            });
+        } else {
+            return h({
+                template: desktop,
+                data: component.data,
+                computed: component.computed,
+                watch: component.watch,
+                created: component.created ,
+                methods: component.methods
+            });
+        }
+    };
+
+    LazyRouting.__routeMap[rule] = { path: rule, name: rule, component: component };
+    router.addRoutes([LazyRouting.__routeMap[rule]]);
+    if (map && map.length > 0) {
+        for (var i = 0; i < map.length; i++) {
             try {
-                var js = await LazyRouting._getHtmlAsync("/views" + path + "/index.js");
-                LazyRouting._controlJs[rule] = js;
+                router.addRoutes([{ path: map[i].src, name: map[i].src, component: component }]);
+            } catch (ex) {
             }
-            catch (ex) {
-            }
-            
-            try {
-                var testCss = await LazyRouting._getHtmlAsync("/views" + path + "/index.css");
-                if (testCss) {
-                    css = "/views" + path + "/index.css";
-                }
-            }
-            catch (ex) {
-            }
-
-            var component = { template: result };
-
-            if (LazyRouting._controlJs[rule]) {
-                eval(LazyRouting._controlJs[rule]);
-            }
-
-            if (component.watch) {
-                for (var x in component.watch) {
-                    var watchFunc = component.watch[x];
-                    if (typeof watchFunc === 'function') {
-                        var str = watchFunc.toString().replace('{', '{\r\n if(!this.__initFinished)return;\r\n');
-                        eval('component.watch[x]=' + str);
-                    }
-                }
-            }
-
-            var func = component.created;
-            component.created = function () {
-                $(window).scrollTop(0);
-                var data = LazyRouting._parseQueryString(this.$options.data, router.history.current.query)();
-                Object.assign(this.$data, data);
-                if (func)
-                    func.call(this);
-                var self = this;
-                setTimeout(function () {
-                    self.__initFinished = true;
-                }, 500);
-                if (css) {
-                    if (!$('#page-css').length) {
-                        $('head').append(`<link id="page-css" href="${css}" rel="stylesheet" />`);
-                    } else {
-                        $('#page-css').attr('href', `<link id="page-css" href="${css}" rel="stylesheet" />`);
-                    }
-                }
-            };
-            
-            LazyRouting.__routeMap[rule] = { path: rule, name: rule, component: component };
-            router.addRoutes([LazyRouting.__routeMap[rule]]);
-            if (map && map.length > 0)
-            {
-                for (var i = 0; i < map.length; i++)
-                {
-                    try {
-                        router.addRoutes([{ path: map[i].src, name: map[i].src, component: component }]);
-                    } catch (ex) {
-                    }
-                }
-            }
-            return Promise.resolve(component);
-        }, (err) => console.error(err));
+        }
+    }
+    return Promise.resolve(component);
 }
 
 LazyRouting._convertToViewNameBase = function(path) {

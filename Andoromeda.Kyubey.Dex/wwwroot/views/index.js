@@ -16,16 +16,30 @@
                 listeners: []
             }
         },
+        _width: null
     },
     created: function () {
-        this.initSignalR();
-        qv.get(`/api/v1/lang/${this.lang}/volume`, {}).then(res => {
+        var self = this;
+        self.initSignalR();
+        qv.get(`/api/v1/lang/${self.lang}/volume`, {}).then(res => {
             if (res.code === 200) {
-                this.volume = res.data;
+                self.volume = res.data;
             }
+        });
+        $(document).ready(function () {
+            self._width = window.innerWidth;
         });
     },
     mounted: function () {
+        var self = this;
+        self.$nextTick(() => {
+            window.addEventListener('resize', () => {
+                if (self._width >= 768 && window.innerWidth < 768 || window.innerWidth >= 768 && self._width < 768) {
+                    window.location.reload();
+                }
+                self._width = window.innerWidth;
+            });
+        });
     },
     watch: {
     },
