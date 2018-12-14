@@ -98,31 +98,31 @@ component.methods = {
     },
     initCandlestick: function () {
         var self = this;
-        this.chartWidget = new window.TradingView.widget(this.chart);
-        FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
-            self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
-                var data = apiResult.data;
-                if (data && Array.isArray(data)) {
-                    var meta = { noData: false };
-                    var bars = [];
-                    if (data.length) {
-                        for (var i = 0; i < data.length; i += 1) {
-                            bars.push({
-                                time: Number(new Date(data[i].time)),
-                                close: data[i].closing,
-                                open: data[i].opening,
-                                high: data[i].max,
-                                low: data[i].min,
-                                volume: data[i].volume
-                            });
+            this.chartWidget = new window.TradingView.widget(this.chart);
+            FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
+                self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
+                    var data = apiResult.data;
+                    if (data && Array.isArray(data)) {
+                        var meta = { noData: false };
+                        var bars = [];
+                        if (data.length) {
+                            for (var i = 0; i < data.length; i += 1) {
+                                bars.push({
+                                    time: Number(new Date(data[i].time)),
+                                    close: data[i].closing,
+                                    open: data[i].opening,
+                                    high: data[i].max,
+                                    low: data[i].min,
+                                    volume: data[i].volume
+                                });
+                            }
+                        } else {
+                            meta = { noData: true };
                         }
-                    } else {
-                        meta = { noData: true };
+                        onResult(bars, meta);
                     }
-                    onResult(bars, meta);
-                }
-            });
-        }
+                });
+            }
     },
     getCandlestickData: function (tokenId, startDate, endDate, period, callback) {
         var _this = this;
@@ -352,7 +352,7 @@ component.methods = {
             height: 160,
             colorDark: "#000000",
             colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
+            correctLevel: QRCode.CorrectLevel.L
         });
     },
     getSellOrders() {

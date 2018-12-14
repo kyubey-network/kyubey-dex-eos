@@ -181,23 +181,24 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         public async Task<IActionResult> Candlestick([FromServices] KyubeyContext db, GetCandlestickRequest request, CancellationToken token)
         {
             var ticks = new TimeSpan(0, 0, request.Period);
-            var begin = new DateTime(request.Begin.Ticks / ticks.Ticks * ticks.Ticks);
-            var end = new DateTime(request.End.Ticks / ticks.Ticks * ticks.Ticks);
+            var begin = new DateTime(request.Begin.Ticks / ticks.Ticks * ticks.Ticks).ToUniversalTime();
+            var end = new DateTime(request.End.Ticks / ticks.Ticks * ticks.Ticks).ToUniversalTime();
+
             var data = await db.MatchReceipts
-                .Where(x => x.TokenId == request.Id)
-                .Where(x => x.Time < end)
-                .OrderBy(x => x.Time)
-                .GroupBy(x => x.Time >= begin ? x.Time.Ticks / ticks.Ticks * ticks.Ticks : 0)
-                .Select(x => new GetCandlestickResponse
-                {
-                    Time = new DateTime(x.Key),
-                    Min = x.Select(y => y.UnitPrice).Min(),
-                    Max = x.Select(y => y.UnitPrice).Max(),
-                    Opening = x.Select(y => y.UnitPrice).FirstOrDefault(),
-                    Closing = x.OrderByDescending(y => y.Time).Select(y => y.UnitPrice).FirstOrDefault(),
-                    Volume = x.Count()
-                })
-                .ToListAsync(token);
+                 .Where(x => x.TokenId == request.Id)
+                 .Where(x => x.Time < end)
+                 .OrderBy(x => x.Time)
+                 .GroupBy(x => x.Time >= begin ? x.Time.Ticks / ticks.Ticks * ticks.Ticks : 0)
+                 .Select(x => new GetCandlestickResponse
+                 {
+                     Time = new DateTime(x.Key),
+                     Min = x.Select(y => y.UnitPrice).Min(),
+                     Max = x.Select(y => y.UnitPrice).Max(),
+                     Opening = x.Select(y => y.UnitPrice).FirstOrDefault(),
+                     Closing = x.OrderByDescending(y => y.Time).Select(y => y.UnitPrice).FirstOrDefault(),
+                     Volume = x.Count()
+                 })
+                 .ToListAsync(token);
 
             if (data.Count <= 1) return ApiResult(data.Where(x => x.Time >= begin).OrderBy(x => x.Time));
 
@@ -220,7 +221,11 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     Volume = 0
                 });
             }
-            return ApiResult(data.Where(x => x.Time >= begin).OrderBy(x => x.Time));
+
+            var responseData = data.Where(x => x.Time >= begin).OrderBy(x => x.Time).ToList();
+            responseData.ForEach(x => x.Time = x.Time.ToLocalTime());
+
+            return ApiResult(responseData);
         }
 
     }
