@@ -208,7 +208,8 @@
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_total')}}</label>
                                     <div class="e-input">
                                         <input @blur="handleBlur('sellTotal', 4)" @input="handleTotalChange('sell')" v-model="inputs.sellTotal" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
-                                        <span class="e-input-suffix">EOS</span>
+                                        <span class="e-input-suffix" v-if="control.trade==='limit'">EOS</span>
+                                        <span class="e-input-suffix" v-if="control.trade==='market'">{{tokenId}}</span>
                                     </div>
                                 </div>
                                 <div class="mb-2" :class="{'dn':control.trade==='limit'}">
@@ -367,8 +368,10 @@
             </div>
         </div>
     </div>
+
+    <!--exchange modal-->
     <div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content" style="background: rgba(0, 0, 0, 0.8)">
                 <div class="close-btn text-center">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -385,6 +388,9 @@
                             {{$t('exchange_account')}}<br />
                             {{$root.account==null ? "":$root.account.name}}
                         </p>
+                        <div class="qrcode-mask qrcode-exchange-mask d-flex flex-column align-items-center justify-content-center" v-if="!$root.qrcodeIsValid">
+                            <p>{{$t('qrcode_expired')}}</p>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-bottom text-center">
@@ -414,6 +420,22 @@
                         </p>
                         <p>
                             {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                        </p>
+                    </div>
+                    <div class="modal-body text-left" v-if="exchange.type=='buy-market'">
+                        <p class="p3 text-success">
+                            {{$t('exchange_buy')}} {{exchange.taretSymbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                        </p>
+                    </div>
+                    <div class="modal-body text-left" v-if="exchange.type=='sell-market'">
+                        <p class="p3 text-danger">
+                            {{$t('exchange_sell')}} {{exchange.symbol}}
+                        </p>
+                        <p>
+                            {{$t('exchange_total')}}：{{exchange.amount}}  {{exchange.symbol}}
                         </p>
                     </div>
                 </div>

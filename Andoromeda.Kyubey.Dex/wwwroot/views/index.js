@@ -16,12 +16,14 @@
                 listeners: []
             }
         },
+        qrcodeIsValid: true,
+        qrcodeTimer: null,
         _width: null
     },
     created: function () {
         var self = this;
-        self.initSignalR();
-        qv.get(`/api/v1/lang/${self.lang}/volume`, {}).then(res => {
+        this.initSignalR();
+        qv.get(`/api/v1/lang/${this.lang}/info/volume`, {}).then(res => {
             if (res.code === 200) {
                 self.volume = res.data;
             }
@@ -68,7 +70,7 @@
                 height: 160,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.L
+                correctLevel: QRCode.CorrectLevel.H
             });
         },
         getSimpleWalletUUID: function () {
@@ -116,7 +118,16 @@
         },
         login: function () {
             $('#loginModal').modal('show');
+            this.refreshLoginQRCode();
+        },
+        refreshLoginQRCode: function () {
+            var _this = this;
             this.generateLoginQRCode("loginQRCode", this.getSimpleWalletUUID());
+            this.qrcodeIsValid = true;
+            clearTimeout(_this.qrcodeTimer);
+            _this.qrcodeTimer = setTimeout(function () {
+                _this.qrcodeIsValid = false;
+            }, 3 * 60 * 1000);
         },
         scatterLogin: function () {
             if (!('scatter' in window)) {

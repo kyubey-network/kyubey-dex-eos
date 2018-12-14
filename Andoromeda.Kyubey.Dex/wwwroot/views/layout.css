@@ -12,6 +12,39 @@
     display: none;
 }
 
+.login-app-icon-container img {
+    margin: 0 8px 8px 8px;
+}
+
+.qrcode-mask {
+    width: 172px;
+    height: 172px;
+    background-color: rgba(0, 0, 0, 0.80);
+    position: absolute;
+    top: 35px;
+    color: #D9D9D9;
+    font-size: 14px;
+}
+.qrcode-exchange-mask {
+    width: 172px;
+    height: 172px;
+    background-color: rgba(0, 0, 0, 0.80);
+    position: absolute;
+    top: 53px;
+    color: #D9D9D9;
+    font-size: 14px;
+    left: 12px;
+    right: 0;
+    margin: auto;
+}
+    .qrcode-mask p {
+        margin-bottom: 4px;
+    }
+
+    .qrcode-mask a {
+        color: #FFB500 !important;
+    }
+
 .exchange {
     background: #fff;
     box-shadow: 0 0 15px rgba(0,0,0,0.2);

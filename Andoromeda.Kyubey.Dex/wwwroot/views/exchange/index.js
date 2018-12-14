@@ -141,6 +141,7 @@ component.methods = {
             this.scatterBuy();
         }
         else if (app.loginMode == "Simple Wallet") {
+            $('#exchangeModal').modal('show');
             this.simpleWalletBuy();
         }
     },
@@ -149,8 +150,12 @@ component.methods = {
         var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
         var buyEosTotal = parseFloat(buyAmount * buyPrice);
-
-        this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+        if (this.control.trade === 'limit') {
+            this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+        }
+        else if (this.control.trade === 'market') {
+            this.simpleWalletExchange("buy-market", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+        }
     },
     scatterBuy() {
         var self = this;
@@ -220,6 +225,7 @@ component.methods = {
             this.scatterSell();
         }
         else if (app.loginMode == "Simple Wallet") {
+            $('#exchangeModal').modal('show');
             this.simpleWalletSell();
         }
     },
@@ -228,8 +234,13 @@ component.methods = {
         var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(sellPrice * sellAmount);
-
-        this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
+        if (this.control.trade === 'limit') {
+            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
+        }
+        else if (this.control.trade === 'market') {
+            sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
+            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
+        }
     },
     scatterSell() {
         var self = this;
@@ -284,7 +295,12 @@ component.methods = {
         }
     },
     simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, taretAmount, taretSymbol, symbol, precision) {
-        $('#exchangeModal').modal('show');
+        //set qrcode timer
+        app.qrcodeIsValid = true;
+        clearTimeout(app.qrcodeTimer);
+        app.qrcodeTimer = setTimeout(function () {
+            app.qrcodeIsValid = false;
+        }, 3 * 60 * 1000);
 
         this.exchange.type = type;
         this.exchange.from = from;
@@ -300,7 +316,7 @@ component.methods = {
             this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
         }
         else if (this.control.trade === 'market') {
-            alert('to be continued');
+            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `market`);
         }
     },
     _getExchangeSign: function (uuid) {
@@ -336,7 +352,7 @@ component.methods = {
             height: 160,
             colorDark: "#000000",
             colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.L
+            correctLevel: QRCode.CorrectLevel.H
         });
     },
     getSellOrders() {

@@ -108,4 +108,9 @@ const zh = {
     search: '搜索',
     limit_order: '限价交易',
     market_order: '市价交易',
+    qrcode_expired: '二维码已失效',
+    qrcode_refresh: '点击刷新',
+    pocket_tip: '版本号至少为 Android 0.4.6、iOS 0.4.4',
+    math_tip: '版本号至少为 1.6.5',
+    meetone_tip: '版本号至少为 1.1.8'
 };

@@ -28,7 +28,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Volume = x.Sum(c => c.Bid)
             }).ToListAsync(cancellationToken);
 
-            var yesterdayList = await db.MatchReceipts.Where(x => x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
+            var lastList = await db.MatchReceipts.Where(x => x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
             {
                 TokenId = x.Key,
                 CurrentPrice = x.FirstOrDefault().UnitPrice
@@ -37,12 +37,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var responseData = (await db.Tokens.OrderByDescending(x => x.Priority).ToListAsync(cancellationToken)).Select(x => new GetTokenListResponse()
             {
                 icon_src = $"/token_assets/{x.Id}/icon.png",
-                current_price = todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? yesterdayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? 0,
+                current_price = todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? 0,
                 change_recent_day =
-                    todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
-                    yesterdayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
-                    yesterdayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == 0 ?
-                    0 : todayList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice / yesterdayList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice,
+                    (todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
+                    lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
+                    lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == 0) ?
+                    0 : (todayList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice / lastList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice) - 1,
                 is_recommend = true,
                 max_price_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.MaxPrice ?? 0,
                 min_price_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.MinPrice ?? 0,
@@ -126,24 +126,24 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             string id,
             [FromServices] KyubeyContext db,
             [FromServices] TokenRepositoryFactory tokenRepositoryFactory,
-            [FromQuery] GetNewsListRequest request,
+            GetBaseRequest request,
             CancellationToken cancellationToken
             )
         {
-            var todayList = await db.MatchReceipts.Where(x => x.Time >= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
+            var todayItem = await db.MatchReceipts.Where(x => x.TokenId == id && x.Time >= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
             {
                 TokenId = x.Key,
                 CurrentPrice = x.FirstOrDefault().UnitPrice,
                 MaxPrice = x.Max(c => c.UnitPrice),
                 MinPrice = x.Min(c => c.UnitPrice),
                 Volume = x.Sum(c => c.Bid)
-            }).ToListAsync(cancellationToken);
+            }).FirstOrDefaultAsync(cancellationToken);
 
-            var yesterdayList = await db.MatchReceipts.Where(x => x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
+            var lastItem = await db.MatchReceipts.Where(x => x.TokenId == id && x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
             {
                 TokenId = x.Key,
                 CurrentPrice = x.FirstOrDefault().UnitPrice
-            }).ToListAsync(cancellationToken);
+            }).FirstOrDefaultAsync(cancellationToken);
 
             var tokenRepository = await tokenRepositoryFactory.CreateAsync(request.Lang);
             var token = tokenRepository.GetSingle(id);
@@ -151,10 +151,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var responseData = new GetTokenDetailResponse()
             {
                 Symbol = token.Id,
-                CurrentPrice = todayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? yesterdayList.FirstOrDefault(t => t.TokenId == token.Id)?.CurrentPrice ?? 0,
-                MaxPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MaxPrice ?? 0,
-                MinPriceRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.MinPrice ?? 0,
-                VolumeRecentDay = todayList.FirstOrDefault(s => s.TokenId == token.Id)?.Volume ?? 0,
+                ChangeRecentDay = (todayItem?.CurrentPrice == null || ((lastItem?.CurrentPrice ?? 0) == 0)) ? 0 :
+((todayItem?.CurrentPrice ?? 0) / (lastItem?.CurrentPrice ?? 1) - 1),
+                CurrentPrice = todayItem?.CurrentPrice ?? lastItem?.CurrentPrice ?? 0,
+                MaxPriceRecentDay = todayItem?.MaxPrice ?? 0,
+                MinPriceRecentDay = todayItem?.MinPrice ?? 0,
+                VolumeRecentDay = todayItem?.Volume ?? 0,
                 IsRecommend = true,
                 IconSrc = $"/token_assets/{token.Id}/icon.png",
                 Priority = token.Priority,

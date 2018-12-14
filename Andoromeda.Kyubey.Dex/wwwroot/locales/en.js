@@ -73,4 +73,9 @@ const en = {
     buy: 'Buy',
     sell: 'Sell',
     ups_downs: 'Ups downs',
+    qrcode_expired: 'QRCode is expired',
+    qrcode_refresh: 'Refresh',
+    pocket_tip: 'Version required Android 0.4.6¡¢iOS 0.4.4',
+    math_tip: 'Version required 1.6.5',
+    meetone_tip:'Version required 1.1.8',
 };

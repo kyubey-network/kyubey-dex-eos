@@ -36,8 +36,13 @@ const zh_tw = {
     k_4H: '4小時',
     k_6H: '6小時',
     k_1D: '1天',
-    switch:'切換',
+    switch: '切換',
     less_full_text: '收起全文',
     expand_text: '展開全文',
-    search: '搜索'
+    search: '搜索',
+    qrcode_expired: '二維碼失效',
+    qrcode_refresh: '點擊刷新',
+    pocket_tip: '版本號至少為 Android 0.4.6、iOS 0.4.4',
+    math_tip: '版本號至少為 1.6.5',
+    meetone_tip: '版本號至少為 1.1.8'
 };

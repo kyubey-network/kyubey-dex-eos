@@ -44,7 +44,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             {
                 id = x.TokenId,
                 price = x.Last?.UnitPrice,
-                change = (x.Last?.UnitPrice) / (last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice - 1)
+                change = (x.Last?.UnitPrice == null
+                || last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice == null
+                || last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice == 0)
+                ? 0 : ((x.Last?.UnitPrice / last24?.FirstOrDefault(l => l.TokenId == x.TokenId)?.Last?.UnitPrice) - 1)
             });
 
             var tokendUnitPriceResult = (await db.Tokens.Where(x => x.Status == TokenStatus.Active).ToListAsync(cancellationToken)).Select(x => new
