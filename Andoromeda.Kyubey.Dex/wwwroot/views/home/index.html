@@ -79,8 +79,8 @@
                             <i class="my-star"></i>        
                         </td>
                         <td>{{item.symbol}}/EOS</td>
-                        <td>{{item.current_price}}</td>
-                        <td>{{item.change_recent_day}}</td>
+                        <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.current_price}}</td>
+                        <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>
                         <td>{{item.min_price_recent_day}}</td>
                         <td>{{item.volume_recent_day}}</td>

@@ -110,5 +110,6 @@ const zh = {
     qrcode_refresh: '点击刷新',
     pocket_tip: '版本号至少为 Android 0.4.6、iOS 0.4.4',
     math_tip: '版本号至少为 1.6.5',
-    meetone_tip: '版本号至少为 1.1.8'
+    meetone_tip: '版本号至少为 1.1.8',
+    currency_introduction: '币种简介',
 };

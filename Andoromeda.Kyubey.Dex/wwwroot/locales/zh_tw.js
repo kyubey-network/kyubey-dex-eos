@@ -110,5 +110,6 @@ const zh_tw = {
     qrcode_refresh: '點擊刷新',
     pocket_tip: '版本號至少為 Android 0.4.6、iOS 0.4.4',
     math_tip: '版本號至少為 1.6.5',
-    meetone_tip: '版本號至少為 1.1.8'
+    meetone_tip: '版本號至少為 1.1.8',
+    currency_introduction: '幣種簡介',
 };

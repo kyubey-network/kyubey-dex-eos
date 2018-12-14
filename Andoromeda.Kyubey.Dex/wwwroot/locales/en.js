@@ -110,5 +110,6 @@ const en = {
     qrcode_refresh: 'Refresh',
     pocket_tip: 'Version required Android 0.4.6¡¢iOS 0.4.4',
     math_tip: 'Version required 1.6.5',
-    meetone_tip:'Version required 1.1.8',
+    meetone_tip: 'Version required 1.1.8',
+    currency_introduction: 'Currency introduction',
 };

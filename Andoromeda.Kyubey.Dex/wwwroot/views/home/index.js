@@ -27,8 +27,24 @@ component.created = function () {
         });
     qv.get(`/api/v1/lang/${app.lang}/token`, {}).then(res => {
         if (res.code - 0 === 200) {
-            self.tokenTableSource = res.data;
             self.tokenTable = res.data;
+            self.tokenTable.forEach(x => {
+                x.current_price = x.current_price.toFixed(8);
+                x.max_price_recent_day = x.max_price_recent_day.toFixed(8);
+                x.min_price_recent_day = x.min_price_recent_day.toFixed(8);
+                var symbol = '';
+                x.change_recent_day *= 100;
+                if (x.change_recent_day > 0) {
+                    x.up = true;
+                    x.down = false;
+                    symbol = '+';
+                } else if (x.change_recent_day < 0) {
+                    x.up = false;
+                    x.down = true;
+                }
+                x.change_recent_day = symbol + x.change_recent_day + '%';
+            });
+            self.tokenTableSource = self.tokenTable;
         }
     })
 };
