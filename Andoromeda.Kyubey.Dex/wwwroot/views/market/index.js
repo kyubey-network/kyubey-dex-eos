@@ -7,7 +7,7 @@
             tab: 'eos'
         },
         sortControl: {
-            desc: null,
+            desc: 0,
             row: null
         }
     };
@@ -23,18 +23,23 @@ component.methods = {
             this.tokenTable = this.tokenTableSource;
         }
     },
+    sortTokenOnClick(row) {
+        this.sortControl.desc = (this.sortControl.desc + 1) % 3;
+        this.sortToken(row, this.sortControl.desc);
+    },
     sortToken(row, desc) {
         this.sortControl.row = row;
         this.sortControl.desc = desc;
-        if (this.sortControl.desc === true){
-            this.tokenTable.sort((a, b)=>{
-                return parseFloat(b[row])-parseFloat(a[row])
+        if (this.sortControl.desc === 2) {
+            this.tokenTable.sort((a, b) => {
+                return parseFloat(b[row]) - parseFloat(a[row])
             })
-        }
-        if (this.sortControl.desc === false) {
-            this.tokenTable.sort((a, b)=>{
-                return parseFloat(a[row])-parseFloat(b[row])
+        } else if (this.sortControl.desc === 1) {
+            this.tokenTable.sort((a, b) => {
+                return parseFloat(a[row]) - parseFloat(b[row])
             })
+        } else {
+            this.tokenTable = this.tokenTableSource;
         }
     }
 } 
