@@ -538,7 +538,7 @@ component.methods = {
         })
     },
     redirectToDetail(token) {
-        window.location.href = '/exchange/' + token
+        app.redirect('/exchange/:id', '/exchange/' + token, { id: token }, {});
     }
 };
 component.computed = {
