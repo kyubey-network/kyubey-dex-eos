@@ -112,4 +112,5 @@ const zh = {
     math_tip: '版本号至少为 1.6.5',
     meetone_tip: '版本号至少为 1.1.8',
     currency_introduction: '币种简介',
+    or: '或',
 };

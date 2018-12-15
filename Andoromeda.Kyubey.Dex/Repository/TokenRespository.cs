@@ -99,7 +99,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
                 return TokenCultureFileSuffix.EN;
             if (new string[] { "zh" }.Contains(cultureStr))
                 return TokenCultureFileSuffix.ZHCN;
-            if (new string[] { "zh-Hant" }.Contains(cultureStr))
+            if (new string[] { "zh-Hant", "zh_tw" }.Contains(cultureStr))
                 return TokenCultureFileSuffix.ZHTW;
             if (new string[] { "ja" }.Contains(cultureStr))
                 return TokenCultureFileSuffix.JP;
@@ -147,7 +147,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
             public const string JP = ".ja";
         }
 
-        public class TokenRepositoryFactory 
+        public class TokenRepositoryFactory
         {
             private IConfiguration _config;
             private IHostingEnvironment _hostingEnv;

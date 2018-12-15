@@ -127,7 +127,7 @@
                 <div class="card my-card e-submit-card">
                     <div class="my-card-header header-text-color">
                         <div @click="control.trade = 'limit'" class="border-button d-inline-block" :class="{'border-button-active': control.trade === 'limit'}">{{$t('limit_order')}}</div>
-                        <div @click="control.trade = 'market'" class="border-button d-inline-block" :class="{'border-button-active': control.trade === 'market'}">{{$t('market_order')}}</div>
+                        <!--<div @click="control.trade = 'market'" class="border-button d-inline-block" :class="{'border-button-active': control.trade === 'market'}">{{$t('market_order')}}</div>-->
                     </div>
                     <div class="container-fluid">
                         <div class="row">
@@ -280,7 +280,7 @@
                             <tr v-for="(x, i) in latestTransactions" :key="i">
                                 <td v-bind:class="{'text-success':x.growing,'text-danger':!x.growing}">{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}}</td>
-                                <td>{{formatTime(x.time)}}</td>
+                                <td>{{formatShortTime(x.time)}}</td>
                             </tr>
                         </tbody>
                     </table>

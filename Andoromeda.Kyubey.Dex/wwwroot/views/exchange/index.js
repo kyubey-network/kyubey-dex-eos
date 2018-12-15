@@ -438,6 +438,9 @@ component.methods = {
     formatTime(time) {
         return moment(time + 'Z').format('YYYY-MM-DD HH:mm:ss')
     },
+    formatShortTime(time) {
+        return moment(time + 'Z').format('MM-DD HH:mm:ss')
+    },
     getFavoriteList() {
         qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
             if (res.code === 200) {

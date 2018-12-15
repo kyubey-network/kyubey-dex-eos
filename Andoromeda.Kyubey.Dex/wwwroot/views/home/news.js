@@ -41,17 +41,7 @@ component.methods = {
                 }
 
                 var time = new Date(item.time);
-                item.time = time.getFullYear()
-                    + '-'
-                    + (time.getMonth() + 1)
-                    + '-'
-                    + time.getDate()
-                    + ' '
-                    + time.getHours()
-                    + ':'
-                    + time.getMinutes()
-                    + ':'
-                    + time.getSeconds();
+                item.time = moment(time + 'Z').format('YYYY-MM-DD HH:mm:ss');
             });
     }
 };

@@ -18,7 +18,7 @@
 };
 
 component.methods = {
-    searchToken () {
+    searchToken() {
         if (this.searchText !== '') {
             this.tokenTable = this.tokenTableSource.filter(item => {
                 return item.symbol.toUpperCase().includes(this.searchText.toUpperCase())
@@ -49,7 +49,7 @@ component.methods = {
     focusMobileSearch() {
         setTimeout(function () { $('#mobileTokenSearch').focus(); }, 50)
     }
-} 
+}
 
 component.computed = {
     isSignedIn: function () {
@@ -76,10 +76,10 @@ component.created = function () {
                     x.up = false;
                     x.down = true;
                 }
-                x.change_recent_day = symbol + x.change_recent_day + '%';
+                x.change_recent_day = symbol + x.change_recent_day.toFixed(2) + '%';
             });
             this.tokenTableSource = this.tokenTable;
         }
     })
-        
+
 };

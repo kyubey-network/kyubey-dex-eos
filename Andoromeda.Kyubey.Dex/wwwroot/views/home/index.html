@@ -30,24 +30,24 @@
                 </div>
                 <div class="m-2">
                     <div class="d-flex align-items-center serach-btn">
-                        <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText" @keyup.enter="searchToken" @input="searchToken"/>
+                        <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText" @keyup.enter="searchToken" @input="searchToken" />
                         <button type="submit" @click="searchToken">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <table class="table table-hover">
+            <table class="table table-hover text-right">
                 <thead>
                     <tr>
-                        <th scope="col" v-if="isSignedIn">
-                            <i class="fa fa-star-o" style="color: #AFAFAF;font-size: 1.2rem;"></i>
+                        <th class="text-center" scope="col" v-if="isSignedIn">
+                            <i class="fa fa-star-o" style="color: #AFAFAF;font-size: 16px;"></i>
                             <span>{{$t('optional')}}</span>
                         </th>
-                        <th scope="col">{{$t('trading_pair')}}</th>
+                        <th class="text-center" scope="col">{{$t('trading_pair')}}</th>
                         <th scope="col">{{$t('latest_price')}}</th>
-                        <th scope="col" class="d-flex align-items-center justify-content-center">
-                            <span @click="sortTokenOnClick('change_recent_day')"  style="cursor:pointer">{{$t('ups_downs_24H')}}</span>
+                        <th scope="col" class="d-flex align-items-center justify-content-end">
+                            <span @click="sortTokenOnClick('change_recent_day')" style="cursor:pointer">{{$t('ups_downs_24H')}}</span>
                             <div class="d-flex flex-column align-items-center ml-1">
                                 <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === 1&&sortControl.row === 'change_recent_day'}" @click="sortToken('change_recent_day', 1)">
                                     <i class="fa fa-caret-up"></i>
@@ -59,7 +59,7 @@
                         </th>
                         <th scope="col">{{$t('highest_price_24H')}}</th>
                         <th scope="col">{{$t('lowest_price_24H')}}</th>
-                        <th scope="col" class="d-flex align-items-center justify-content-center">
+                        <th scope="col" class="d-flex align-items-center justify-content-end">
                             <span @click="sortTokenOnClick('volume_recent_day')" style="cursor:pointer">{{$t('volume_24H')}}</span>
                             <div class="d-flex flex-column align-items-center ml-1">
                                 <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === 1&&sortControl.row === 'volume_recent_day'}" @click="sortToken('volume_recent_day', 1)">
@@ -73,19 +73,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
+                    <tr class="text-center" style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
                         @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
                         <td scope="row" v-if="isSignedIn">
-                            <i class="my-star"></i>        
+                            <i class="my-star"></i>
                         </td>
-                        <td>{{item.symbol}}/EOS</td>
+                        <td class="text-center">{{item.symbol}}/EOS</td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.current_price}}</td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>
                         <td>{{item.min_price_recent_day}}</td>
-                        <td>{{item.volume_recent_day}}</td>
+                        <td>{{item.volume_recent_day.toFixed(4)}}</td>
                     </tr>
-                    <tr v-if="tokenTable.length === 0" >
+                    <tr v-if="tokenTable.length === 0">
                         <td colspan="6" class="nodata">
                             {{$t('noData')}}
                         </td>

@@ -43,7 +43,7 @@ component.created = function () {
                     x.up = false;
                     x.down = true;
                 }
-                x.change_recent_day = symbol + x.change_recent_day + '%';
+                x.change_recent_day = symbol + x.change_recent_day.toFixed(2) + '%';
             });
             self.tokenTableSource = self.tokenTable;
         }
