@@ -230,11 +230,7 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
         } catch { }
     }
 
-    var component = { };
-
-    component.render = function () {
-        return;
-    };
+    var component = { template: window.innerWidth < 768 ? mobile : desktop };
 
     if (LazyRouting._controlJs[rule]) {
         eval(LazyRouting._controlJs[rule]);
@@ -251,18 +247,6 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
     } else {
         component.watch = {};
     }
-
-    if (!component.computed) {
-        component.computed = [];
-    }
-
-    component.computed.__template = function () {
-        if (app._width < 768) {
-            return mobile;
-        } else {
-            return desktop;
-        }
-    };
 
     var func = component.created;
     component.created = function () {
@@ -293,28 +277,28 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
         }
     };
     
-    component.render = function (_, ref) {
-        var h = _;
-        if (app._width < 768) {
-            return h({
-                template: mobile,
-                data: component.data || emptyFunc,
-                computed: component.computed || {},
-                watch: component.watch || {},
-                created: component.created || emptyFunc,
-                methods: component.methods || {}
-            });
-        } else {
-            return h({
-                template: desktop,
-                data: component.data,
-                computed: component.computed,
-                watch: component.watch,
-                created: component.created ,
-                methods: component.methods
-            });
-        }
-    };
+    //component.render = function (_, ref) {
+    //    var h = _;
+    //    if (app._width < 768) {
+    //        return h({
+    //            template: mobile,
+    //            data: component.data || emptyFunc,
+    //            computed: component.computed || {},
+    //            watch: component.watch || {},
+    //            created: component.created || emptyFunc,
+    //            methods: component.methods || {}
+    //        });
+    //    } else {
+    //        return h({
+    //            template: desktop,
+    //            data: component.data,
+    //            computed: component.computed,
+    //            watch: component.watch,
+    //            created: component.created ,
+    //            methods: component.methods
+    //        });
+    //    }
+    //};
 
     LazyRouting.__routeMap[rule] = { path: rule, name: rule, component: component };
     router.addRoutes([LazyRouting.__routeMap[rule]]);
