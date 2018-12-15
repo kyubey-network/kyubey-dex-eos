@@ -1,9 +1,51 @@
 ﻿<div>
-    <h2>Mobile</h2>
-    <h2>Mobile</h2>
-    <h2>Mobile</h2>
-    <h2>Mobile</h2>
-    <h2>Mobile</h2>
-    <h2>Mobile</h2>
-    <router-view></router-view>
+    <div class="mobile-page">
+        <router-view></router-view>
+        <div class="mobile-copyright">
+            <div>24H成交额：1234.5678 EOS</div>
+            <div>市场有风险，投资需谨慎</div>
+            <div>Copyright © Kyubey 2018. All rights reserved.</div>
+        </div>
+    </div>
+    <div class="tab-outer">
+        <table>
+            <tr>
+                <td @click="$root.redirect('/')">
+                    <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'home' }">
+                        <img src="/img/home.active.svg" v-if="$root.mobile.nav === 'home'" />
+                        <img src="/img/home.svg" v-if="$root.mobile.nav !== 'home'" />
+                        <div class="tab-item-text">首页</div>
+                    </div>
+                </td>
+                <td @click="$root.redirect('/market')">
+                    <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'market' }">
+                        <img src="/img/market.active.svg" v-if="$root.mobile.nav === 'market'" />
+                        <img src="/img/market.svg" v-if="$root.mobile.nav !== 'market'" />
+                        <div class="tab-item-text">行情</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'order' }">
+                        <img src="/img/order.active.svg" v-if="$root.mobile.nav === 'order'" />
+                        <img src="/img/order.svg" v-if="$root.mobile.nav !== 'order'" />
+                        <div class="tab-item-text">订单</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'assets' }">
+                        <img src="/img/assets.active.svg" v-if="$root.mobile.nav === 'assets'" />
+                        <img src="/img/assets.svg" v-if="$root.mobile.nav !== 'assets'" />
+                        <div class="tab-item-text">资产</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'more' }">
+                        <img src="/img/more.active.svg" v-if="$root.mobile.nav === 'more'" />
+                        <img src="/img/more.svg" v-if="$root.mobile.nav !== 'more'" />
+                        <div class="tab-item-text">更多</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

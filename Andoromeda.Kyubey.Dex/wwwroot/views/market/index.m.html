@@ -1,0 +1,91 @@
+﻿<div>
+    <div class="market-header">
+        <table class="market-filter">
+            <tr v-show="mobile.mode === 'normal'">
+                <td>
+                    <img src="/img/home-page/eos.png" />
+                    EOS
+                </td>
+                <td class="market-filter-search-cell" @click="mobile.mode = 'search'; focusMobileSearch();">
+                    <i class="fa fa-search"></i>
+                </td>
+            </tr>
+            <tr v-show="mobile.mode !== 'normal'">
+                <td><i class="fa fa-search"></i></td>
+                <td>
+                    <input id="mobileTokenSearch" class="market-search-textbox" placeholder="通证" v-model="mobile.search" />
+                </td>
+                <td @click="mobile.mode = 'normal'; mobile.search = '';" class="market-filter-close-cell"><i class="fa fa-close"></i></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="market-token-list" v-if="mobile.mode === 'normal'">
+        <table class="market-token-header">
+            <tr>
+                <td>交易对</td>
+                <td>24H成交量</td>
+                <td>最新价格</td>
+                <td>24H涨跌幅</td>
+            </tr>
+        </table>
+        <table class="market-token-table">
+            <tr>
+                <td class="token-pair-cell">
+                    <div class="token-pair"><i class="fa fa-star-o"></i> KBY/EOS</div>
+                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
+                </td>
+                <td class="token-price-cell">0.0001 EOS</td>
+                <td class="token-change-cell">
+                    <div class="token-change green">+0.01%</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="token-pair-cell">
+                    <div class="token-pair"><i class="fa fa-star-o"></i> CMU/EOS</div>
+                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
+                </td>
+                <td class="token-price-cell">0.0001 EOS</td>
+                <td class="token-change-cell">
+                    <div class="token-change red">-0.01%</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="market-search-result" v-if="mobile.mode === 'search'">
+        <div class="market-search-result-text">搜索结果：</div>
+        <table class="market-token-search-table">
+            <tr>
+                <td>KBY/EOS</td>
+                <td>0.12345678</td>
+                <td>+0.00%</td>
+                <td><i class="fa fa-star-o"></i></td>
+            </tr>
+            <tr>
+                <td>KBY/EOS</td>
+                <td>0.12345678</td>
+                <td>+0.00%</td>
+                <td><i class="fa fa-star-o"></i></td>
+            </tr>
+            <tr>
+                <td>KBY/EOS</td>
+                <td>0.12345678</td>
+                <td>+0.00%</td>
+                <td><i class="fa fa-star-o"></i></td>
+            </tr>
+            <tr>
+                <td>KBY/EOS</td>
+                <td>0.12345678</td>
+                <td>+0.00%</td>
+                <td><i class="fa fa-star-o"></i></td>
+            </tr>
+            <tr>
+                <td>KBY/EOS</td>
+                <td>0.12345678</td>
+                <td>+0.00%</td>
+                <td><i class="fa fa-star-o"></i></td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -18,7 +18,10 @@
         },
         qrcodeIsValid: true,
         qrcodeTimer: null,
-        _width: null
+        _width: null,
+        mobile: {
+            nav: 'home'
+        }
     },
     created: function () {
         var self = this;

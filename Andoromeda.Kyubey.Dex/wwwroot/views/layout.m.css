@@ -1,2 +1,48 @@
 ﻿body {
+    background: #f8f8f8;
+    font-family: 'Microsoft YaHei'
+}
+
+.tab-outer {
+    height: 64px;
+    background: #fff;
+    border-top: 1px solid #ccc;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+    .tab-outer .tab-item.active {
+        color: #2C8CE3;
+    }
+
+.tab-item {
+    text-align: center;
+    padding: 10px 0;
+    color: #ccc;
+}
+
+.tab-item img {
+    height: 22px;
+}
+
+.tab-outer table {
+    width: 100%;
+}
+
+.tab-item-text {
+    font-size: 12px;
+}
+
+.mobile-page {
+    margin-bottom: 64px;
+    background: #f8f8f8;
+}
+
+.mobile-copyright {
+    color: #aaa;
+    font-size: 12px;
+    text-align: center;
+    padding: 15px;
 }

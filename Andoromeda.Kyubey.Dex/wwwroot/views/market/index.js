@@ -9,6 +9,10 @@
         sortControl: {
             desc: 0,
             row: null
+        },
+        mobile: {
+            mode: 'normal',
+            search: ''
         }
     };
 };
@@ -41,9 +45,10 @@ component.methods = {
         } else {
             this.tokenTable = this.tokenTableSource;
         }
+    },
+    focusMobileSearch() {
+        setTimeout(function () { $('#mobileTokenSearch').focus(); }, 50)
     }
-
-    
 } 
 
 component.computed = {
@@ -53,6 +58,7 @@ component.computed = {
 };
 
 component.created = function () {
+    app.mobile.nav = 'market';
     qv.get(`/api/v1/lang/${app.lang}/token`, {}).then(res => {
         if (res.code - 0 === 200) {
             this.tokenTable = res.data;
