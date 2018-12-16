@@ -54,13 +54,13 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData);
         }
 
-        [HttpGet("{tokenId}/buy-order")]
+        [HttpGet("{symbol}/buy-order")]
         [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
-        public async Task<IActionResult> BuyOrder([FromServices] KyubeyContext db, string tokenId, CancellationToken cancellationToken)
+        public async Task<IActionResult> BuyOrder([FromServices] KyubeyContext db, string symbol, CancellationToken cancellationToken)
         {
             var orders = await db.DexBuyOrders
-                        .Where(x => x.TokenId == tokenId)
+                        .Where(x => x.TokenId == symbol)
                         .OrderByDescending(x => x.UnitPrice)
                         .Take(15)
                         .ToListAsync(cancellationToken);
@@ -73,16 +73,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     Total = x.Bid
                 });
 
-            return ApiResult(responseData);
+            return ApiResult(responseData, new { symbol = symbol });
         }
 
-        [HttpGet("{tokenId}/sell-order")]
+        [HttpGet("{symbol}/sell-order")]
         [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
-        public async Task<IActionResult> SellOrder([FromServices] KyubeyContext db, string tokenId, CancellationToken cancellationToken)
+        public async Task<IActionResult> SellOrder([FromServices] KyubeyContext db, string symbol, CancellationToken cancellationToken)
         {
             var orders = await db.DexSellOrders
-                        .Where(x => x.TokenId == tokenId)
+                        .Where(x => x.TokenId == symbol)
                         .OrderBy(x => x.UnitPrice)
                         .Take(15)
                         .ToListAsync(cancellationToken);
@@ -96,16 +96,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     Total = x.Ask
                 });
 
-            return ApiResult(responseData);
+            return ApiResult(responseData, new { symbol = symbol });
         }
 
-        [HttpGet("{tokenId}/match")]
+        [HttpGet("{symbol}/match")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<GetRecentTransactionResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
-        public async Task<IActionResult> RecentTransactionRecord([FromServices] KyubeyContext db, string tokenId, CancellationToken token)
+        public async Task<IActionResult> RecentTransactionRecord([FromServices] KyubeyContext db, string symbol, CancellationToken token)
         {
             var responseData = await db.MatchReceipts
-                .Where(x => x.TokenId == tokenId)
+                .Where(x => x.TokenId == symbol)
                 .OrderByDescending(x => x.Time)
                 .Take(21)
                 .ToListAsync(token);
@@ -116,7 +116,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Amount = x.Ask,
                 Time = x.Time,
                 Growing = x.UnitPrice > (responseData.FirstOrDefault(g => g.Time < x.Time)?.UnitPrice ?? x.UnitPrice)
-            }));
+            }), new { symbol = symbol });
         }
 
         [HttpGet("{id}")]
