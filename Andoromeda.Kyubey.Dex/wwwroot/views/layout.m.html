@@ -48,4 +48,14 @@
             </tr>
         </table>
     </div>
+
+    <!-- start notifications -->
+    <div class="notification" v-bind:class="{ 'active': $root.control.currentNotification !== null, 'pending': $root.control.currentNotification && $root.control.currentNotification.level === 'pending', 'succeeded': $root.control.currentNotification && $root.control.currentNotification.level === 'succeeded', 'warning': $root.control.currentNotification && $root.control.currentNotification.level === 'warning', 'error': $root.control.currentNotification && $root.control.currentNotification.level === 'error', 'important': $root.control.currentNotification && $root.control.currentNotification.level === 'important' }">
+        <div class="notification-title">{{ $root.control.currentNotification ? $root.control.currentNotification.title : null }}</div>
+        <div class="notification-detail" v-if="$root.control.currentNotification && $root.control.currentNotification.detail">{{ $root.control.currentNotification ? control.currentNotification.detail : null }}</div>
+        <div class="notification-button-outer" v-if="$root.control.currentNotification && $root.control.currentNotification.button">
+            <a class="notification-button" v-on:click="clickNotification">{{ $root.control.currentNotification.button }}</a>
+        </div>
+    </div>
+    <!-- end notifications -->
 </div>
