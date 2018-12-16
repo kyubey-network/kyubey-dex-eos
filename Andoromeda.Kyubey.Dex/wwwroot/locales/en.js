@@ -112,4 +112,5 @@ const en = {
     math_tip: 'Version required 1.6.5',
     meetone_tip: 'Version required 1.1.8',
     currency_introduction: 'Currency introduction',
+    delegate_succeed: 'Delegate Succeed',
 };

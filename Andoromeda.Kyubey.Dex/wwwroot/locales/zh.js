@@ -113,4 +113,5 @@ const zh = {
     meetone_tip: '版本号至少为 1.1.8',
     currency_introduction: '币种简介',
     or: '或',
+    delegate_succeed: '委托成功',
 };

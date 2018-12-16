@@ -15,7 +15,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     public class TokenController : BaseController
     {
         [HttpGet]
-        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetTokenListResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetTokenListResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> TokenList([FromServices] KyubeyContext db, CancellationToken cancellationToken)
         {
@@ -55,7 +55,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("{symbol}/buy-order")]
-        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> BuyOrder([FromServices] KyubeyContext db, string symbol, CancellationToken cancellationToken)
         {
@@ -77,7 +77,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("{symbol}/sell-order")]
-        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetBaseOrderResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetBaseOrderResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> SellOrder([FromServices] KyubeyContext db, string symbol, CancellationToken cancellationToken)
         {
@@ -176,7 +176,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
 
         [HttpGet("{id}/candlestick")]
-        [ProducesResponseType(typeof(ApiResult<IEnumerator<GetCandlestickResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetCandlestickResponse>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Candlestick([FromServices] KyubeyContext db, GetCandlestickRequest request, CancellationToken token)
         {

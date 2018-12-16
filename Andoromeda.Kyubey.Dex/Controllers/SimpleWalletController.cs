@@ -57,7 +57,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpPost("callback/exchange")]
-        public async Task<IActionResult> ExchangeCallbackAsync([FromBody]PostSimpleWalletExchangeRequest request,
+        public async Task<IActionResult> ExchangeCallbackAsync(GetSimpleWalletExchangeRequest request,
             [FromServices]IConfiguration config,
             [FromServices]IHubContext<SimpleWalletHub> hubContext,
             [FromServices]AesCrypto aesCrypto,
@@ -78,7 +78,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             {
                 Code = 1,
                 Error = "sign error"
-            });       
+            });
         }
     }
 }

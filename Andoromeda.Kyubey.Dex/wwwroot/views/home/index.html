@@ -75,7 +75,7 @@
                 <tbody>
                     <tr class="text-center" style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
                         @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
-                        <td scope="row" v-if="isSignedIn">
+                        <td  class="text-center" scope="row" v-if="isSignedIn">
                             <i class="my-star"></i>
                         </td>
                         <td class="text-center">{{item.symbol}}/EOS</td>

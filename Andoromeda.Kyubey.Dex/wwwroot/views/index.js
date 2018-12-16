@@ -75,8 +75,8 @@
             var loginObj = this._getLoginRequestObj(uuid);
             var qrcode = new QRCode(idSelector, {
                 text: JSON.stringify(loginObj),
-                width: 160,
-                height: 160,
+                width: 180,
+                height: 180,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.L
@@ -100,6 +100,7 @@
         },
         initSignalR: function () {
             var self = this;
+            const $t = this.$t.bind(this);
             self.signalr.simplewallet.connection = new signalR.HubConnectionBuilder()
                 .configureLogging(signalR.LogLevel.Trace)
                 .withUrl('/signalr/simplewallet', {})
@@ -117,7 +118,7 @@
 
             self.signalr.simplewallet.connection.on('simpleWalletExchangeSucceeded', () => {
                 $('#exchangeModal').modal('hide');
-                alert('恭喜,委托成功');
+                //todo notification.
             });
 
             self.signalr.simplewallet.connection.start().then(function () {

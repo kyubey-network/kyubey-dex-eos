@@ -84,6 +84,12 @@ component.created = function () {
     this.getOrders();
     this.getTokenInfo();
     this.getFavoriteList();
+
+    if (app.isSignedIn) {
+        this.getBalances()
+        this.getOpenOrders();
+        this.getHistroyOrders();
+    }
 };
 
 component.methods = {
@@ -149,7 +155,7 @@ component.methods = {
         var buySymbol = this.tokenId
         var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
-        var buyEosTotal = parseFloat(buyAmount * buyPrice);
+        var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
         if (this.control.trade === 'limit') {
             this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
         }
@@ -233,7 +239,7 @@ component.methods = {
         var sellSymbol = this.tokenId
         var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
-        var sellTotal = parseFloat(sellPrice * sellAmount);
+        var sellTotal = parseFloat(parseFloat(sellPrice * sellAmount).toFixed(4));
         if (this.control.trade === 'limit') {
             this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
         }
@@ -340,6 +346,7 @@ component.methods = {
             "desc": `${symbol} exchange`,
             "expired": new Date().getTime() + (3 * 60 * 1000),
             "callback": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
+            "callbackUrl": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
         };
         return loginObj;
     },
@@ -348,8 +355,8 @@ component.methods = {
         var reqObj = this._getExchangeRequestObj(from, to, amount, contract, symbol, precision, uuid, dappData);
         var qrcode = new QRCode(idSelector, {
             text: JSON.stringify(reqObj),
-            width: 160,
-            height: 160,
+            width: 180,
+            height: 180,
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.L
