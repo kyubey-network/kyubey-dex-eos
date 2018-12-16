@@ -357,31 +357,25 @@ component.methods = {
     },
     getSellOrders() {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000).fetch(res => {
-            if (res.code === 200) {
+            if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.sellOrders = res.data || [];
                 let maxAmountSellOrder = 0;
                 res.data.forEach(item => {
                     maxAmountSellOrder = Math.max(maxAmountSellOrder, item.amount)
                 })
                 this.maxAmountSellOrder = maxAmountSellOrder;
-                // just excete once
-                if (this.executeControl.sell === 0) this.inputs.sellPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(8);
-                this.executeControl.sell++;
             }
         })
     },
     getBuyOrders() {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/buy-order`, {}, 6000).fetch(res => {
-            if (res.code === 200) {
+            if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.buyOrders = res.data || [];
                 let maxAmountBuyOrder = 0;
                 res.data.forEach(item => {
                     maxAmountBuyOrder = Math.max(maxAmountBuyOrder, item.amount)
                 })
                 this.maxAmountBuyOrder = maxAmountBuyOrder;
-                // just excete once
-                if (this.executeControl.buy === 0) this.inputs.buyPrice = parseFloat(res.data[res.data.length - 1] ? res.data[res.data.length - 1].unitPrice : 0).toFixed(8);
-                this.executeControl.buy++;
             }
         })
     },
@@ -430,7 +424,7 @@ component.methods = {
     },
     getMatchList() {
         qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/match`, {}, 6000).fetch(res => {
-            if (res.code === 200) {
+            if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.latestTransactions = res.data || [];
             }
         })
