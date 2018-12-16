@@ -317,7 +317,7 @@
                                 <td>{{formatTime(x.time)}}</td>
                                 <!-- todo：status -->
                                 <td class="text-center">——</td>
-                                <td class="text-center text-warning">{{$t('cancel')}}</td>
+                                <td class="text-center text-warning" v-on:click="exchangeCancel(x.symbol, x.type, x.id)">{{$t('cancel')}}</td>
                             </tr>
                             <tr v-if="openOrders.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>

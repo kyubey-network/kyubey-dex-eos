@@ -114,4 +114,5 @@ const en = {
     currency_introduction: 'Currency introduction',
     delegate_succeed: 'Delegate Succeed',
     tip_balance_not_enough: 'Sorry, your balance is not enough!',
+    to_be_continued: 'to be continued',
 };

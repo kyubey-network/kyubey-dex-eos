@@ -115,4 +115,5 @@ const zh_tw = {
     or: '或',
     delegate_succeed: '委托成功',
     tip_balance_not_enough: '抱歉，您的餘額不足！',
+    to_be_continued: '即將到來',
 };

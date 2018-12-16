@@ -142,6 +142,48 @@ component.methods = {
             callback(x);
         });
     },
+    exchangeCancel: function (token, type, id) {
+        const $t = this.$t.bind(this);
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterCancel(token, type, id);
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            app.notification("error", $t('to_be_continued'));
+        }
+    },
+    scatterCancel: function (token, type, id) {
+        var self = this;
+        const { account, requiredFields, eos } = app;
+        const $t = this.$t.bind(this);
+        eos.contract('kyubeydex.bp', { requiredFields })
+            .then(contract => {
+                if (type === 'buy') {
+                    return contract.cancelbuy(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                } else {
+                    return contract.cancelsell(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                }
+            })
+            .then(() => {
+                self.getCurrentOrders();
+                self.getOrders();
+                showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+            })
+            .catch(error => {
+                showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+            });
+    },
     exchangeBuy() {
         const $t = this.$t.bind(this);
         var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
