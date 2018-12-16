@@ -66,11 +66,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                         .ToListAsync(cancellationToken);
 
             var responseData = orders
+                .GroupBy(x => x.UnitPrice)
                 .Select(x => new GetBaseOrderResponse
                 {
-                    UnitPrice = x.UnitPrice,
-                    Amount = x.Ask,
-                    Total = x.Bid
+                    UnitPrice = x.Key,
+                    Amount = x.Select(y => y.Ask).Sum(),
+                    Total = x.Select(y => y.Bid).Sum()
                 });
 
             return ApiResult(responseData, new { symbol = symbol });
@@ -89,11 +90,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             orders.Reverse();
 
             var responseData = orders
+                .GroupBy(x => x.UnitPrice)
                 .Select(x => new GetBaseOrderResponse
                 {
-                    UnitPrice = x.UnitPrice,
-                    Amount = x.Bid,
-                    Total = x.Ask
+                    UnitPrice = x.Key,
+                    Amount = x.Select(y => y.Bid).Sum(),
+                    Total = x.Select(y => y.Ask).Sum()
                 });
 
             return ApiResult(responseData, new { symbol = symbol });
