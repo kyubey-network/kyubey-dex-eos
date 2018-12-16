@@ -143,6 +143,15 @@ component.methods = {
         });
     },
     exchangeBuy() {
+        const $t = this.$t.bind(this);
+        var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
+        var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
+        var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
+        if (buyEosTotal > this.eosBalance) {
+            app.notification("error", $t('tip_balance_not_enough'));
+            return;
+        }
+
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
             this.scatterBuy();
         }
@@ -227,6 +236,13 @@ component.methods = {
             showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
     },
     exchangeSell() {
+        const $t = this.$t.bind(this);
+        var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
+        if (sellAmount > this.tokenBalance) {
+            app.notification("error", $t('tip_balance_not_enough'));
+            return;
+        }
+
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
             this.scatterSell();
         }

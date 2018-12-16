@@ -113,4 +113,5 @@ const en = {
     meetone_tip: 'Version required 1.1.8',
     currency_introduction: 'Currency introduction',
     delegate_succeed: 'Delegate Succeed',
+    tip_balance_not_enough: 'Sorry, your balance is not enough!',
 };

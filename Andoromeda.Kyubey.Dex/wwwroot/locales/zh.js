@@ -114,4 +114,5 @@ const zh = {
     currency_introduction: '币种简介',
     or: '或',
     delegate_succeed: '委托成功',
+    tip_balance_not_enough: '抱歉，您的余额不足！',
 };

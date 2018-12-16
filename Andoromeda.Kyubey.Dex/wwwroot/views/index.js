@@ -118,7 +118,7 @@
 
             self.signalr.simplewallet.connection.on('simpleWalletExchangeSucceeded', () => {
                 $('#exchangeModal').modal('hide');
-                //todo notification.
+                app.notification("succeeded", $t('delegate_succeed'));
             });
 
             self.signalr.simplewallet.connection.start().then(function () {
