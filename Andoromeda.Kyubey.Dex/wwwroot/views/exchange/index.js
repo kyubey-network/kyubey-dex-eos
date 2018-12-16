@@ -236,16 +236,16 @@ component.methods = {
         }
     },
     simpleWalletSell() {
-        var sellSymbol = this.tokenId
+        var sellSymbol = this.tokenId;
         var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(sellPrice * sellAmount).toFixed(4));
         if (this.control.trade === 'limit') {
-            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
+            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellAmount, "dacincubator", sellPrice, sellTotal, "EOS", sellSymbol, 4);
         }
         else if (this.control.trade === 'market') {
             sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
-            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellTotal, "dacincubator", sellPrice, sellAmount, "EOS", sellSymbol, 4);
+            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellAmount, "dacincubator", sellPrice, sellTotal, "EOS", sellSymbol, 4);
         }
     },
     scatterSell() {
@@ -300,7 +300,7 @@ component.methods = {
                 });
         }
     },
-    simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, taretAmount, taretSymbol, symbol, precision) {
+    simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, memoAmount, memoSymbol, exchangeSymbol, precision) {
         //set qrcode timer
         app.qrcodeIsValid = true;
         clearTimeout(app.qrcodeTimer);
@@ -313,16 +313,16 @@ component.methods = {
         this.exchange.to = to;
         this.exchange.amount = amount;
         this.exchange.contract = contract;
-        this.exchange.symbol = symbol;
-        this.exchange.taretSymbol = taretSymbol;
+        this.exchange.symbol = exchangeSymbol;
+        this.exchange.taretSymbol = memoSymbol;
         this.exchange.precision = precision;
-        this.exchange.taretAmount = taretAmount;
+        this.exchange.taretAmount = memoAmount;
         this.exchange.price = targetPrice;
         if (this.control.trade === 'limit') {
-            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `${taretAmount.toFixed(precision)} ${taretSymbol}`);
+            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, exchangeSymbol, precision, app.uuid, `${memoAmount.toFixed(precision)} ${memoSymbol}`);
         }
         else if (this.control.trade === 'market') {
-            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, symbol, precision, app.uuid, `market`);
+            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, exchangeSymbol, precision, app.uuid, `market`);
         }
     },
     _getExchangeSign: function (uuid) {
@@ -345,8 +345,7 @@ component.methods = {
             "dappData": dappData,
             "desc": `${symbol} exchange`,
             "expired": new Date().getTime() + (3 * 60 * 1000),
-            "callback": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
-            "callbackUrl": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`,
+            "callback": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`
         };
         return loginObj;
     },
@@ -355,8 +354,8 @@ component.methods = {
         var reqObj = this._getExchangeRequestObj(from, to, amount, contract, symbol, precision, uuid, dappData);
         var qrcode = new QRCode(idSelector, {
             text: JSON.stringify(reqObj),
-            width: 180,
-            height: 180,
+            width: 200,
+            height: 200,
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.L

@@ -75,8 +75,8 @@
             var loginObj = this._getLoginRequestObj(uuid);
             var qrcode = new QRCode(idSelector, {
                 text: JSON.stringify(loginObj),
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.L
