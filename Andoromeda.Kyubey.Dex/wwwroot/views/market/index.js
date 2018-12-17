@@ -13,7 +13,8 @@
         mobile: {
             mode: 'normal',
             search: ''
-        }
+        },
+        onScroll: false
     };
 };
 
@@ -80,6 +81,9 @@ component.created = function () {
             });
             this.tokenTableSource = this.tokenTable;
         }
+    })
+    window.addEventListener('scroll', x => {
+        this.onScroll = document.documentElement.scrollTop != 0;
     })
 
 };

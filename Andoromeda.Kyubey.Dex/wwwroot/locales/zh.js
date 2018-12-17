@@ -121,4 +121,5 @@ const zh = {
     home_banner_tip2: '零手续费 / 不限最低成交额 / 链上撮合 / 安全透明',
     detail: '详情',
     tip_correct_count: '请填写正确的数量值！',
+    no_result: '抱歉，没有这个关键字',
 };

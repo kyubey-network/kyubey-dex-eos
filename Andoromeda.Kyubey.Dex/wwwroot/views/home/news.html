@@ -17,6 +17,10 @@
                 <div class="expand-outer"><a @click="x.expand = !x.expand">{{$t('less_full_text')}}<i class="fa fa-caret-up" aria-hidden="true"></i></a></div>
             </div>
         </template>
+        <div v-if="boolNoData">
+            <h2>{{ $t('noData') }}</h2>
+        </div>
+
 
         <div class="btn-outer" v-if="!noMore">
             <a href="javascript:;" v-on:click="loadMore()" class="btn btn-default">加载更多</a>

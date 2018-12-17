@@ -53,9 +53,23 @@
         background: #c54a4a;
     }
 
+    .token-change.gray {
+        background: #A7A7A7;
+    }
+
 .market-token-list {
     background: #fff;
     margin-top: 10px;
+}
+
+.header {
+    width: 100%;
+    position: fixed;
+    background-color: #F8F8F8;
+    top: 0px;
+}
+shadow {
+    box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
 }
 
 .token-pair-cell {
@@ -131,4 +145,12 @@
 
 .market-token-search-table td {
     padding: 5px 10px;
+}
+
+.sort-icon-active {
+    color: #FFB500;
+}
+
+.result-list {
+    margin-top: 98px;
 }

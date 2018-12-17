@@ -121,4 +121,5 @@ const zh_tw = {
     home_banner_tip2: '零手續費 / 不限最低成交額 / 鏈上撮合 / 安全透明',
     detail: '詳情',
     tip_correct_count: '請填寫正確的數量詞！',
+    no_result: '抱歉，沒有這個關鍵字',
 };

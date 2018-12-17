@@ -1,90 +1,75 @@
-﻿<div>
-    <div class="market-header">
-        <table class="market-filter">
-            <tr v-show="mobile.mode === 'normal'">
-                <td>
-                    <img src="/img/home-page/eos.png" />
-                    EOS
-                </td>
-                <td class="market-filter-search-cell" @click="mobile.mode = 'search'; focusMobileSearch();">
-                    <i class="fa fa-search"></i>
-                </td>
-            </tr>
-            <tr v-show="mobile.mode !== 'normal'">
-                <td><i class="fa fa-search"></i></td>
-                <td>
-                    <input id="mobileTokenSearch" class="market-search-textbox" placeholder="通证" v-model="mobile.search" />
-                </td>
-                <td @click="mobile.mode = 'normal'; mobile.search = '';" class="market-filter-close-cell"><i class="fa fa-close"></i></td>
-            </tr>
-        </table>
+﻿<div v-on:scroll.passive="onScroll">
+    <div class="header" v-bind:class="{ 'shadow': onScroll != 0 }">
+        <div class="market-header ">
+            <table class="market-filter">
+                <tr v-show="mobile.mode === 'normal'">
+                    <td>
+                        <img src="/img/home-page/eos.png" />
+                        EOS
+                    </td>
+                    <td class="market-filter-search-cell" @click="mobile.mode = 'search'; focusMobileSearch();">
+                        <i class="fa fa-search"></i>
+                    </td>
+                </tr>
+                <tr v-show="mobile.mode !== 'normal'">
+                    <td><i class="fa fa-search"></i></td>
+                    <td>
+                        <input id="mobileTokenSearch" class="market-search-textbox" type="search" :placeholder="$t('token')" name="name" v-model="searchText" @keyup.enter="searchToken" @input="searchToken" />
+                    </td>
+                    <td @click="mobile.mode = 'normal'; mobile.search = '';" class="market-filter-close-cell"><i class="fa fa-close"></i></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="market-token-list">
+            <table class="market-token-header">
+                <tr>
+                    <td>{{$t('trading_pair')}}</td>
+                    <td scope="col" class="d-flex align-items-center justify-content-end">
+                        <span @click="sortTokenOnClick('volume_recent_day')" style="cursor:pointer">{{$t('volume_24H')}}</span>
+                        <div class="d-flex flex-column align-items-center ml-1">
+                            <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === 1&&sortControl.row === 'volume_recent_day'}" @click="sortToken('volume_recent_day', 1)">
+                                <i class="fa fa-caret-up"></i>
+                            </div>
+                            <div class="p-0 m-0 down-icon" style="height: auto;" :class="{'sort-icon-active': sortControl.desc === 2&&sortControl.row === 'volume_recent_day'}" @click="sortToken('volume_recent_day', 2)">
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{$t('latest_price')}}</td>
+                    <td scope="col" class="d-flex align-items-center justify-content-end">
+                        <span @click="sortTokenOnClick('change_recent_day')" style="cursor:pointer">{{$t('ups_downs_24H')}}</span>
+                        <div class="d-flex flex-column align-items-center ml-1">
+                            <div class="p-0 m-0 up-icon" style="height: 8px;" :class="{'sort-icon-active': sortControl.desc === 1&&sortControl.row === 'change_recent_day'}" @click="sortToken('change_recent_day', 1)">
+                                <i class="fa fa-caret-up"></i>
+                            </div>
+                            <div class="p-0 m-0 down-icon" style="height: auto;" :class="{'sort-icon-active': sortControl.desc === 2&&sortControl.row === 'change_recent_day'}" @click="sortToken('change_recent_day', 2)">
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 
-    <div class="market-token-list" v-if="mobile.mode === 'normal'">
-        <table class="market-token-header">
-            <tr>
-                <td>交易对</td>
-                <td>24H成交量</td>
-                <td>最新价格</td>
-                <td>24H涨跌幅</td>
-            </tr>
-        </table>
+    <div class="market-token-list result-list">
         <table class="market-token-table">
-            <tr>
+            <tr v-for="(item, index) in tokenTable" :key="index"
+                @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
                 <td class="token-pair-cell">
-                    <div class="token-pair"><i class="fa fa-star-o"></i> KBY/EOS</div>
-                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
+                    <div class="token-pair"><i class="fa fa-star-o"></i> {{item.symbol}}/EOS</div>
+                    <div class="token-volume">{{$t('volume_24H') +': '+item.volume_recent_day.toFixed(4)}} EOS</div>
                 </td>
-                <td class="token-price-cell">0.0001 EOS</td>
+                <td class="token-price-cell">{{item.current_price}} EOS</td>
                 <td class="token-change-cell">
-                    <div class="token-change green">+0.01%</div>
+                    <div v-bind:class="{ 'token-change green': item.up , 'token-change red': item.down , 'token-change gray':!item.down&!item.up }">{{item.change_recent_day}}</div>
                 </td>
             </tr>
-            <tr>
-                <td class="token-pair-cell">
-                    <div class="token-pair"><i class="fa fa-star-o"></i> CMU/EOS</div>
-                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
+            <tr v-if="tokenTable.length === 0">
+                <td>
+                    {{$t('no_result')}}
                 </td>
-                <td class="token-price-cell">0.0001 EOS</td>
-                <td class="token-change-cell">
-                    <div class="token-change red">-0.01%</div>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="market-search-result" v-if="mobile.mode === 'search'">
-        <div class="market-search-result-text">搜索结果：</div>
-        <table class="market-token-search-table">
-            <tr>
-                <td>KBY/EOS</td>
-                <td>0.12345678</td>
-                <td>+0.00%</td>
-                <td><i class="fa fa-star-o"></i></td>
-            </tr>
-            <tr>
-                <td>KBY/EOS</td>
-                <td>0.12345678</td>
-                <td>+0.00%</td>
-                <td><i class="fa fa-star-o"></i></td>
-            </tr>
-            <tr>
-                <td>KBY/EOS</td>
-                <td>0.12345678</td>
-                <td>+0.00%</td>
-                <td><i class="fa fa-star-o"></i></td>
-            </tr>
-            <tr>
-                <td>KBY/EOS</td>
-                <td>0.12345678</td>
-                <td>+0.00%</td>
-                <td><i class="fa fa-star-o"></i></td>
-            </tr>
-            <tr>
-                <td>KBY/EOS</td>
-                <td>0.12345678</td>
-                <td>+0.00%</td>
-                <td><i class="fa fa-star-o"></i></td>
             </tr>
         </table>
     </div>

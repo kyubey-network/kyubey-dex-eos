@@ -120,4 +120,5 @@ const en = {
     home_banner_tip2: 'Zero trading fee / No limit on minimum order / On-chain order-marching / Secure and transparent',
     detail: 'Detail',
     tip_correct_count: 'Please fill in the correct amount!',
+    no_result: 'Sorry, there is no such keyword',
 };

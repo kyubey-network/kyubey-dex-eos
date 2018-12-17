@@ -4,6 +4,7 @@
         page: -1,
         noMore: false,
         keyWords: '',
+        boolNoData: false
     };
 };
 
@@ -48,8 +49,9 @@ component.methods = {
 
 component.computed = {
     newsForm: function () {
+        this.BoolNoData = false;
         if (this.keyWords != '') {
-            return this.news.filter(x => {
+            var filteredNews = this.news.filter(x => {
                 if (x.title.includes(this.keyWords)) {
                     return true;
                 }
@@ -60,6 +62,10 @@ component.computed = {
                     return true;
                 }
             });
+            if (filteredNews.length == 0) {
+                this.BoolNoData = true;
+            }
+            return filteredNews;
         }
         else {
             return this.news;
