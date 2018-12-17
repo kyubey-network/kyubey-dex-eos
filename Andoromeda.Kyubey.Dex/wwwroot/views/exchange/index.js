@@ -75,32 +75,52 @@
         eosBalance: 0,
         tokenBalance: 0,
         appAccount: app.account,
+        //views
         openOrdersView: null,
-        histroyOrdersView: null
+        histroyOrdersView: null,
+        sellOrdersView: null,
+        buyOrdersView: null,
+        matchListView: null,
+        tokenInfoView: null,
+        favoriteListView: null,
+        balanceView: null
     };
 };
 
 component.created = function () {
     this.tokenId = router.history.current.params.id;
     this.chart.symbol = this.tokenId;
-    this.getOrders();
-    this.getTokenInfo();
+
+    this.initCommonViews();
+
     this.getFavoriteList();
 
     if (app.isSignedIn) {
-        this.getBalances()
-        this.getOpenOrders();
-        this.getHistroyOrders();
+        this.initUserViews();
     }
 };
 
 component.methods = {
-    getOrders() {
+    initCommonViews() {
         this.getSellOrders();
         this.getBuyOrders();
         this.getMatchList();
+        this.getTokenInfo();
     },
-    getCurrentOrders() { },
+    initUserViews() {
+        this.getBalances();
+        this.getOpenOrders();
+        this.getHistroyOrders();
+    },
+    refreshUserViews() {
+        this.balanceView.refresh();
+        this.openOrdersView.refresh();
+        this.histroyOrdersView.refresh();
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+        setInterval(callback, 10000);
+    },
     dateObjToString: function (date) {
         return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
     },
@@ -178,9 +198,7 @@ component.methods = {
                 }
             })
             .then(() => {
-                setTimeout(function () {
-                    self.openOrdersView.refresh();
-                }, 10000);
+                self.delayRefresh(self.refreshUserViews);
 
                 showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
             })
@@ -242,11 +260,8 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    setTimeout(function () {
-                        self.getCurrentOrders();
-                        self.getOrders();
-                        self.getBalances();
-                    }, 10000);
+                    self.delayRefresh(self.refreshUserViews);
+
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -266,11 +281,7 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    setTimeout(function () {
-                        self.getCurrentOrders();
-                        self.getOrders();
-                        self.getBalances();
-                    }, 10000);
+                    self.delayRefresh(self.refreshUserViews);
 
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
@@ -343,9 +354,8 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders();
-                    self.getOrders();
-                    self.getBalances();
+                    self.delayRefresh(self.refreshUserViews);
+
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -365,9 +375,8 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders();
-                    self.getOrders();
-                    self.getBalances();
+                    self.delayRefresh(self.refreshUserViews);
+                    
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -437,7 +446,8 @@ component.methods = {
         });
     },
     getSellOrders() {
-        qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000).fetch(res => {
+        this.sellOrdersView = qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000);
+        this.sellOrdersView.fetch(res => {
             if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.sellOrders = res.data || [];
                 let maxAmountSellOrder = 0;
@@ -449,7 +459,8 @@ component.methods = {
         })
     },
     getBuyOrders() {
-        qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/buy-order`, {}, 6000).fetch(res => {
+        this.buyOrdersView = qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/buy-order`, {}, 6000);
+        this.buyOrdersView.fetch(res => {
             if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.buyOrders = res.data || [];
                 let maxAmountBuyOrder = 0;
@@ -461,11 +472,12 @@ component.methods = {
         })
     },
     getTokenInfo() {
-        qv.get(`/api/v1/lang/${app.lang}/token/${this.tokenId}`, {}).then(res => {
+        this.tokenInfoView = qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}`, {});
+        this.tokenInfoView.fetch(res => {
             if (res.code === 200) {
                 this.baseInfo = res.data || {};
             }
-        })
+        });
     },
     setPublish(price, amount, total) {
         price = parseFloat(price).toFixed(8);
@@ -504,7 +516,8 @@ component.methods = {
         return parseInt(now * 100.0 / history) + "%";
     },
     getMatchList() {
-        qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/match`, {}, 6000).fetch(res => {
+        this.matchListView = qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/match`, {}, 6000);
+        this.matchListView.fetch(res => {
             if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.latestTransactions = res.data || [];
             }
@@ -517,17 +530,12 @@ component.methods = {
         return moment(time + 'Z').format('MM-DD HH:mm:ss')
     },
     getFavoriteList() {
-        qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
+        this.favoriteListView = qv.createView(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {});
+        this.favoriteListView.fetch(res => {
             if (res.code === 200) {
                 this.favoriteList = res.data || [];
             }
-        })
-    },
-    getCandlestick() {
-        qv.get(`/api/v1/lang/${app.lang}/token/${this.tokenId}/candlestick`, {}).then(res => {
-            if (res.code === 200) {
-            }
-        })
+        });
     },
     isValidInput: function (value, precision) {
         if (precision != null && precision == 4) {
@@ -545,12 +553,13 @@ component.methods = {
     getBalances: function () {
         if (this.isSignedIn) {
             var self = this;
-            qv.get(`/api/v1/lang/${app.lang}/Node/${app.account.name}/balance`, {}).then(res => {
+            this.balanceView = qv.createView(`/api/v1/lang/${app.lang}/Node/${app.account.name}/balance`, {});
+            this.balanceView.fetch(res => {
                 if (res.code - 0 === 200) {
                     self.eosBalance = parseFloat(res.data['EOS'] || 0);
                     self.tokenBalance = parseFloat(res.data[this.tokenId.toUpperCase()] || 0);
                 }
-            })
+            });
         }
     },
     handlePriceChange(type) {
@@ -642,9 +651,8 @@ component.watch = {
     },
     '$root.isSignedIn': function (val) {
         if (val === true) {
-            this.getHistroyOrders();
-            this.getOpenOrders();
-            this.getBalances();
+            this.initUserViews();
+            this.getFavoriteList();
         }
         //logout
         else {
