@@ -11,5 +11,4 @@
 
 LazyRouting.SetMirror({
     '/': '/home',
-    '/token': '/currency/all'
 });

@@ -21,6 +21,7 @@ const zh_tw = {
     highest_price_24H: '24h最高價',
     lowest_price_24H: '24h最低價',
     volume_24H: '24h成交量',
+    scatter_not_found: 'Scatter插件沒有找到',
     scatter_tip: 'Scatter是一款EOS錢包，請您確定已經安裝Scatter. 參考：https://get-scatter.com',
     qrcode_login: '手機錢包掃碼登錄',
     qrcode_tip: '請確保手機錢包為支持掃碼授權的版本',
@@ -116,4 +117,8 @@ const zh_tw = {
     delegate_succeed: '委托成功',
     tip_balance_not_enough: '抱歉，您的餘額不足！',
     to_be_continued: '即將到來',
+    home_banner_tip1: '免費的去中心化交易所',
+    home_banner_tip2: '零手續費 / 不限最低成交額 / 鏈上撮合 / 安全透明',
+    detail: '詳情',
+    tip_correct_count: '請填寫正確的數量詞！',
 };

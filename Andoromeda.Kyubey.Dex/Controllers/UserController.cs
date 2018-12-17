@@ -171,6 +171,14 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
             var responseData = new List<GetWalletResponse>();
 
+            responseData.Add(new GetWalletResponse()
+            {
+                Freeze = buyList.Sum(x => x.FreezeEOS),
+                Symbol = "EOS",
+                UnitPrice = 1,
+                Valid = nodeApiInvoker.GetCurrencyBalanceAsync(account, "eosio.token", "EOS", cancellationToken).Result
+            });
+
             tokens.ForEach(x =>
                 {
                     var currentTokenBalance = 0.0;
@@ -197,14 +205,6 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                         });
                     }
                 });
-
-            responseData.Add(new GetWalletResponse()
-            {
-                Freeze = buyList.Sum(x => x.FreezeEOS),
-                Symbol = "EOS",
-                UnitPrice = 1,
-                Valid = nodeApiInvoker.GetCurrencyBalanceAsync(account, "eosio.token", "EOS", cancellationToken).Result
-            });
 
             return ApiResult(responseData);
         }

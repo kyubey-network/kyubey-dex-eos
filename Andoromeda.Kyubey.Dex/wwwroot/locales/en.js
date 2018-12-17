@@ -21,6 +21,7 @@ const en = {
     highest_price_24H: '24h high',
     lowest_price_24H: '24h low',
     volume_24H: '24h volume',
+    scatter_not_found: 'Scatter not found',
     scatter_tip: 'Scatter is an EOS wallet. Please make sure that Scatter is installed. Scatter website: https://get-scatter.com',
     qrcode_login: 'App wallet QR code scanning login',
     qrcode_tip: 'Please make sure that App version supports QR code scanning authorization.',
@@ -115,4 +116,8 @@ const en = {
     delegate_succeed: 'Delegate Succeed',
     tip_balance_not_enough: 'Sorry, your balance is not enough!',
     to_be_continued: 'to be continued',
+    home_banner_tip1: 'Free decentralized exchange',
+    home_banner_tip2: 'Zero trading fee / No limit on minimum order / On-chain order-marching / Secure and transparent',
+    detail: 'Detail',
+    tip_correct_count: 'Please fill in the correct amount!',
 };

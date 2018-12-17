@@ -3,9 +3,9 @@
         <div class="continer page-container">
             <div class="row">
                 <div class="col-8">
-                    <h1 style="color:#FFB500;margin-bottom:10px;">KYUBEY</h1>
-                    <h3 style="font-weight:normal!important;">The first EOS based decentralized exchange in the world</h3>
-                    <p style="margin-bottom: 10px;">No deposit / No withdrawal / Safe assets / Open & transparency</p>
+                    <h1 style="color:#FFB500;margin-bottom:10px;">Kyubey</h1>
+                    <h3 style="font-weight:normal!important;">{{$t('home_banner_tip1')}}</h3>
+                    <p style="margin-bottom: 10px;">{{$t('home_banner_tip2')}}</p>
                 </div>
                 <div class="col-4">
                     <img style="width: 20rem;float: right;" src="/img/home-page/conputer.png" alt="dex" />
@@ -86,7 +86,7 @@
                         <td>{{item.volume_recent_day.toFixed(4)}}</td>
                     </tr>
                     <tr v-if="tokenTable.length === 0">
-                        <td colspan="6" class="nodata">
+                        <td colspan="7" class="nodata text-center">
                             {{$t('noData')}}
                         </td>
                     </tr>

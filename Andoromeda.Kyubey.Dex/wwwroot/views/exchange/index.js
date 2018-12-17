@@ -74,7 +74,9 @@
         },
         eosBalance: 0,
         tokenBalance: 0,
-        appAccount: app.account
+        appAccount: app.account,
+        openOrdersView: null,
+        histroyOrdersView: null
     };
 };
 
@@ -176,8 +178,10 @@ component.methods = {
                 }
             })
             .then(() => {
-                self.getCurrentOrders();
-                self.getOrders();
+                setTimeout(function () {
+                    self.openOrdersView.refresh();
+                }, 10000);
+
                 showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
             })
             .catch(error => {
@@ -191,6 +195,10 @@ component.methods = {
         var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
         if (buyEosTotal > this.eosBalance) {
             app.notification("error", $t('tip_balance_not_enough'));
+            return;
+        }
+        if (buyEosTotal <= 0) {
+            app.notification("error", $t('tip_correct_count'));
             return;
         }
 
@@ -234,9 +242,11 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders();
-                    self.getOrders();
-                    self.getBalances();
+                    setTimeout(function () {
+                        self.getCurrentOrders();
+                        self.getOrders();
+                        self.getBalances();
+                    }, 10000);
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -256,9 +266,12 @@ component.methods = {
                         });
                 })
                 .then(() => {
-                    self.getCurrentOrders();
-                    self.getOrders();
-                    self.getBalances();
+                    setTimeout(function () {
+                        self.getCurrentOrders();
+                        self.getOrders();
+                        self.getBalances();
+                    }, 10000);
+
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -282,6 +295,10 @@ component.methods = {
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         if (sellAmount > this.tokenBalance) {
             app.notification("error", $t('tip_balance_not_enough'));
+            return;
+        }
+        if (sellAmount <= 0) {
+            app.notification("error", $t('tip_correct_count'));
             return;
         }
 
@@ -585,16 +602,20 @@ component.methods = {
         return parseFloat(n).toFixed(4);
     },
     getOpenOrders() {
-        qv.get(`/api/v1/lang/${app.lang}/User/${app.account.name}/current-delegate`, {}).then(res => {
+        var self = this;
+        self.openOrdersView = qv.createView(`/api/v1/lang/${app.lang}/User/${app.account.name}/current-delegate`, {});
+        self.openOrdersView.fetch(res => {
             if (res.code === 200) {
-                this.openOrders = res.data || [];
+                self.openOrders = res.data || [];
             }
         })
     },
     getHistroyOrders() {
-        qv.get(`/api/v1/lang/${app.lang}/User/${app.account.name}/history-delegate`, {}).then(res => {
+        var self = this;
+        self.histroyOrdersView = qv.createView(`/api/v1/lang/${app.lang}/User/${app.account.name}/history-delegate`, {});
+        self.histroyOrdersView.fetch(res => {
             if (res.code === 200) {
-                this.orderHistory = res.data || [];
+                self.orderHistory = res.data;
             }
         })
     },
@@ -621,9 +642,13 @@ component.watch = {
     },
     '$root.isSignedIn': function (val) {
         if (val === true) {
-            this.getBalances()
-            this.getOpenOrders();
             this.getHistroyOrders();
+            this.getOpenOrders();
+            this.getBalances();
+        }
+        //logout
+        else {
+            //comments: stop qv job or use signalR
         }
     },
     //reload multi language ajax method

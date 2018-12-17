@@ -23,8 +23,8 @@
                     </div>
                     <div class="m-2">
                         <div class="d-flex align-items-center serach-btn">
-                            <input type="search" class="my-input" :placeholder="$t('token')" name="name" v-model="searchText" />
-                            <button type="submit" @click="searchToken" @keyup.enter="searchToken">
+                            <input type="search" class="my-input" @keyup="searchToken" :placeholder="$t('token')" name="name" v-model="searchText" />
+                            <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -49,6 +49,11 @@
                             <td><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
                             <td><font size="3">{{parseFloat(item.freeze).toFixed(4)}}</font></td>
                             <td><font size="3">{{parseFloat(item.eos).toFixed(4)}} EOS</font></td>
+                        </tr>
+                        <tr v-if="listWithFiter.length === 0">
+                            <td colspan="4" class="nodata">
+                                {{$t('noData')}}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -21,6 +21,7 @@ const zh = {
     highest_price_24H: '24H最高价',
     lowest_price_24H: '24H最低价',
     volume_24H: '24H成交量',
+    scatter_not_found: 'Scatter插件没有找到',
     scatter_tip: 'Scatter是一款EOS钱包， 请您确定已经安装Scatter. 参考：https://get-scatter.com',
     qrcode_login: '手机钱包扫码登录',
     qrcode_tip: '请确保手机钱包为支持扫码授权的版本',
@@ -116,4 +117,8 @@ const zh = {
     delegate_succeed: '委托成功',
     tip_balance_not_enough: '抱歉，您的余额不足！',
     to_be_continued: '即将到来',
+    home_banner_tip1: '免费的去中心化交易所',
+    home_banner_tip2: '零手续费 / 不限最低成交额 / 链上撮合 / 安全透明',
+    detail: '详情',
+    tip_correct_count: '请填写正确的数量值！',
 };
