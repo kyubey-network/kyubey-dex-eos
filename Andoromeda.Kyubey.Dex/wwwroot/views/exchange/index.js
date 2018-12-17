@@ -585,9 +585,9 @@ component.methods = {
             if (n === 'buyPrecent') {
                 let isZero = this.inputs.buyPrice === '0.000000';
                 this.inputs.buyTotal = parseFloat(this.eosBalance * x).toFixed(4);
-                this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(5);
+                this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
             } else {
-                this.inputs.sellAmount = parseFloat(this.eosBalance * x).toFixed(5);
+                this.inputs.sellAmount = parseFloat(this.tokenBalance * x).toFixed(4);
                 this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4);
             }
         }
