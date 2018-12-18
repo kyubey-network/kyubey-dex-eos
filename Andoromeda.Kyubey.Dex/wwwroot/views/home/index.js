@@ -47,7 +47,6 @@ component.created = function () {
             self.tokenTableSource = self.tokenTable;
         }
     })
-    this.getFavoriteList();
 };
 
 component.methods = {
