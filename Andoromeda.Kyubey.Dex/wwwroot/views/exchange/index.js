@@ -334,11 +334,11 @@ component.methods = {
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(sellPrice * sellAmount).toFixed(4));
         if (this.control.trade === 'limit') {
-            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellAmount, "dacincubator", sellPrice, sellTotal, "EOS", sellSymbol, 4);
+            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellPrice, sellTotal, "EOS", sellSymbol, 4);
         }
         else if (this.control.trade === 'market') {
             sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
-            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellAmount, "dacincubator", sellPrice, sellTotal, "EOS", sellSymbol, 4);
+            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellPrice, sellTotal, "EOS", sellSymbol, 4);
         }
     },
     scatterSell() {
@@ -349,7 +349,7 @@ component.methods = {
             var price = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
             var bid = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
             var ask = parseFloat(bid * price);
-            eos.contract('dacincubator', { requiredFields })
+            eos.contract(this.baseInfo.contract.transfer, { requiredFields })
                 .then(contract => {
                     return contract.transfer(
                         account.name,
@@ -370,7 +370,7 @@ component.methods = {
                 });
         }
         else if (this.control.trade === 'market') {
-            eos.contract('dacincubator', { requiredFields })
+            eos.contract(this.baseInfo.contract.transfer, { requiredFields })
                 .then(contract => {
                     return contract.transfer(
                         account.name,
