@@ -6,12 +6,14 @@
         tokenTableSource: [],
         searchText: '',
         control: {
-            tab: 'eos'
+            tab: 'eos',
+            fav: false
         },
         sortControl: {
             desc: 0,
             row: null
-        }
+        },
+        favoriteObj: {}
     };
 };
 
@@ -45,6 +47,7 @@ component.created = function () {
             self.tokenTableSource = self.tokenTable;
         }
     })
+    this.getFavoriteList();
 };
 
 component.methods = {
@@ -84,6 +87,34 @@ component.methods = {
             })
         } else {
             this.tokenTable = this.tokenTableSource;
+        }
+    },
+    toggleFav(token) {
+        const isAdd = !this.favoriteObj[token];
+        app.toggleFav(token, isAdd, () => {
+            this.favoriteObj[token] = isAdd;
+        })
+    },
+    getFavoriteList() {
+        qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
+            if (res.code === 200) {
+                let favoriteObj = {};
+                let favoriteList = res.data || [];
+                favoriteList.forEach((item) => {
+                    favoriteObj[item.symbol] = item.favorite
+                })
+                this.favoriteObj = favoriteObj;
+            }
+        })
+    },
+    filterFav() {
+        this.control.fav = !this.control.fav;
+        if (this.control.fav) {
+            this.tokenTable = this.tokenTable.filter((item) => {
+                return this.favoriteObj[item.symbol]
+            })
+        } else {
+            this.tokenTable = this.tokenTableSource
         }
     }
 };

@@ -117,6 +117,7 @@ const zh = {
     delegate_succeed: '委托成功',
     tip_balance_not_enough: '抱歉，您的余额不足！',
     to_be_continued: '即将到来',
+    collection_fail: '收藏失败',
     home_banner_tip1: '免费的去中心化交易所',
     home_banner_tip2: '零手续费 / 不限最低成交额 / 链上撮合 / 安全透明',
     detail: '详情',

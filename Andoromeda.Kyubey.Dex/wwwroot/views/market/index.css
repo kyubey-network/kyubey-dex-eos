@@ -73,21 +73,6 @@
             color: #000;
         }
 
-.my-star {
-    display: inline-block;
-    font: normal normal normal 2em FontAwesome;
-}
-
-    .my-star::before {
-        content: "\f006";
-        color: #AFAFAF;
-    }
-
-    .my-star:hover::before {
-        content: "\f005";
-        color: #FFDC00;
-    }
-
 .my-separator {
     line-height: 100%;
     text-align: center;

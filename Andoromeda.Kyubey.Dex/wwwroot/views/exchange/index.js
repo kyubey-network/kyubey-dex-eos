@@ -635,15 +635,21 @@ component.methods = {
     },
     redirectToDetail(token) {
         app.redirect('/exchange/:id', '/exchange/' + token, { id: token }, {});
+    },
+    toggleFav(token, i) {
+        const isAdd = !this.favoriteListFilter[i].favorite;
+        app.toggleFav(token, isAdd, () => {
+            this.favoriteListFilter[i].favorite = isAdd;
+        })
     }
-};
+}
 component.computed = {
     isSignedIn: function () {
         return !(app.account == null || app.account.name == null);
     },
     favoriteListFilter() {
-        if (this.inputs.tokenSearchInput === '') {
-            return this.favoriteList
+        if (this.control.markets === 'favorite') {
+            return this.favoriteList.filter(x => x.symbol.includes(this.inputs.tokenSearchInput.toUpperCase()) && x.favorite)
         } else {
             return this.favoriteList.filter(x => x.symbol.includes(this.inputs.tokenSearchInput.toUpperCase()))
         }

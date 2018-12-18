@@ -4,7 +4,8 @@
         tokenTable: [],
         searchText: '',
         control: {
-            tab: 'eos'
+            tab: 'eos',
+            fav: false
         },
         sortControl: {
             desc: 0,
@@ -14,6 +15,7 @@
             mode: 'normal',
             search: ''
         },
+        favoriteObj: {},
         onScroll: false
     };
 };
@@ -49,6 +51,34 @@ component.methods = {
     },
     focusMobileSearch() {
         setTimeout(function () { $('#mobileTokenSearch').focus(); }, 50)
+    },
+    toggleFav(token) {
+        const isAdd = !this.favoriteObj[token];
+        app.toggleFav(token, isAdd, () => {
+            this.favoriteObj[token] = isAdd;
+        })
+    },
+    getFavoriteList() {
+        qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
+            if (res.code === 200) {
+                let favoriteObj = {};
+                let favoriteList = res.data || [];
+                favoriteList.forEach((item) => {
+                    favoriteObj[item.symbol] = item.favorite
+                })
+                this.favoriteObj = favoriteObj;
+            }
+        })
+    },
+    filterFav() {
+        this.control.fav = !this.control.fav;
+        if (this.control.fav) {
+            this.tokenTable = this.tokenTable.filter((item) => {
+                return this.favoriteObj[item.symbol]
+            })
+        } else {
+            this.tokenTable = this.tokenTableSource
+        }
     }
 }
 

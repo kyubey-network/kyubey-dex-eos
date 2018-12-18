@@ -235,6 +235,40 @@
                 }
             }, 250);
         },
+        // token, is add favorite, callback
+        toggleFav(token, isAdd, cb) {
+            if (this.loginMode === 'Simple Wallet') {
+                // todo
+            } else if (this.loginMode === 'Scatter Addons' || this.loginMode === 'Scatter Desktop') {
+                this.scatterFav(token, isAdd, cb);
+            }
+        },
+        scatterFav(token, isAdd, cb) {
+            const { account, requiredFields, eos } = app;
+            const $t = this.$t.bind(this);
+            eos.contract('kyubeydex.bp', { requiredFields })
+                .then(contract => {
+                    if (isAdd) {
+                        return contract.addfav(
+                            account.name,
+                            token,
+                            {
+                                authorization: [`${account.name}@${account.authority}`]
+                            });
+                    } else {
+                        return contract.removefav(
+                            account.name,
+                            token,
+                            {
+                                authorization: [`${account.name}@${account.authority}`]
+                            });
+                    }
+                })
+                .then(cb)
+                .catch(error => {
+                    showModal($t('collection_fail'), error.message + $t('Please contact us if you have any questions'));
+                });
+        }
     },
     computed: {
         isSignedIn: function () {

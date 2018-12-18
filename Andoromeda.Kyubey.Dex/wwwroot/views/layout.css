@@ -1587,10 +1587,9 @@ a:not([href]):not([tabindex]) {
     cursor: pointer;
 }
 
-    .sort-icon-active, .up-icon:hover, .down-icon:hover {
-        color: #FFB500;
-    }
-
+.sort-icon-active, .up-icon:hover, .down-icon:hover {
+    color: #FFB500;
+}
 .container {
     max-width: 1280px;
 }
@@ -1602,3 +1601,20 @@ a:not([href]):not([tabindex]) {
 .pt-2 {
     text-align: right;
 }
+.my-star {
+    display: inline-block;
+    font: normal normal normal 2em FontAwesome;
+}
+    .my-star::before {
+        content: "\f006";
+        color: #AFAFAF;
+    }
+
+    .my-star:hover::before {
+        content: "\f005";
+        color: #FFDC00;
+    }
+    .my-star-active::before {
+        content: "\f005";
+        color: #FFDC00;
+    }

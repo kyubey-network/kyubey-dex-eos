@@ -232,7 +232,7 @@
                 <div class="card my-card e-pair-card">
                     <div class="my-card-header header-text-color" style="justify-content: space-between;">
                         <div>
-                            <div @click="control.markets = 'favorite'" class="border-button d-inline-block" :class="{'border-button-active': control.markets !== 'eos'}"><i class="fa fa-star-o mr-1"></i>{{$t('favorite')}}</div>
+                            <div @click="control.markets = 'favorite'" class="border-button d-inline-block" :class="{'border-button-active': control.markets !== 'eos'}" v-if="isSignedIn"><i class="fa fa-star-o mr-1"></i>{{$t('favorite')}}</div>
                             <div @click="control.markets = 'eos'" class="border-button d-inline-block" :class="{'border-button-active': control.markets === 'eos'}">EOS</div>
                         </div>
                         <div class="input-container">
@@ -242,7 +242,7 @@
                     <table class="table e-table table-sm table-hover pl-1 scroll-table">
                         <thead>
                             <tr>
-                                <th scope="col" style="width: 20px;"></th>
+                                <th scope="col" style="width: 20px;" v-if="isSignedIn"></th>
                                 <th scope="col" class="text-left">{{$t('market')}}</th>
                                 <th scope="col" class="text-right">{{$t('latest_price')}}</th>
                                 <th scope="col" class="text-right">{{$t('ups_downs')}}</th>
@@ -251,7 +251,9 @@
                         <tbody style="height: 390px;">
                             <tr v-for="(x, i) in favoriteListFilter" :key="i"
                                 @click="redirectToDetail(x.symbol)">
-                                <td style="width: 20px;"><i class="fa fa-star-o" style="color: #AFAFAF;"></i></td>
+                                <td style="width: 20px;" v-if="isSignedIn">
+                                    <i class="my-star" style="color: #AFAFAF;font-size: 14px;" :class="{'my-star-active': x.favorite}" @click.stop="toggleFav(x.symbol, i)"></i>
+                                </td>
                                 <td class="text-left">{{x.symbol}}/EOS</td>
                                 <td v-bind:class="{'text-success':x.change>0,'text-danger':x.change<0}">{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td v-bind:class="{'text-success':x.change>0,'text-danger':x.change<0}">
