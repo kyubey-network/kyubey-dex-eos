@@ -49,7 +49,7 @@ component.methods = {
 
 component.computed = {
     newsForm: function () {
-        this.BoolNoData = false;
+        this.boolNoData = false;
         if (this.keyWords != '') {
             var filteredNews = this.news.filter(x => {
                 if (x.title.includes(this.keyWords)) {
@@ -63,7 +63,7 @@ component.computed = {
                 }
             });
             if (filteredNews.length == 0) {
-                this.BoolNoData = true;
+                this.boolNoData = true;
             }
             return filteredNews;
         }
