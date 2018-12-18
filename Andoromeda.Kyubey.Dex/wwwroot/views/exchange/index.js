@@ -60,7 +60,8 @@
         mobile: {
             nav: 'summary',
             summaryActive: 'candlestick',
-            exchangeMode: 'buy'
+            exchangeMode: 'buy',
+            delegateActive: 'current'
         },
         chartWidget: null,
         tokenId: '',
@@ -93,6 +94,7 @@
 };
 
 component.created = function () {
+    app.mobile.nav = null;
     this.tokenId = router.history.current.params.id;
     this.chart.symbol = this.tokenId;
 

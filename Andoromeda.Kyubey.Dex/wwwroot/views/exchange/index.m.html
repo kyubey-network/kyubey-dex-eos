@@ -6,6 +6,7 @@
             <div class="exchange-header-publisher">dacincubator</div>
         </div>
         <div class="exchange-header-star"><i class="fa fa-star-o"></i></div>
+        <div class="exchange-header-back" v-if="mobile.nav !== 'summary'" @click="mobile.nav = 'summary'"><i class="fa fa-line-chart"></i></div>
     </div>
     <div v-if="mobile.nav === 'summary'">
         <div class="exchange-summary">
@@ -275,6 +276,219 @@
         </div>
     </div>
     <div v-if="mobile.nav === 'exchange'">
+        <div class="exchange-container">
+            <div class="exchange-main-left">
+                <div class="exchange-main-row">
+                    <div class="exchange-type-button active">买入</div>
+                    <div class="exchange-type-button">卖出</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="exchange-main-row">
+                    <div class="exchange-type-button active">限价</div>
+                    <div class="exchange-type-button">市价</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="exchange-main-row">
+                    <div class="exchange-main-row-label">单价</div>
+                    <div class="exchange-main-amount-decrease">-</div>
+                    <div class="exchange-main-amount-textbox"><input type="text" value="0.00010000" /></div>
+                    <div class="exchange-main-amount-increase">+</div>
+                    <div class="clear"></div>
+                </div>
+                <div class="exchange-main-row">
+                    <div class="exchange-main-row-label">数量(KBY)</div>
+                    <div class="exchange-main-amount-textbox no-border-right"><input type="text" class="text-align-left" value="0.00010000" /></div>
+                    <div class="exchange-main-amount-token">KBY</div>
+                    <div class="clear"></div>
+                    <div class="exchange-main-row-hint">≈ 0.0000 EOS</div>
+                </div>
+                <div class="exchange-main-row">
+                    <div class="exchange-type-button sm col-4">25%</div>
+                    <div class="exchange-type-button sm col-4">50%</div>
+                    <div class="exchange-type-button sm col-4">75%</div>
+                    <div class="exchange-type-button sm col-4">100%</div>
+                    <div class="clear"></div>
+                    <div class="exchange-main-row-label">可用EOS: 0.0000 EOS</div>
+                </div>
+                <div class="exchange-main-row">
+                    <div class="exchange-main-button green">买入</div>
+                </div>
+            </div>
+            <div class="exchange-main-right">
+                <table class="exchange-main-delegate-table">
+                    <thead>
+                        <tr>
+                            <th>价格</th>
+                            <th>委托量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: linear-gradient(to left, rgb(249,237,235) 33%, rgb(255,255,255) 33%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                        <tr style="background: linear-gradient(to left, rgb(249,237,235) 55%, rgb(255,255,255) 55%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                        <tr style="background: linear-gradient(to left, rgb(249,237,235) 44%, rgb(255,255,255) 44%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="exchange-main-delegate-latest">
+                    0.0001 ↑
+                </div>
+                <table class="exchange-main-delegate-table">
+                    <tbody>
+                        <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                        <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                        <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);">
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear"></div>
+            <table class="exchange-table-header navigator gray">
+                <tr>
+                    <th v-bind:class="{ active: mobile.delegateActive === 'current' }" @click="mobile.delegateActive = 'current'">当前委托</th>
+                    <th v-bind:class="{ active: mobile.delegateActive === 'history' }" @click="mobile.delegateActive = 'history'">历史委托</th>
+                </tr>
+            </table>
+            <div v-if="mobile.delegateActive === 'current'">
+                <div class="exchange-main-current-item">
+                    <div class="exchange-main-current-item-header">
+                        <span class="exchange-main-current-item-tag-red">卖</span>
+                        <span class="exchange-main-current-item-token-pair">KBY/EOS</span>
+                        <span class="exchange-main-current-item-date">12-18</span>
+                        <a class="exchange-main-current-item-cancel-button">取消</a>
+                    </div>
+                    <table class="exchange-main-delegate-detail-table">
+                        <tr class="field">
+                            <td>委托价</td>
+                            <td>委托量</td>
+                            <td>成交量</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>--</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="exchange-main-current-item">
+                    <div class="exchange-main-current-item-header">
+                        <span class="exchange-main-current-item-tag-red">卖</span>
+                        <span class="exchange-main-current-item-token-pair">KBY/EOS</span>
+                        <span class="exchange-main-current-item-date">12-18</span>
+                        <a class="exchange-main-current-item-cancel-button">取消</a>
+                    </div>
+                    <table class="exchange-main-delegate-detail-table">
+                        <tr class="field">
+                            <td>委托价</td>
+                            <td>委托量</td>
+                            <td>成交量</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>--</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="exchange-main-current-item">
+                    <div class="exchange-main-current-item-header">
+                        <span class="exchange-main-current-item-tag-red">卖</span>
+                        <span class="exchange-main-current-item-token-pair">KBY/EOS</span>
+                        <span class="exchange-main-current-item-date">12-18</span>
+                        <a class="exchange-main-current-item-cancel-button">取消</a>
+                    </div>
+                    <table class="exchange-main-delegate-detail-table">
+                        <tr class="field">
+                            <td>委托价</td>
+                            <td>委托量</td>
+                            <td>成交量</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>--</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div v-if="mobile.delegateActive === 'history'">
+                <div class="exchange-main-current-item">
+                    <div class="exchange-main-current-item-header">
+                        <span class="exchange-main-current-item-tag-red">卖</span>
+                        <span class="exchange-main-current-item-token-pair">KBY/EOS</span>
+                        <span class="exchange-main-current-item-date">12-18</span>
+                        <div class="exchange-main-current-item-finished">已成交</div>
+                    </div>
+                    <table class="exchange-main-delegate-detail-table">
+                        <tr class="field">
+                            <td>委托价</td>
+                            <td>委托量</td>
+                            <td>成交量</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>--</td>
+                        </tr>
+                        <tr class="field">
+                            <td>成交均价</td>
+                            <td>成交总量</td>
+                            <td>手续费</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>免费</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="exchange-main-current-item">
+                    <div class="exchange-main-current-item-header">
+                        <span class="exchange-main-current-item-tag-red">卖</span>
+                        <span class="exchange-main-current-item-token-pair">KBY/EOS</span>
+                        <span class="exchange-main-current-item-date">12-18</span>
+                        <div class="exchange-main-current-item-finished">已成交</div>
+                    </div>
+                    <table class="exchange-main-delegate-detail-table">
+                        <tr class="field">
+                            <td>委托价</td>
+                            <td>委托量</td>
+                            <td>成交量</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>--</td>
+                        </tr>
+                        <tr class="field">
+                            <td>成交均价</td>
+                            <td>成交总量</td>
+                            <td>手续费</td>
+                        </tr>
+                        <tr>
+                            <td>0.0001</td>
+                            <td>0.0001</td>
+                            <td>免费</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
+        </div>
     </div>
 </div>

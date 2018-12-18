@@ -3,6 +3,10 @@
     font-family: 'Microsoft YaHei'
 }
 
+.clear {
+    clear: both;
+}
+
 .notification {
     position: fixed;
     right: 0;
