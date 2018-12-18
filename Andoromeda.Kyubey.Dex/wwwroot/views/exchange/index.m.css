@@ -1,0 +1,279 @@
+﻿.exchange-summary {
+    margin: 5px 15px;
+    height: 55px;
+}
+
+.exchange-summary-left {
+    width: 50%;
+    float: left;
+}
+
+.exchange-summary-right {
+    width: 50%;
+    float: left;
+}
+
+.exchange-summary-token {
+    font-size: 18px;
+}
+
+.exchange-summary-price {
+    font-size: 18px;
+}
+
+.exchange-summary-rate {
+    font-size: 12px;
+}
+
+.exchange-summary-price.red, .exchange-summary-rate.red {
+    color: #c54a4a;
+}
+
+.exchange-summary-price.green, .exchange-summary-rate.green {
+    color: #59c54a;
+}
+
+.exchange-summary-field {
+    font-size: 12px;
+    color: #aaa;
+    text-align: right;
+}
+
+.exchange-summary-value {
+    color: #555;
+}
+
+.exchange-table-header {
+    table-layout: fixed;
+    background: #eee;
+    color: #888!important;
+    font-size: 12px;
+    width: 100%;
+}
+
+    .exchange-table-header th {
+        text-align: center;
+        font-weight: normal !important;
+        padding: 5px;
+    }
+
+    .exchange-table-header th:first-child {
+        text-align: left;
+    }
+
+    .exchange-table-header th:last-child {
+        text-align: right;
+    }
+
+.exchange-buttons {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    height: 70px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    width: 100%;
+    text-align: center;
+}
+
+.exchange-buttons-item {
+    display: inline-block;
+    width: 46%;
+    text-align: center;
+    background: #eee;
+    border-radius: 5px;
+    height: 45px;
+    line-height: 45px;
+    margin: 10px 0;
+    color: #fff;
+}
+
+    .exchange-buttons-item.red {
+        background: #c54a4a;
+    }
+
+    .exchange-buttons-item.green {
+        background: #59c54a;
+    }
+
+.exchange-table-data-outer, #tv_chart_container {
+    top: 187px;
+    bottom: 130px;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background: #fff;
+    overflow-y: auto;
+}
+
+#tv_chart_container {
+    top: 160px;
+}
+
+.exchange-table-data-left {
+    padding: 5px 0 5px 5px;
+    float: left;
+    width: 50%;
+}
+
+.exchange-table-data-right {
+    padding: 5px 5px 5px 0;
+    float: left;
+    width: 50%;
+}
+
+.exchange-table-data-left .exchange-table-data tr td:last-child {
+    color: #59c54a;
+}
+
+.exchange-table-data-right .exchange-table-data tr td:first-child {
+    color: #c54a4a;
+}
+
+.exchange-table-data {
+    width: 100%;
+    font-size: 12px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.exchange-table-data tr td:first-child {
+    text-align: left;
+}
+
+.exchange-table-data tr td:last-child {
+    text-align: right;
+}
+
+    .exchange-table-data tr td {
+        padding: 5px;
+    }
+
+.exchange-header {
+    padding: 5px 15px;
+    height: 60px;
+}
+
+.exchange-header-icon {
+    height: 50px;
+    width: 50px;
+    float: left;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+
+.exchange-header-text-outer {
+    float: left;
+    height: 50px;
+}
+
+.exchange-header-token {
+    font-size: 18px;
+    line-height: 18px;
+    padding: 10px 0 2px 0;
+}
+
+.exchange-header-publisher {
+    color: #888;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 0px 0 13px;
+}
+
+.exchange-header-star {
+    float: right;
+    font-size: 32px;
+    line-height: 50px;
+}
+
+.exchange-table-header.navigator {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+.exchange-table-header.navigator th {
+    padding: 8px 5px
+}
+
+.exchange-table-header.navigator th {
+    cursor: pointer;
+}
+
+    .exchange-table-header.navigator th.active {
+        color: #2C8CE3;
+    }
+
+.exchange-table-history {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: right;
+}
+
+.exchange-table-history thead {
+    background: #eee;
+    font-weight: normal;
+    border-bottom: 1px solid #ddd;
+    color: #555;
+}
+
+    .exchange-table-history th, .exchange-table-history td {
+        font-size: 12px;
+        padding: 5px;
+        font-weight: normal!important;
+    }
+
+        .exchange-table-history th:first-child, .exchange-table-history td:first-child {
+            text-align: left;
+        }
+
+.exchange-table-history td {
+    color: #888;
+}
+
+    .exchange-table-history td.red {
+        color: #c54a4a;
+    }
+
+    .exchange-table-history td.green {
+        color: #59c54a;
+    }
+
+    .exchange-description {
+        padding: 8px;
+    }
+
+exchange-description-icon-outer {
+    height: 50px;
+}
+
+.exchange-description-icon-outer img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.exchange-description-symbol {
+    font-size: 16px;
+    line-height: 50px;
+}
+
+.exchange-description-content {
+    font-size: 12px;
+    color: #888;
+}
+
+.exchange-description-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+    color: #888;
+}
+
+.exchange-description-table td {
+    padding: 8px;
+}

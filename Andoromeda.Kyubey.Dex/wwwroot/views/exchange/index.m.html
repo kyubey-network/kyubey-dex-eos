@@ -1,0 +1,280 @@
+﻿<div>
+    <div class="exchange-header">
+        <img class="exchange-header-icon" src="/token_assets/KBY/icon.png" />
+        <div class="exchange-header-text-outer">
+            <div class="exchange-header-token">KBY/EOS</div>
+            <div class="exchange-header-publisher">dacincubator</div>
+        </div>
+        <div class="exchange-header-star"><i class="fa fa-star-o"></i></div>
+    </div>
+    <div v-if="mobile.nav === 'summary'">
+        <div class="exchange-summary">
+            <div class="exchange-summary-left">
+                <div class="exchange-summary-price green">0.01000000 ↑</div>
+                <div class="exchange-summary-rate green">99.9999%</div>
+            </div>
+            <div class="exchange-summary-right">
+                <div class="exchange-summary-field">
+                    24H VOL <span class="exchange-summary-value">1234.5678</span>
+                </div>
+                <div class="exchange-summary-field">
+                    24H High <span class="exchange-summary-value">1234.5678</span>
+                </div>
+                <div class="exchange-summary-field">
+                    24H Low <span class="exchange-summary-value">1234.5678</span>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <table class="exchange-table-header navigator">
+            <tr>
+                <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> Candlestick</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> Orders</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> History</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> Description</th>
+            </tr>
+        </table>
+
+        <table class="exchange-table-header" v-if="mobile.summaryActive === 'order'">
+            <tr>
+                <th>Buy Amount(KBY)</th>
+                <th>Price(EOS)</th>
+                <th>Sell Amount(KBY)</th>
+            </tr>
+        </table>
+
+        <div class="exchange-table-data-outer" v-if="mobile.summaryActive === 'order'">
+            <div class="exchange-table-data-left">
+                <table class="exchange-table-data">
+                    <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);">
+                        <td>1234.5678</td>
+                        <td>0.0011</td>
+                    </tr>
+                    <tr>
+                        <td>1234.5678</td>
+                        <td>0.0011</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="exchange-table-data-right">
+                <table class="exchange-table-data">
+                    <tr style="background: linear-gradient(to left, rgb(255,255,255) 33%, rgb(249,237,235) 33%);">
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                    <tr>
+                        <td>0.0011</td>
+                        <td>1234.5678</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="tv_chart_container" v-show="mobile.summaryActive === 'candlestick'"></div>
+
+        <table class="exchange-table-history" v-if="mobile.summaryActive === 'history'">
+            <thead>
+                <tr>
+                    <th>时间</th>
+                    <th>价格(EOS)</th>
+                    <th>数量(KBY)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>12-18 14:25:12</td>
+                    <td class="green">1234.5678</td>
+                    <td>1234.5678</td>
+                </tr>
+                <tr>
+                    <td>12-18 14:25:12</td>
+                    <td class="red">1234.5678</td>
+                    <td>1234.5678</td>
+                </tr>
+                <tr>
+                    <td>12-18 14:25:12</td>
+                    <td class="green">1234.5678</td>
+                    <td>1234.5678</td>
+                </tr>
+                <tr>
+                    <td>12-18 14:25:12</td>
+                    <td class="green">1234.5678</td>
+                    <td>1234.5678</td>
+                </tr>
+                <tr>
+                    <td>12-18 14:25:12</td>
+                    <td class="red">1234.5678</td>
+                    <td>1234.5678</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="exchange-description" v-if="mobile.summaryActive === 'description'">
+            <div class="exchange-description-icon-outer">
+                <img src="/token_assets/KBY/icon.png" />
+                <span class="exchange-description-symbol">KBY</span>
+            </div>
+            <div class="exchange-description-content">KBY是通过分布式班科协议标准发行的Kyubey孵化器平台币.KBY的持有者将成为Kyubey孵化器平台的股东并享有股东权利，包括平台利润分红、投票权及小区其它分布式应用的空投。当然，KBY也将上架一系列交易所进行流通。</div>
+            <hr />
+            <table class="exchange-description-table">
+                <tr>
+                    <td>最大发行量</td>
+                    <td>200000000.0000</td>
+                </tr>
+                <tr>
+                    <td>最大发行量</td>
+                    <td>200000000.0000</td>
+                </tr>
+                <tr>
+                    <td>最大发行量</td>
+                    <td>200000000.0000</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="exchange-buttons">
+            <div class="exchange-buttons-item green" @click="mobile.exchangeMode = 'buy'; mobile.nav = 'exchange'">Buy</div>
+            <div class="exchange-buttons-item red" @click="mobile.exchangeMode = 'sell'; mobile.nav = 'exchange'">Sell</div>
+        </div>
+    </div>
+    <div v-if="mobile.nav === 'exchange'">
+
+    </div>
+</div>

@@ -57,6 +57,11 @@
             interval: 240,
             symbol: ''
         },
+        mobile: {
+            nav: 'summary',
+            summaryActive: 'candlestick',
+            exchangeMode: 'buy'
+        },
         chartWidget: null,
         tokenId: '',
         account: '',

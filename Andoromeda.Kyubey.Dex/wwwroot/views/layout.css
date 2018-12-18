@@ -12,6 +12,10 @@
     display: none;
 }
 
+.claer {
+    clear: both;
+}
+
 .notification {
     position: fixed;
     right: 0;
