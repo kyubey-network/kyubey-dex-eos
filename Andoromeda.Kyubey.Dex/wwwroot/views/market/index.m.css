@@ -152,5 +152,9 @@ shadow {
 }
 
 .result-list {
-    margin-top: 98px;
+    padding-top: 90px;
+}
+
+.result-list-search {
+    padding-top: 44px;
 }
