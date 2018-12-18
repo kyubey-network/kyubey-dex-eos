@@ -559,7 +559,7 @@ component.methods = {
     getBalances: function () {
         if (this.isSignedIn) {
             var self = this;
-            this.balanceView = qv.createView(`/api/v1/lang/${app.lang}/Node/${app.account.name}/balance`, {});
+            this.balanceView = qv.createView(`/api/v1/lang/${app.lang}/Node/${app.account.name}/balance/${this.tokenId}`, {});
             this.balanceView.fetch(res => {
                 if (res.code - 0 === 200) {
                     self.eosBalance = parseFloat(res.data['EOS'] || 0);

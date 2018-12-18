@@ -9,10 +9,17 @@
 };
 
 component.created = function () {
-    this.loadMore();
+    this.init();
 };
 
 component.methods = {
+    init: function () {
+        this.news = [];
+        this.page = -1;
+        this.noMore = false;
+        this.keyWords = '';
+        this.loadMore();
+    },
     loadMore: function () {
         var self = this;
         if (self.noMore) {
@@ -70,5 +77,12 @@ component.computed = {
         else {
             return this.news;
         }
+    }
+}
+
+component.watch = {
+    //reload multi language ajax method
+    '$root.lang': function () {
+        this.init();
     }
 }

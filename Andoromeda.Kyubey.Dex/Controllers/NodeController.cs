@@ -4,6 +4,7 @@ using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,18 +16,31 @@ namespace Andoromeda.Kyubey.Dex.Controllers
     [Route("api/v1/lang/{lang}/[controller]")]
     public class NodeController : BaseController
     {
-        [HttpGet("{account}/balance/")]
+        [HttpGet("{account}/balance/{symbol?}")]
         [ProducesResponseType(typeof(ApiResult<Dictionary<string, double>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         [ProducesResponseType(typeof(ApiResult), 500)]
-        public async Task<IActionResult> GetEOSBalanceAsync(string account, string lang, [FromServices]ILogger logger, [FromServices] KyubeyContext db, [FromServices]TokenRepositoryFactory tokenRepositoryFactory, [FromServices] NodeApiInvoker nodeApiInvoker, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetEOSBalanceAsync(string account, string symbol, string lang, [FromServices]ILogger logger, [FromServices] KyubeyContext db, [FromServices]TokenRepositoryFactory tokenRepositoryFactory, [FromServices] NodeApiInvoker nodeApiInvoker, CancellationToken cancellationToken)
         {
             var tokenRespository = await tokenRepositoryFactory.CreateAsync(lang);
 
             var buyTokens = await db.DexBuyOrders.Where(x => x.Account == account).Select(x => x.TokenId).Distinct().ToListAsync(cancellationToken);
             var sellTokens = await db.DexSellOrders.Where(x => x.Account == account).Select(x => x.TokenId).Distinct().ToListAsync(cancellationToken);
+            var matchTokens = await db.MatchReceipts
+                .Where(x => x.Time >= DateTime.Now.AddMonths(-3) &&
+                (x.Asker == account || x.Bidder == account))
+                .Select(x => x.TokenId).Distinct().ToListAsync(cancellationToken);
 
-            var tokens = buyTokens.Concat(sellTokens).Distinct().ToList();
+            var tokens = buyTokens.Concat(sellTokens).Concat(matchTokens).Distinct().ToList();
+
+            if (!string.IsNullOrWhiteSpace(symbol))
+            {
+                if (!tokens.Contains(symbol))
+                {
+                    tokens.Add(symbol);
+                }
+            }
+
             var responseData = new Dictionary<string, double>();
 
             tokens.ForEach(x =>

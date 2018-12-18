@@ -167,7 +167,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                                 FreezeToken = x.Sum(s => s.Ask)
                             }).ToListAsync(cancellationToken);
 
-            var tokens = buyList.Select(x => x.TokenId).Concat(sellList.Select(x => x.TokenId)).Distinct().ToList();
+            var matchTokens = await db.MatchReceipts
+                .Where(x => x.Time >= DateTime.Now.AddMonths(-3) &&
+                (x.Asker == account || x.Bidder == account))
+                .Select(x => x.TokenId).Distinct().ToListAsync(cancellationToken);
+
+            var tokens = buyList.Select(x => x.TokenId).Concat(sellList.Select(x => x.TokenId)).Concat(matchTokens).Distinct().ToList();
 
             var responseData = new List<GetWalletResponse>();
 
