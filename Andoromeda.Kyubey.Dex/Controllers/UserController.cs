@@ -173,6 +173,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
 
             responseData.Add(new GetWalletResponse()
             {
+                IconSrc = "/img/eos.png",
                 Freeze = buyList.Sum(x => x.FreezeEOS),
                 Symbol = "EOS",
                 UnitPrice = 1,
@@ -198,6 +199,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                     {
                         responseData.Add(new GetWalletResponse()
                         {
+                            IconSrc = $"/token_assets/{x}/icon.png",
                             Valid = currentTokenBalance,
                             Symbol = x,
                             Freeze = sellList.FirstOrDefault(s => s.TokenId == x)?.FreezeToken ?? 0,

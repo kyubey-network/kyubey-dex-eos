@@ -200,10 +200,10 @@ component.methods = {
             .then(() => {
                 self.delayRefresh(self.refreshUserViews);
 
-                showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
             })
             .catch(error => {
-                showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
             });
     },
     exchangeBuy() {

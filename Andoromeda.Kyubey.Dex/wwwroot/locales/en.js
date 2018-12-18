@@ -121,4 +121,6 @@ const en = {
     detail: 'Detail',
     tip_correct_count: 'Please fill in the correct amount!',
     no_result: 'Sorry, there is no such keyword',
+    tip_cancel_succeed: 'Cancel succeed!',
+    tip_cancel_failed: 'Cancel failed!',
 };

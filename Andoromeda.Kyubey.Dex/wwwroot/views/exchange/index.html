@@ -399,13 +399,13 @@
                             {{$t('exchange_buy')}} {{exchange.taretSymbol}}
                         </p>
                         <p>
-                            {{$t('exchange_price')}}：{{exchange.price}} EOS
+                            {{$t('exchange_price')}}：{{parseFloat(exchange.price).toFixed(8)}} EOS
                         </p>
                         <p>
-                            {{$t('exchange_amount')}}：{{exchange.taretAmount}} {{exchange.taretSymbol}}
+                            {{$t('exchange_amount')}}：{{parseFloat(exchange.taretAmount).toFixed(4)}} {{exchange.taretSymbol}}
                         </p>
                         <p>
-                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                            {{$t('exchange_total')}}：{{parseFloat(exchange.amount).toFixed(4)}} EOS
                         </p>
                     </div>
                     <div class="modal-body text-left" v-if="exchange.type=='sell'">
@@ -413,13 +413,13 @@
                             {{$t('exchange_sell')}} {{exchange.symbol}}
                         </p>
                         <p>
-                            {{$t('exchange_sellprice')}}：{{exchange.price}} EOS
+                            {{$t('exchange_sellprice')}}：{{parseFloat(exchange.price).toFixed(8)}} EOS
                         </p>
                         <p>
-                            {{$t('exchange_sellamount')}}：{{exchange.taretAmount}} {{exchange.symbol}}
+                            {{$t('exchange_sellamount')}}：{{parseFloat(exchange.amount).toFixed(4)}} {{exchange.symbol}}
                         </p>
                         <p>
-                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                            {{$t('exchange_total')}}：{{parseFloat(exchange.taretAmount).toFixed(4)}} EOS
                         </p>
                     </div>
                     <div class="modal-body text-left" v-if="exchange.type=='buy-market'">
@@ -427,7 +427,7 @@
                             {{$t('exchange_buy')}} {{exchange.taretSymbol}}
                         </p>
                         <p>
-                            {{$t('exchange_total')}}：{{exchange.amount}} EOS
+                            {{$t('exchange_total')}}：{{parseFloat(exchange.amount).toFixed(4)}} EOS
                         </p>
                     </div>
                     <div class="modal-body text-left" v-if="exchange.type=='sell-market'">
@@ -435,7 +435,7 @@
                             {{$t('exchange_sell')}} {{exchange.symbol}}
                         </p>
                         <p>
-                            {{$t('exchange_total')}}：{{exchange.amount}}  {{exchange.symbol}}
+                            {{$t('exchange_total')}}：{{parseFloat(exchange.amount).toFixed(4)}}  {{exchange.symbol}}
                         </p>
                     </div>
                 </div>

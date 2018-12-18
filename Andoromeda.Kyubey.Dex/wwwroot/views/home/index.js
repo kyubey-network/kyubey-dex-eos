@@ -18,10 +18,7 @@
 component.created = function () {
     var self = this;
     app.mobile.nav = 'home';
-    qv.createView(`/api/v1/lang/${app.lang}/news`, {}, 60000)
-        .fetch(x => {
-            self.news = x.data;
-        });
+    self.getNews();
     qv.createView(`/api/v1/lang/${app.lang}/slides`, {}, 60000)
         .fetch(x => {
             self.slides = x.data;
@@ -51,6 +48,13 @@ component.created = function () {
 };
 
 component.methods = {
+    getNews: function () {
+        var self = this;
+        qv.createView(`/api/v1/lang/${app.lang}/news`, {}, 60000)
+            .fetch(x => {
+                self.news = x.data;
+            });
+    },
     searchToken: function () {
         if (this.searchText !== '') {
             this.tokenTable = this.tokenTableSource.filter(item => {
@@ -67,16 +71,16 @@ component.methods = {
         this.sortControl.desc = (this.sortControl.desc + 1) % 3;
         this.sortToken(row, this.sortControl.desc);
     },
-    sortToken(row,desc) {
+    sortToken(row, desc) {
         this.sortControl.row = row;
         this.sortControl.desc = desc;
-        if (this.sortControl.desc === 2){
-            this.tokenTable.sort((a, b)=>{
-                return parseFloat(b[row])-parseFloat(a[row])
+        if (this.sortControl.desc === 2) {
+            this.tokenTable.sort((a, b) => {
+                return parseFloat(b[row]) - parseFloat(a[row])
             })
-        }else if (this.sortControl.desc === 1) {
-            this.tokenTable.sort((a, b)=>{
-                return parseFloat(a[row])-parseFloat(b[row])
+        } else if (this.sortControl.desc === 1) {
+            this.tokenTable.sort((a, b) => {
+                return parseFloat(a[row]) - parseFloat(b[row])
             })
         } else {
             this.tokenTable = this.tokenTableSource;
@@ -88,4 +92,11 @@ component.computed = {
     isSignedIn: function () {
         return !(app.account == null || app.account.name == null);
     }
+};
+
+component.watch = {
+    '$root.lang': function () {
+        this.getNews();
+    },
+    deep: true
 };

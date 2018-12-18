@@ -4,6 +4,8 @@ namespace Andoromeda.Kyubey.Dex.Models
 {
     public class GetWalletResponse
     {
+        public string IconSrc { get; set; }
+
         public string Symbol { get; set; }
 
         public double Valid { get; set; }

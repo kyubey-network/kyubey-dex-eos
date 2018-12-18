@@ -122,4 +122,6 @@ const zh = {
     detail: '详情',
     tip_correct_count: '请填写正确的数量值！',
     no_result: '抱歉，没有这个关键字',
+    tip_cancel_succeed: '取消成功!',
+    tip_cancel_failed: '取消失败!',
 };

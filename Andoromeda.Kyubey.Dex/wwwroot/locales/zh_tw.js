@@ -122,4 +122,6 @@ const zh_tw = {
     detail: '詳情',
     tip_correct_count: '請填寫正確的數量詞！',
     no_result: '抱歉，沒有這個關鍵字',
+    tip_cancel_succeed: '取消成功!',
+    tip_cancel_failed: '取消失敗!',
 };
