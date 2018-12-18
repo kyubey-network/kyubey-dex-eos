@@ -535,7 +535,8 @@ component.methods = {
         return moment(time + 'Z').format('MM-DD HH:mm:ss')
     },
     getFavoriteList() {
-        this.favoriteListView = qv.createView(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {});
+        const name = app.account ? app.account.name : null
+        this.favoriteListView = qv.createView(`/api/v1/lang/${app.lang}/user/${name}/favorite`, {});
         this.favoriteListView.fetch(res => {
             if (res.code === 200) {
                 this.favoriteList = res.data || [];

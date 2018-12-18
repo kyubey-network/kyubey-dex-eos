@@ -45,7 +45,10 @@
                             <td scope="row" v-if="isSignedIn">
                                 <i class="my-star"></i>
                             </td>
-                            <td><font size="3">{{item.symbol}}</font></td>
+                            <td>
+                                <img :src="item.iconSrc" style="width: 30px;">
+                                <font size="3">{{item.symbol}}</font>
+                            </td>
                             <td><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
                             <td><font size="3">{{parseFloat(item.freeze).toFixed(4)}}</font></td>
                             <td><font size="3">{{parseFloat(item.eos).toFixed(4)}} EOS</font></td>

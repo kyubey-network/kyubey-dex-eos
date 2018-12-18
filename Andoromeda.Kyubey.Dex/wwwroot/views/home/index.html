@@ -44,7 +44,7 @@
                             <i class="fa fa-star-o" style="color: #AFAFAF;font-size: 16px;" :class="{'my-star-active': control.fav}"></i>
                             <span>{{$t('optional')}}</span>
                         </th>
-                        <th class="text-center" scope="col">{{$t('trading_pair')}}</th>
+                        <th class="text-left" scope="col">{{$t('trading_pair')}}</th>
                         <th scope="col">{{$t('latest_price')}}</th>
                         <th scope="col" class="d-flex align-items-center justify-content-end">
                             <span @click="sortTokenOnClick('change_recent_day')" style="cursor:pointer">{{$t('ups_downs_24H')}}</span>
@@ -78,7 +78,10 @@
                         <td class="text-center" scope="row" v-if="isSignedIn">
                             <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)"></i>
                         </td>
-                        <td class="text-center">{{item.symbol}}/EOS</td>
+                        <td class="text-left">
+                            <img :src="item.icon_src" style="width: 30px;">
+                            <span>{{item.symbol}}/EOS</span>
+                        </td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.current_price}}</td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>

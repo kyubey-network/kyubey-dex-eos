@@ -59,7 +59,7 @@ component.methods = {
         })
     },
     getFavoriteList() {
-        qv.get(`/api/v1/lang/${app.lang}/user/${app.account}/favorite`, {}).then(res => {
+        qv.get(`/api/v1/lang/${app.lang}/user/${app.account.name}/favorite`, {}).then(res => {
             if (res.code === 200) {
                 let favoriteObj = {};
                 let favoriteList = res.data || [];
@@ -116,4 +116,16 @@ component.created = function () {
         this.onScroll = document.documentElement.scrollTop != 0;
     })
 
+};
+component.watch = {
+    '$root.isSignedIn': function (val) {
+        if (val === true) {
+            this.getFavoriteList();
+        }
+        //logout
+        else {
+            //comments: stop qv job or use signalR
+        }
+    },
+    deep: true
 };
