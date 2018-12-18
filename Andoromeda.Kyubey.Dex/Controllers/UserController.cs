@@ -124,12 +124,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             {
                 Id = x.Id,
                 Symbol = x.TokenId,
-                Bidder = x.Bidder,
-                Asker = x.Asker,
-                Type = x.Bidder == account ? "sell" : "buy",
+                Bidder = x.IsSellMatch ? x.Bidder : x.Asker,
+                Asker = x.IsSellMatch ? x.Asker : x.Bidder,
+                Type = x.IsSellMatch ? (x.Bidder == account ? "sell" : "buy") : (x.Asker == account ? "sell" : "buy"),
                 UnitPrice = x.UnitPrice,
-                Amount = x.Ask,
-                Total = x.Bid,
+                Amount = x.IsSellMatch ? x.Bid : x.Ask,
+                Total = x.IsSellMatch ? x.Ask : x.Bid,
                 Time = x.Time
             });
 

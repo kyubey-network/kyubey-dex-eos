@@ -25,7 +25,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 CurrentPrice = x.FirstOrDefault().UnitPrice,
                 MaxPrice = x.Max(c => c.UnitPrice),
                 MinPrice = x.Min(c => c.UnitPrice),
-                Volume = x.Sum(c => c.Bid)
+                Volume = x.Sum(c => c.IsSellMatch ? c.Bid : c.Ask)
             }).ToListAsync(cancellationToken);
 
             var lastList = await db.MatchReceipts.Where(x => x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new
@@ -115,7 +115,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             return ApiResult(responseData.Take(20).Select(x => new GetRecentTransactionResponse
             {
                 UnitPrice = x.UnitPrice,
-                Amount = x.Ask,
+                Amount = (x.IsSellMatch ? x.Bid : x.Ask),
                 Time = x.Time,
                 Growing = x.UnitPrice > (responseData.FirstOrDefault(g => g.Time < x.Time)?.UnitPrice ?? x.UnitPrice)
             }), new { symbol = symbol });
@@ -138,7 +138,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 CurrentPrice = x.FirstOrDefault().UnitPrice,
                 MaxPrice = x.Max(c => c.UnitPrice),
                 MinPrice = x.Min(c => c.UnitPrice),
-                Volume = x.Sum(c => c.Bid)
+                Volume = x.Sum(c => c.IsSellMatch ? c.Bid : c.Ask)
             }).FirstOrDefaultAsync(cancellationToken);
 
             var lastItem = await db.MatchReceipts.Where(x => x.TokenId == id && x.Time <= DateTime.Now.AddDays(-1)).OrderByDescending(x => x.Time).GroupBy(x => x.TokenId).Select(x => new

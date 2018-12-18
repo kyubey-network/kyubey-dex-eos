@@ -33,7 +33,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> Volume([FromServices] KyubeyContext db)
         {
-            var volumeVal = await db.MatchReceipts.Where(x => x.Time > DateTime.Now.AddDays(-1)).SumAsync(x => x.Ask);
+            var volumeVal = await db.MatchReceipts.Where(x => x.Time > DateTime.Now.AddDays(-1)).SumAsync(x => x.IsSellMatch ? x.Ask : x.Bid);
             return ApiResult(volumeVal);
         }
     }
