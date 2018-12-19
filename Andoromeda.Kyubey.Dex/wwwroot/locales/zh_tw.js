@@ -124,4 +124,5 @@ const zh_tw = {
     no_result: '抱歉，沒有這個關鍵字',
     tip_cancel_succeed: '取消成功!',
     tip_cancel_failed: '取消失敗!',
+    tip_use_dapp_browser: '請使用DAPP瀏覽器.',
 };

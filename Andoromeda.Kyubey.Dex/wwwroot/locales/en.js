@@ -123,4 +123,5 @@ const en = {
     no_result: 'Sorry, there is no such keyword',
     tip_cancel_succeed: 'Cancel succeed!',
     tip_cancel_failed: 'Cancel failed!',
+    tip_use_dapp_browser:'Please use DAPP Broswer.',
 };

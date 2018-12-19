@@ -43,6 +43,18 @@
     },
     mounted: function () {
         var self = this;
+
+        if (self.isMobile()) {
+            setTimeout(function () {
+                if (typeof scatter == 'undefined') {
+                    const $t = self.$t.bind(self);
+                    alert($t('tip_use_dapp_browser'));
+                    return;
+                }
+                self.scatterLogin();
+            }, 1000);
+        };
+
         self.$nextTick(() => {
             window.addEventListener('resize', () => {
                 if (self._width >= 768 && window.innerWidth < 768 || window.innerWidth >= 768 && self._width < 768) {
@@ -55,6 +67,9 @@
     watch: {
     },
     methods: {
+        isMobile: function () {
+            return this._width < 768;
+        },
         _getLoginRequestObj: function (uuid) {
             var _this = this;
             var loginObj = {
