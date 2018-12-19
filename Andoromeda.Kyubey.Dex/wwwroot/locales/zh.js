@@ -126,4 +126,8 @@ const zh = {
     tip_cancel_succeed: '取消成功!',
     tip_cancel_failed: '取消失败!',
     tip_use_dapp_browser: '请使用DAPP浏览器.',
+    limit_price: '限价',
+    deal_done: '已成交',
+    free: '免费',
+    handling_fee: '手续费'
 };

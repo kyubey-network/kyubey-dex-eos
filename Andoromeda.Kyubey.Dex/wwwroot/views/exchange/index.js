@@ -89,7 +89,8 @@
         matchListView: null,
         tokenInfoView: null,
         favoriteListView: null,
-        balanceView: null
+        balanceView: null,
+        buyAndSellStatus: true
     };
 };
 

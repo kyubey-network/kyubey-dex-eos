@@ -497,3 +497,13 @@ exchange-description-icon-outer {
     font-size: 12px;
     color: #aaa;
 }
+
+.suspension {
+    position: fixed;
+    left: 0;
+    right: 0;
+}
+
+.outline-button-active, .outline-button:hover {
+    border: 1px solid #278eda;
+}
