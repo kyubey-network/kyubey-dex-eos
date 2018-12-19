@@ -265,14 +265,12 @@
                 .then(contract => {
                     if (isAdd) {
                         return contract.addfav(
-                            account.name,
                             token,
                             {
                                 authorization: [`${account.name}@${account.authority}`]
                             });
                     } else {
                         return contract.removefav(
-                            account.name,
                             token,
                             {
                                 authorization: [`${account.name}@${account.authority}`]

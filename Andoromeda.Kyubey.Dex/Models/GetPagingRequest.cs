@@ -8,6 +8,6 @@ namespace Andoromeda.Kyubey.Dex.Models
         public int Skip { get; set; }
 
         [FromQuery(Name = "take")]
-        public int Take { get; set; } = 10;
+        public int Take { get; set; } = 50;
     }
 }
