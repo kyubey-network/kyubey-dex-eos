@@ -2,45 +2,45 @@
     <div class="home-banner">
         <div class="home-banner-text-outer">
             <div class="home-banner-title">Kyubey DEX</div>
-            <div class="home-banner-subtitle">全球首家去中心化交易所</div>
+            <div class="home-banner-subtitle">{{$t('home_banner_tip1')}}</div>
             <img src="/img/mobile.png" class="home-banner-picture" />
         </div>
     </div>
 
     <div class="home-announcement-outer">
         <img src="/img/announce.svg" />
-        <span>公告：blablabla</span>
+        <span  v-on:click="$root.redirect('/home/news')">{{news[0].title}} {{formatTime(news[0].time)}}</span>
     </div>
+
 
     <div class="home-token-list">
         <table class="home-token-filter">
             <tr>
-                <td class="active">涨幅榜</td>
-                <td>24H成交榜</td>
+                <td :class = "[sortControl.row === 'change_recent_day' ? 'active' : '']" @click="sortTokenOnClick('change_recent_day')">{{$t('ups_downs_24H')}}</td>
+                <td :class = "[sortControl.row === 'volume_recent_day' ? 'active' : '']" @click="sortTokenOnClick('volume_recent_day')">{{$t('volume_24H')}}</td>
             </tr>
         </table>
         <table class="home-token-table">
-            <tr>
-                <td class="token-pair-cell">
-                    <div class="token-pair">KBY/EOS</div>
-                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
+            <tr v-for="(item,index) in tokenTable.slice(0,10)" :key="index"
+                @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
+                <td class="test-center" scope="row" v-if="isSignedIn">
+                    <i class="my-start"></i>
                 </td>
-                <td class="token-price-cell">0.0001 EOS</td>
+                <td class="token-pair-cell">
+                    <div class="token-pair">{{item.symbol}}/EOS</div>
+                    <div class="token-volume">{{$t('volume_24H')}}: {{item.volume_recent_day.toFixed(4)}}/EOS</div>
+                </td>
+                <td class="token-price-cell">{{$t('latest_price')}}: {{item.current_price}}/EOS</td>
                 <td class="token-change-cell">
-                    <div class="token-change green">+0.01%</div>
+                    <div v-bind:class="[item.up ? 'token-change green' : (item.down ? 'token-change red' : 'token-change gray')]">{{item.change_recent_day}}</div>
                 </td>
             </tr>
-            <tr>
-                <td class="token-pair-cell">
-                    <div class="token-pair">CMU/EOS</div>
-                    <div class="token-volume">24H成交量 1234.5678 EOS</div>
-                </td>
-                <td class="token-price-cell">0.0001 EOS</td>
-                <td class="token-change-cell">
-                    <div class="token-change red">-0.01%</div>
+            <tr v-if="tokenTable.length == 0">
+                <td>
+                    {{$t('no_result')}}
                 </td>
             </tr>
         </table>
-        <div class="home-more-tokens">查看更多 &gt;</div>
+        <div class="home-more-tokens" v-on:click="$root.redirect('/market')">{{$t('more')}} &gt;</div>
     </div>
 </div>

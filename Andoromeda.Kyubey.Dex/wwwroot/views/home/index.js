@@ -45,6 +45,9 @@ component.created = function () {
                 x.change_recent_day = symbol + x.change_recent_day.toFixed(2) + '%';
             });
             self.tokenTableSource = self.tokenTable;
+            if (app.isMobile()) {
+                this.sortTokenOnClick('change_recent_day');
+            }
         }
     })
 };
@@ -70,20 +73,32 @@ component.methods = {
         return moment(time).format('MM-DD');
     },
     sortTokenOnClick(row) {
+        if (app.isMobile()) {
+            this.sortControl.row = row;
+            this.sortByDecrement(row);
+            return;
+        }
         this.sortControl.desc = (this.sortControl.desc + 1) % 3;
         this.sortToken(row, this.sortControl.desc);
+    },
+
+    sortByDecrement(row) {
+        this.tokenTable.sort((a, b) => {
+            return parseFloat(b[row]) - parseFloat(a[row])
+        })
+    },
+    sortByIncrement(row) {
+        this.tokenTable.sort((a, b) => {
+            return parseFloat(a[row]) - parseFloat(b[row])
+        })
     },
     sortToken(row, desc) {
         this.sortControl.row = row;
         this.sortControl.desc = desc;
         if (this.sortControl.desc === 2) {
-            this.tokenTable.sort((a, b) => {
-                return parseFloat(b[row]) - parseFloat(a[row])
-            })
+            this.sortByDecrement(row);
         } else if (this.sortControl.desc === 1) {
-            this.tokenTable.sort((a, b) => {
-                return parseFloat(a[row]) - parseFloat(b[row])
-            })
+            this.sortByIncrement(row);
         } else {
             this.tokenTable = this.tokenTableSource;
         }
