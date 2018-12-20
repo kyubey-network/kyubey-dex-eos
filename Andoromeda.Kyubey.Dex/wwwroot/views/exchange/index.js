@@ -207,11 +207,18 @@ component.methods = {
             })
             .then(() => {
                 self.delayRefresh(self.refreshUserViews);
-
-                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                if (app.isMobile) {
+                    app.notification("succeeded", $t('tip_cancel_succeed'));
+                } else {
+                    showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                }
             })
             .catch(error => {
-                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
+                if (app.isMobile) {
+                    app.notification("error", $t('tip_cancel_failed'));
+                } else {
+                    showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
+                }
             });
     },
     exchangeBuy() {
@@ -269,11 +276,18 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-
-                    showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    if (app.isMobile) {
+                        app.notification("succeeded", $t('delegate_succeed'));
+                    } else {
+                        showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    }
                 })
                 .catch(error => {
-                    self.handleScatterException(error, $t('delegate_failed'));
+                    if (app.isMobile) {
+                        app.notification("error", $t('delegate_failed'));
+                    } else {
+                        self.handleScatterException(error, $t('delegate_failed'));
+                    }
                 });
         }
         else if (this.control.trade === 'market') {
@@ -290,11 +304,18 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-
-                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    if (app.isMobile) {
+                        app.notification("succeeded", $t('Transaction Succeeded'));
+                    } else {
+                        showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    }
                 })
                 .catch(error => {
-                    self.handleScatterException(error, $t('Transaction Failed'));
+                    if (app.isMobile) {
+                        app.notification("error", $t('Transaction Failed'));
+                    } else {
+                        self.handleScatterException(error, $t('Transaction Failed'));
+                    }
                 });
         }
     },
