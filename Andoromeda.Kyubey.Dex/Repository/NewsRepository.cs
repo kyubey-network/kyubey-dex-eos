@@ -9,6 +9,7 @@ using Andoromeda.Framework.AnnotatedMarkdown;
 using Andoromeda.Framework.GitHub;
 using Andoromeda.Kyubey.Dex.Repository;
 using Andoromeda.Kyubey.Dex.Extensions;
+using Andoromeda.Kyubey.Dex.Lib;
 
 namespace Andoromeda.Kyubey.Dex.Repository
 {
@@ -17,7 +18,7 @@ namespace Andoromeda.Kyubey.Dex.Repository
         private string _lang;
         private string _path;
 
-        public NewsRepository(string path, string lang) 
+        public NewsRepository(string path, string lang)
         {
             _path = path;
             _lang = lang;
@@ -25,23 +26,20 @@ namespace Andoromeda.Kyubey.Dex.Repository
 
         private IEnumerable<string> EnumerateNewsFiles()
         {
-            var files = Directory.EnumerateFiles(_path);
-            return files.Where(x => x.EndsWith($".{_lang}.md"));
+            return GlobalizationFileFinder.GetCultureFiles(_path, _lang);
         }
 
         public IEnumerable<News> EnumerateAll()
         {
-            foreach(var x in EnumerateNewsFiles())
+            foreach (var x in EnumerateNewsFiles())
             {
-                var md = File.ReadAllText(x);
-                var result = AnnotationParser.Parse(md);
-                yield return GetSingle(Path.GetFileNameWithoutExtension(x).TrimEnd($".{_lang}"));
+                yield return GetSingle(GlobalizationFileFinder.GetFileId(x));
             }
         }
 
         public News GetSingle(object id)
         {
-            var path = Path.Combine(_path, $"{id}.{_lang}.md");
+            var path = GlobalizationFileFinder.GetFilePathById(_path, id.ToString(), _lang);
             var md = File.ReadAllText(path);
             var result = AnnotationParser.Parse(md);
             return new News

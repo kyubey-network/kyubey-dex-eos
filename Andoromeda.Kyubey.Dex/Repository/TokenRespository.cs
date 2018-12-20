@@ -1,4 +1,5 @@
 ﻿using Andoromeda.Framework.GitHub;
+using Andoromeda.Kyubey.Dex.Lib;
 using Andoromeda.Kyubey.Dex.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -71,80 +72,20 @@ namespace Andoromeda.Kyubey.Dex.Repository
             return null;
         }
 
-        public string GetTokenIncubationDescription(string tokenId, string cultureStr)
+        public string GetTokenDescription(string tokenId, string cultureStr)
         {
             var folderPath = Path.Combine(tokenFolderAbsolutePath, tokenId, "incubator");
             if (!Directory.Exists(folderPath))
             {
                 return null;
             }
-            var files = Directory.GetFiles(folderPath, "description.*.txt", SearchOption.TopDirectoryOnly);
-            var availableFiles = GetAvailableFileNames(files, cultureStr);
-            var availablePath = availableFiles.Select(x => Path.Combine(folderPath, x)).FirstOrDefault();
+
+            var availableFilePaths = GlobalizationFileFinder.GetCultureFiles(folderPath, cultureStr, ".txt").Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("description."));
+
+            var availablePath = availableFilePaths.FirstOrDefault();
             if (availablePath != null)
                 return File.ReadAllText(availablePath);
             return null;
-        }
-
-        private string[] AvailuableCulcureFileSuffix = new string[] {
-            TokenCultureFileSuffix.EN,
-            TokenCultureFileSuffix.JP,
-            TokenCultureFileSuffix.ZHCN,
-            TokenCultureFileSuffix.ZHTW
-        };
-
-        private string GetFileNameSuffixByCulture(string cultureStr)
-        {
-            if (new string[] { "en" }.Contains(cultureStr))
-                return TokenCultureFileSuffix.EN;
-            if (new string[] { "zh" }.Contains(cultureStr))
-                return TokenCultureFileSuffix.ZHCN;
-            if (new string[] { "zh-Hant", "zh_tw" }.Contains(cultureStr))
-                return TokenCultureFileSuffix.ZHTW;
-            if (new string[] { "ja" }.Contains(cultureStr))
-                return TokenCultureFileSuffix.JP;
-            return "";
-        }
-
-        private string[] GetAvailableFileNames(string[] fileNames, string cultureStr)
-        {
-            var cultureSuffix = GetFileNameSuffixByCulture(cultureStr);
-            string[] availuableFilenames = null;
-            if (!string.IsNullOrEmpty(cultureSuffix))
-            {
-                //current culture 
-                availuableFilenames = fileNames.Where(x => x.Contains(cultureSuffix + ".")).ToArray();
-                if (availuableFilenames.Count() > 0)
-                    return availuableFilenames;
-
-                //zh-cn no file, -->zh-tw
-                if (cultureSuffix == TokenCultureFileSuffix.ZHCN)
-                    availuableFilenames = fileNames.Where(x => x.Contains(TokenCultureFileSuffix.ZHTW + ".")).ToArray();
-                if (availuableFilenames.Count() > 0)
-                    return availuableFilenames;
-
-                //zh-tw no file, -->zh-cn
-                if (cultureSuffix == TokenCultureFileSuffix.ZHTW)
-                    availuableFilenames = fileNames.Where(x => x.Contains(TokenCultureFileSuffix.ZHCN + ".")).ToArray();
-                if (availuableFilenames.Count() > 0)
-                    return availuableFilenames;
-            }
-            //en
-            availuableFilenames = fileNames.Where(x => x.Contains(TokenCultureFileSuffix.EN + ".")).ToArray();
-            if (availuableFilenames.Count() > 0)
-                return availuableFilenames;
-
-            //default
-            availuableFilenames = fileNames.Where(x => !AvailuableCulcureFileSuffix.Any(c => x.Contains(c))).ToArray();
-            return availuableFilenames;
-        }
-
-        public class TokenCultureFileSuffix
-        {
-            public const string ZHCN = ".zh";
-            public const string ZHTW = ".zh-Hant";
-            public const string EN = ".en";
-            public const string JP = ".ja";
         }
 
         public class TokenRepositoryFactory

@@ -35,6 +35,26 @@
     text-align: right;
 }
 
+.home-page .banner {
+    width: 100%;
+    background: #313131;
+    color: #ffffff;
+    padding: 4rem 0 2rem 0;
+}
+
+    .home-page .banner .t1 {
+        color: #FFB500;
+        margin-bottom: 10px;
+    }
+
+    .home-page .banner .t2 {
+        font-weight: normal !important;
+    }
+
+    .home-page .banner .t3 {
+        margin-bottom: 10px;
+    }
+
 .eos-img {
     width: 16px;
 }

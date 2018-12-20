@@ -270,10 +270,10 @@ component.methods = {
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
 
-                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    self.handleScatterException(error);
+                    self.handleScatterException(error, $t('delegate_failed'));
                 });
         }
         else if (this.control.trade === 'market') {
@@ -294,20 +294,20 @@ component.methods = {
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    self.handleScatterException(error);
+                    self.handleScatterException(error, $t('Transaction Failed'));
                 });
         }
     },
-    handleScatterException(error) {
+    handleScatterException(error, tipTitle) {
         const $t = this.$t.bind(this);
         if (typeof error === 'string') {
             error = JSON.parse(error)
         }
         if (error.error != null && error.error.code != null) {
-            showModal($t('Transaction Failed'), $t(error.error.what));
+            showModal(tipTitle, $t(error.error.what));
         }
         else
-            showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+            showModal(tipTitle, error.message + $t('Please contact us if you have any questions'));
     },
     exchangeSell() {
         const $t = this.$t.bind(this);
@@ -364,7 +364,7 @@ component.methods = {
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
 
-                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+                    showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
                     showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
@@ -384,7 +384,7 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-                    
+
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
@@ -587,11 +587,11 @@ component.methods = {
     },
     handleTotalChange(type) {
         if (type === 'buy') {
-            let isZero = this.inputs.buyPrice === '0.000000';
-            this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(5);
+            let isZero = this.inputs.buyPrice === '0.0000';
+            this.inputs.buyAmount = isZero ? '0.0000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
         } else {
-            let isZero = this.inputs.buyPrice === '0.000000';
-            this.inputs.sellAmount = isZero ? '0.00000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(5);
+            let isZero = this.inputs.buyPrice === '0.0000';
+            this.inputs.sellAmount = isZero ? '0.0000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(4);
         }
     },
     handleBlur(n, m = 8) {
@@ -601,9 +601,9 @@ component.methods = {
         if (this.isSignedIn) {
             this[n] = x;
             if (n === 'buyPrecent') {
-                let isZero = this.inputs.buyPrice === '0.000000';
+                let isZero = this.inputs.buyPrice === '0.0000';
                 this.inputs.buyTotal = parseFloat(this.eosBalance * x).toFixed(4);
-                this.inputs.buyAmount = isZero ? '0.00000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
+                this.inputs.buyAmount = isZero ? '0.0000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
             } else {
                 this.inputs.sellAmount = parseFloat(this.tokenBalance * x).toFixed(4);
                 this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4);
@@ -633,7 +633,7 @@ component.methods = {
         self.histroyOrdersView = qv.createView(`/api/v1/lang/${app.lang}/User/${app.account.name}/history-delegate`, {});
         self.histroyOrdersView.fetch(res => {
             if (res.code === 200) {
-                self.orderHistory = res.data;
+                self.orderHistory = res.data.result;
             }
         })
     },

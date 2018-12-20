@@ -114,6 +114,7 @@ const en = {
     meetone_tip: 'Version required 1.1.8',
     currency_introduction: 'Currency introduction',
     delegate_succeed: 'Delegate Succeed',
+    delegate_failed: 'Delegate Failed',
     tip_balance_not_enough: 'Sorry, your balance is not enough!',
     to_be_continued: 'to be continued',
     home_banner_tip1: 'Free decentralized exchange',
@@ -123,5 +124,5 @@ const en = {
     no_result: 'Sorry, there is no such keyword',
     tip_cancel_succeed: 'Cancel succeed!',
     tip_cancel_failed: 'Cancel failed!',
-    tip_use_dapp_browser:'Please use DAPP Broswer.',
+    tip_use_dapp_browser: 'Please use DAPP Broswer.',
 };

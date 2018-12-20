@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div class="page-container">
     <div class="wallet-summary mt-60px">
         <div class="wallet-avatar-outer">
             <img src="/img/avatar.png" class="wallet-avatar" />
@@ -30,31 +30,33 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover">
+                <table class="table table-hover ">
                     <thead>
                         <tr>
-                            <th scope="col">{{$t('token')}}</th>
-                            <th scope="col">{{$t('available_balance')}}</th>
-                            <th scope="col">{{$t('freeze_balance')}}</th>
-                            <th scope="col">{{$t('valuation')}}</th>
+                            <th scope="col" class="fav-th">
+                            </th>
+                            <th class="text-left symbol-th" scope="col">{{$t('token')}}</th>
+                            <th class="text-right" scope="col">{{$t('available_balance')}}</th>
+                            <th class="text-right" scope="col">{{$t('freeze_balance')}}</th>
+                            <th class="text-right" scope="col">{{$t('valuation')}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
                             @click="goToEosExchange(item.symbol)">
-                            <td scope="row" v-if="isSignedIn">
+                            <td scope="row">
                                 <i class="my-star"></i>
                             </td>
-                            <td>
+                            <td class="text-left">
                                 <img :src="item.iconSrc" style="width: 30px;">
                                 <font size="3">{{item.symbol}}</font>
                             </td>
-                            <td><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
-                            <td><font size="3">{{parseFloat(item.freeze).toFixed(4)}}</font></td>
-                            <td><font size="3">{{parseFloat(item.eos).toFixed(4)}} EOS</font></td>
+                            <td class="text-right"><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
+                            <td class="text-right"><font size="3">{{parseFloat(item.freeze).toFixed(4)}}</font></td>
+                            <td class="text-right"><font size="3">{{parseFloat(item.eos).toFixed(4)}} EOS</font></td>
                         </tr>
                         <tr v-if="listWithFiter.length === 0">
-                            <td colspan="4" class="nodata">
+                            <td colspan="5" class="nodata">
                                 {{$t('noData')}}
                             </td>
                         </tr>

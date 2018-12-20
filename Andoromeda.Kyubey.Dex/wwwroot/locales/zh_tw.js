@@ -115,6 +115,7 @@ const zh_tw = {
     currency_introduction: '幣種簡介',
     or: '或',
     delegate_succeed: '委托成功',
+    delegate_failed: '委托失败',
     tip_balance_not_enough: '抱歉，您的餘額不足！',
     to_be_continued: '即將到來',
     home_banner_tip1: '免費的去中心化交易所',

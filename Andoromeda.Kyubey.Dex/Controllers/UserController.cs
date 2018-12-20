@@ -113,12 +113,12 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         }
 
         [HttpGet("{account}/history-delegate")]
-        [ProducesResponseType(typeof(ApiResult<IEnumerable<GetHistoryOrdersResponse>>), 200)]
+        [ProducesResponseType(typeof(ApiResult<GetPagingResponse<IEnumerable<GetHistoryOrdersResponse>>>), 200)]
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> GetHistoryDelegateAsync(GetHistoryDelegateRequest request, [FromServices] KyubeyContext db, CancellationToken cancellationToken)
         {
-            var matches = await db.MatchReceipts
-                .Where(x => x.Bidder == request.Account || x.Asker == request.Account).ToListAsync(cancellationToken);
+            var matches = db.MatchReceipts
+                .Where(x => x.Bidder == request.Account || x.Asker == request.Account);
 
             var userHistoryList = matches.Select(x => new GetHistoryOrdersResponse
             {
@@ -132,13 +132,15 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 Total = x.IsSellMatch ? x.Ask : x.Bid,
                 Time = x.Time
             }).OrderByDescending(x => x.Time)
-            .Where(x => 
+            .Where(x =>
             (string.IsNullOrWhiteSpace(request.FilterString) || x.Symbol.Contains(request.FilterString))
             && (request.Type == null || x.Type == request.Type)
             && (request.Start == null || request.Start <= x.Time)
             && (request.End == null || request.End >= x.Time)).Skip(request.Skip).Take(request.Take);
 
-            return ApiResult(userHistoryList);
+            var rowsCount = await matches.CountAsync(cancellationToken);
+
+            return ApiResult(new GetPagingResponse<GetHistoryOrdersResponse>(userHistoryList, rowsCount, request.Take));
         }
 
         [HttpGet("{account}/wallet")]

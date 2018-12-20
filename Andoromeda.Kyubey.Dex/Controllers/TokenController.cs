@@ -162,7 +162,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 IsRecommend = true,
                 IconSrc = $"/token_assets/{token.Id}/icon.png",
                 Priority = token.Priority,
-                Description = tokenRepository.GetTokenIncubationDescription(id, request.Lang),
+                Description = tokenRepository.GetTokenDescription(id, request.Lang),
                 TotalSupply = token.Basic?.Total_Supply ?? 0,
                 TotalCirculate = token.Basic?.Total_Circulate ?? 0,
                 Contract = new GetTokenResultContract()

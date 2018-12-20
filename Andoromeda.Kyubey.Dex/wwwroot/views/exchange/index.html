@@ -151,7 +151,7 @@
                                 <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_amount')}}</label>
                                     <div class="e-input">
-                                        <input @blur="handleBlur('buyAmount', 5)" @input="handleAmountChange('buy')" v-model="inputs.buyAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <input @blur="handleBlur('buyAmount', 4)" @input="handleAmountChange('buy')" v-model="inputs.buyAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <span class="e-input-suffix">{{tokenId}}</span>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                                 <div style="font-size: 0;" class="mb-2" v-if="control.trade === 'limit'">
                                     <label style="width: 70px;color: #AFAFAF;font-size: 14px;">{{$t('exchange_sellamount')}}</label>
                                     <div class="e-input">
-                                        <input @blur="handleBlur('sellAmount', 5)" @input="handleAmountChange('sell')" v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
+                                        <input @blur="handleBlur('sellAmount', 4)" @input="handleAmountChange('sell')" v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="e-input-inner">
                                         <span class="e-input-suffix">{{tokenId}}</span>
                                     </div>
                                 </div>

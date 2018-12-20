@@ -115,6 +115,7 @@ const zh = {
     currency_introduction: '币种简介',
     or: '或',
     delegate_succeed: '委托成功',
+    delegate_failed: '委托失败',
     tip_balance_not_enough: '抱歉，您的余额不足！',
     to_be_continued: '即将到来',
     collection_fail: '收藏失败',

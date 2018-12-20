@@ -27,11 +27,19 @@
 }
 
 .home-page td, .home-page th {
-    text-align: center !important;
+    text-align: center;
 }
 
 .eos-img {
     width: 16px;
+}
+
+table .fav-th {
+    width: 100px;
+}
+
+table .symbol-th {
+    width: 120px;
 }
 
 .my-input {
