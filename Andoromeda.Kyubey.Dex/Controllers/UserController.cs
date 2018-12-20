@@ -118,26 +118,25 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         public async Task<IActionResult> GetHistoryDelegateAsync(GetHistoryDelegateRequest request, [FromServices] KyubeyContext db, CancellationToken cancellationToken)
         {
             var matches = db.MatchReceipts
-                .Where(x => x.Bidder == request.Account || x.Asker == request.Account);
+                .Where(x => x.Bidder == request.Account || x.Asker == request.Account)
+                .Select(x => new GetHistoryOrdersResponse
+                {
+                    Id = x.Id,
+                    Symbol = x.TokenId,
+                    Bidder = x.IsSellMatch ? x.Bidder : x.Asker,
+                    Asker = x.IsSellMatch ? x.Asker : x.Bidder,
+                    Type = x.IsSellMatch ? (x.Bidder == request.Account ? "sell" : "buy") : (x.Asker == request.Account ? "sell" : "buy"),
+                    UnitPrice = x.UnitPrice,
+                    Amount = x.IsSellMatch ? x.Bid : x.Ask,
+                    Total = x.IsSellMatch ? x.Ask : x.Bid,
+                    Time = x.Time
+                }).OrderByDescending(x => x.Time)
+            .Where(x => (string.IsNullOrWhiteSpace(request.FilterString) || x.Symbol.Contains(request.FilterString))
+                        && (request.Type == null || x.Type == request.Type)
+                        && (request.Start == null || request.Start <= x.Time)
+                        && (request.End == null || request.End >= x.Time));
 
-            var userHistoryList = matches.Select(x => new GetHistoryOrdersResponse
-            {
-                Id = x.Id,
-                Symbol = x.TokenId,
-                Bidder = x.IsSellMatch ? x.Bidder : x.Asker,
-                Asker = x.IsSellMatch ? x.Asker : x.Bidder,
-                Type = x.IsSellMatch ? (x.Bidder == request.Account ? "sell" : "buy") : (x.Asker == request.Account ? "sell" : "buy"),
-                UnitPrice = x.UnitPrice,
-                Amount = x.IsSellMatch ? x.Bid : x.Ask,
-                Total = x.IsSellMatch ? x.Ask : x.Bid,
-                Time = x.Time
-            }).OrderByDescending(x => x.Time)
-            .Where(x =>
-            (string.IsNullOrWhiteSpace(request.FilterString) || x.Symbol.Contains(request.FilterString))
-            && (request.Type == null || x.Type == request.Type)
-            && (request.Start == null || request.Start <= x.Time)
-            && (request.End == null || request.End >= x.Time)).Skip(request.Skip).Take(request.Take);
-
+            var userHistoryList = matches.Skip(request.Skip).Take(request.Take);
             var rowsCount = await matches.CountAsync(cancellationToken);
 
             return ApiResult(new GetPagingResponse<GetHistoryOrdersResponse>(userHistoryList, rowsCount, request.Take));

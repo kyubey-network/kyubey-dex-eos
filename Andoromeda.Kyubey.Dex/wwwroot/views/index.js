@@ -140,6 +140,23 @@
                 self.uuid = self.generateUUID();
                 return self.signalr.simplewallet.connection.invoke('bindUUID', self.uuid);
             });
+
+            self.signalr.simplewallet.connection.onclose(async () => {
+                await self.restartSignalR();
+            });
+        },
+        restartSignalR: async function () {
+            var self = this;
+            try {
+                await self.signalr.simplewallet.connection.start();
+                self.signalr.simplewallet.connection.invoke('bindUUID', self.uuid);
+                console.log('reconnected');
+            } catch (err) {
+                console.warn(err);
+                if (err.statusCode > 500 || err.statusCode == 0) {s
+                    setTimeout(() => self.restartSignalR(), 2000);
+                }
+            }
         },
         login: function () {
             $('#loginModal').modal('show');

@@ -24,8 +24,7 @@ component.data = function () {
 
 component.created = function () {
     if (this.isSignedIn) {
-        this.getOpenOrders();
-        this.getHistroyOrders();
+        this.init();
     }
 };
 
@@ -38,6 +37,59 @@ component.mounted = function () {
 }
 
 component.methods = {
+    init() {
+        this.getOpenOrders();
+        this.getHistroyOrders();
+    },
+    refresh() {
+        this.openOrdersView.refresh();
+        this.histroyOrdersView.refresh();
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+    },
+    exchangeCancel: function (token, type, id) {
+        const $t = this.$t.bind(this);
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterCancel(token, type, id);
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            app.notification("error", $t('to_be_continued'));
+        }
+    },
+    scatterCancel: function (token, type, id) {
+        var self = this;
+        const { account, requiredFields, eos } = app;
+        const $t = this.$t.bind(this);
+        eos.contract('kyubeydex.bp', { requiredFields })
+            .then(contract => {
+                if (type === 'buy') {
+                    return contract.cancelbuy(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                } else {
+                    return contract.cancelsell(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                }
+            })
+            .then(() => {
+                self.delayRefresh(self.refresh);
+
+                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+            })
+            .catch(error => {
+                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
+            });
+    },
     formatTime(time) {
         return moment(time).format('MM-DD');
     },
@@ -116,8 +168,7 @@ component.computed = {
 component.watch = {
     '$root.isSignedIn': function (val) {
         if (val === true) {
-            this.getOpenOrders();
-            this.getHistroyOrders();
+            this.init();
         }
         //logout
         else {
