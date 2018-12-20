@@ -115,7 +115,9 @@ component.created = function () {
     window.addEventListener('scroll', x => {
         this.onScroll = document.documentElement.scrollTop != 0;
     })
-
+    if (this.isSignedIn) {
+        this.getFavoriteList();
+    }
 };
 component.watch = {
     '$root.isSignedIn': function (val) {

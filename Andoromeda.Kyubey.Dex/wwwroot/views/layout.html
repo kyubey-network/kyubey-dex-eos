@@ -20,6 +20,9 @@
                     <li class="nav-item" v-if="$root.isSignedIn"><router-link to="/wallet" class="nav-link">{{$t('welcome_nav')}}，{{ $root.account.name }}</router-link></li>
                     <li class="nav-item" v-if="$root.isSignedIn"><a class="nav-link" v-on:click="$root.switchAccount()">{{$t('switch')}}</a></li>
                     <li class="nav-item" v-if="$root.isSignedIn"><a class="nav-link" v-on:click="$root.scatterLogout()">{{$t('logout_nav')}}</a></li>
+                    <li class="nav-item" v-if="$root.isSignedIn">
+                        <router-link to="/order" class="nav-link">{{$t('order')}}</router-link>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{$t('lang')}}

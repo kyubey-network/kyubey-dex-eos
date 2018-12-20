@@ -21,6 +21,9 @@ component.created = function () {
     var self = this;
     app.mobile.nav = 'home';
     self.getNews();
+    if (this.isSignedIn) {
+        this.getFavoriteList();
+    }
     qv.createView(`/api/v1/lang/${app.lang}/slides`, {}, 60000)
         .fetch(x => {
             self.slides = x.data;
