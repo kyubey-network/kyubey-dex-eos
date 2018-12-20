@@ -72,7 +72,7 @@
 
     .home-token-table td {
         font-size: 12px;
-        padding: 10px 15px;
+        padding: 10px 0px;
     }
 
 .token-pair {
@@ -112,6 +112,7 @@
 
 .token-price-cell {
     text-align: right;
+    padding-right: 15px !important;
 }
 
 .token-change-cell {
@@ -123,4 +124,23 @@
     text-align: center;
     font-size: 12px;
     line-height: 20px;
+}
+
+.header {
+    width: 100%;
+    position: fixed;
+    background-color: #F8F8F8;
+    top: 0px;
+}
+
+.result-list {
+    padding-top: 290px;
+}
+
+.result-list-search {
+    padding-top: 44px;
+}
+
+shadow {
+    box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
 }

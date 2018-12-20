@@ -13,7 +13,8 @@
             desc: 0,
             row: null
         },
-        favoriteObj: {}
+        favoriteObj: {},
+        onScroll: false
     };
 };
 
@@ -52,6 +53,9 @@ component.created = function () {
                 this.sortTokenOnClick('change_recent_day');
             }
         }
+    })
+    window.addEventListener('scroll', x => {
+        this.onScroll = document.documentElement.scrollTop != 0;
     })
 };
 

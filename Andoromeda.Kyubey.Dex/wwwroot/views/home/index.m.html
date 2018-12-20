@@ -1,41 +1,41 @@
-﻿<div>
-    <div class="home-banner">
-        <div class="home-banner-text-outer">
-            <div class="home-banner-title">Kyubey DEX</div>
-            <div class="home-banner-subtitle">{{$t('home_banner_tip1')}}</div>
-            <img src="/img/mobile.png" class="home-banner-picture" />
+﻿<div v-on:scroll.passive="onScroll">
+    <div class="header" v-bind:class="{ 'shadow': onScroll !== false }">
+        <div class="home-banner">
+            <div class="home-banner-text-outer">
+                <div class="home-banner-title">Kyubey DEX</div>
+                <div class="home-banner-subtitle">{{$t('home_banner_tip1')}}</div>
+                <img src="/img/mobile.png" class="home-banner-picture" />
+            </div>
+        </div>
+
+        <div class="home-announcement-outer">
+            <img src="/img/announce.svg" />
+            <span v-on:click="$root.redirect('/home/news')">{{news[0].title}} {{formatTime(news[0].time)}}</span>
+        </div>
+
+        <div class="home-token-list">
+            <table class="home-token-filter">
+                <tr>
+                    <td :class="[sortControl.row === 'change_recent_day' ? 'active' : '']" @click="sortTokenOnClick('change_recent_day')">{{$t('ups_downs_24H')}}</td>
+                    <td :class="[sortControl.row === 'volume_recent_day' ? 'active' : '']" @click="sortTokenOnClick('volume_recent_day')">{{$t('volume_24H')}}</td>
+                </tr>
+            </table>
         </div>
     </div>
-
-    <div class="home-announcement-outer">
-        <img src="/img/announce.svg" />
-        <span  v-on:click="$root.redirect('/home/news')">{{news[0].title}} {{formatTime(news[0].time)}}</span>
-    </div>
-
-
-    <div class="home-token-list">
-        <table class="home-token-filter">
-            <tr>
-                <td :class = "[sortControl.row === 'change_recent_day' ? 'active' : '']" @click="sortTokenOnClick('change_recent_day')">{{$t('ups_downs_24H')}}</td>
-                <td :class = "[sortControl.row === 'volume_recent_day' ? 'active' : '']" @click="sortTokenOnClick('volume_recent_day')">{{$t('volume_24H')}}</td>
-            </tr>
-        </table>
+    <div class="home-token-list result-list">
         <table class="home-token-table">
-            <tr v-for="(item,index) in tokenTable.slice(0,10)" :key="index"
+            <tr v-for="(item, index) in tokenTable" :key="index"
                 @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
-                <td class="test-center" scope="row" v-if="isSignedIn">
-                    <i class="my-start"></i>
-                </td>
                 <td class="token-pair-cell">
-                    <div class="token-pair">{{item.symbol}}/EOS</div>
-                    <div class="token-volume">{{$t('volume_24H')}}: {{item.volume_recent_day.toFixed(4)}}/EOS</div>
+                    <div class="token-pair"><i class="fa fa-star-o"></i> {{item.symbol}}/EOS</div>
+                    <div class="token-volume">{{$t('volume_24H') +': '+item.volume_recent_day.toFixed(4)}} EOS</div>
                 </td>
-                <td class="token-price-cell">{{$t('latest_price')}}: {{item.current_price}}/EOS</td>
+                <td class="token-price-cell">{{item.current_price}} EOS</td>
                 <td class="token-change-cell">
-                    <div v-bind:class="[item.up ? 'token-change green' : (item.down ? 'token-change red' : 'token-change gray')]">{{item.change_recent_day}}</div>
+                    <div v-bind:class="{ 'token-change green': item.up , 'token-change red': item.down , 'token-change gray':!item.down&!item.up }">{{item.change_recent_day}}</div>
                 </td>
             </tr>
-            <tr v-if="tokenTable.length == 0">
+            <tr v-if="tokenTable.length === 0">
                 <td>
                     {{$t('no_result')}}
                 </td>

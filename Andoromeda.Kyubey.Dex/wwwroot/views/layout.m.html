@@ -31,7 +31,7 @@
                         <div class="tab-item-text">订单</div>
                     </div>
                 </td>
-                <td>
+                <td @click="$root.redirect('/wallet')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'assets' }">
                         <img src="/img/assets.active.svg" v-if="$root.mobile.nav === 'assets'" />
                         <img src="/img/assets.svg" v-if="$root.mobile.nav !== 'assets'" />
