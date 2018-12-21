@@ -87,11 +87,12 @@
 
 .wallet-summary {
     background-color: #fff;
+    padding-bottom: 14px;
 }
 
 .wallet-token-list {
     background: #fff;
-    padding: 10px 0;
+    padding: 0px 0;
     margin-top: 10px;
 }
 
@@ -121,6 +122,9 @@
         font-size: 12px;
         padding: 10px 15px;
     }
+.wallet-token-table tr:last-child {
+    border: none;
+}
 
 .wallet-avatar-outer {
     padding-top: 50px;
@@ -132,7 +136,7 @@
     font-size: 16px;
     color: #888;
     line-height: 30px;
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
     .wallet-evaluated-outer strong {
@@ -162,21 +166,23 @@
 }
 
     .serach-btn button {
-        color: #ccc;
+        color: #949494;
         position: absolute;
         border-style: none;
         border-width: 0;
         right: 4px;
-        background: #fff;
-        margin-top: 10px;
+        background: #DBDBDB;
+        margin-top: 15px;
+        margin-right: 10px;
     }
 
         .serach-btn button:hover {
             color: #000;
         }
 .my-input {
+    margin-top: 10px;
     -webkit-appearance: none;
-    background-color: #fff;
+    background-color: #DBDBDB;
     background-image: none;
     border-radius: 10px;
     border: 1px solid #dcdfe6;
@@ -184,8 +190,8 @@
     color: #606266;
     display: inline-block;
     font-size: inherit;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     outline: none;
     padding: 0 0.7rem;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
@@ -200,3 +206,31 @@
     text-align:center;
 }
 
+.wallet-asset-balance {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.wallet-asset-freeze{
+    font-size: 12px;
+    color: gray;
+    margin-top:5px;
+}
+
+.wallet-notEOSsymbol {
+    color: #5EA9FF;
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+.wallet-EOSsymbol {
+    color: #000;
+    font-size: 16px;
+    margin-left: 5px;
+}
+.wallet-myasset {
+    text-align: left;
+}
+    .wallet-myasset span {
+        margin-left: 27px;
+    }

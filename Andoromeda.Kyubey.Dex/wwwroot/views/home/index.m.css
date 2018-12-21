@@ -144,3 +144,7 @@
 shadow {
     box-shadow: 3px 3px 11px 5px rgba(218,216,216,0.5);
 }
+
+.home-token-table tr:last-child {
+    border: none;
+}

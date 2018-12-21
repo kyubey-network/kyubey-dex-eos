@@ -14,7 +14,7 @@
     <div class="wallet-token-list">
         <table class="wallet-token-filter">
             <tr>
-                <td style="text-align:left;"><span style="margin-left:27px">{{$t('my_account')}}</span></td>
+                <td class="wallet-myasset"><span>{{$t('my_account')}}</span></td>
                 <td>
                     <div class="search">
                         <div class="serach-btn">
@@ -30,14 +30,14 @@
         <table class="wallet-token-table">
             <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
                 @click="goToEosExchange(item.symbol)">
-                <td class="token-pair-cell">
+                <td class="wallet-token-cell">
                     <img :src="item.iconSrc" style="width: 25px; border-radius:50%">
-                    <span style="margin-left:5px"><font color="#5EA9FF" size="2">{{item.symbol}}</font></span>
-                    <div class="token-volume" v-if="item.symbol !== 'EOS'"><font color="gray">{{$t('valuation')}} : {{parseFloat(item.eos).toFixed(4)}} </font></div>
+                    <span :class="[item.symbol === 'EOS' ? 'wallet-EOSsymbol' : 'wallet-notEOSsymbol']">{{item.symbol}}</span>
+                    <div class="wallet-asset-freeze" v-if="item.symbol !== 'EOS'">{{$t('valuation')}} : {{parseFloat(item.eos).toFixed(4)}}</div>
                 </td>
-                <td class="token-change-cell" style="text-align:left">
-                    <div><font size="2" style="font-weight:bold">{{$t('balance')}} : {{parseFloat(item.valid).toFixed(4)}}</font></div>
-                    <div><font size="1" color="gray">{{$t('freeze_balance')}} : {{parseFloat(item.freeze).toFixed(4)}}</div>
+                <td style="text-align:left">
+                    <div class="wallet-asset-balance">{{$t('balance')}} : {{parseFloat(item.valid).toFixed(4)}}</div>
+                    <div class="wallet-asset-freeze">{{$t('freeze_balance')}} : {{parseFloat(item.freeze).toFixed(4)}}</div>
                 </td>
             </tr>
             <tr v-if="listWithFiter.length === 0">

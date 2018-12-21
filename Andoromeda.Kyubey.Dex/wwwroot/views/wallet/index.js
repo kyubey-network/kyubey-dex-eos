@@ -18,7 +18,7 @@ component.methods = {
     },
 
     goToEosExchange: function (symbol) {
-        if (symbol == 'EOS') {
+        if (symbol === 'EOS') {
             return;
         }
         app.redirect('/exchange/:id', '/exchange/' + symbol, { id: symbol }, {})
@@ -42,6 +42,7 @@ component.computed = {
 };
 
 component.created = function () {
+    app.mobile.nav = 'assets';
     var self = this
     if (!app.isSignedIn) {
         app.redirect('/');
