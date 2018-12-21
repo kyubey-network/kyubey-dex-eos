@@ -59,15 +59,55 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         [HttpPost("callback/exchange")]
         public async Task<IActionResult> ExchangeCallbackAsync(GetSimpleWalletExchangeRequest request,
             [FromServices]IConfiguration config,
+             [FromServices]ILogger logger,
             [FromServices]IHubContext<SimpleWalletHub> hubContext,
             [FromServices]AesCrypto aesCrypto,
             CancellationToken cancellationToken)
         {
-            var verify = aesCrypto.Encrypt(request.UUID) == request.Sign;
+            logger.LogInfo(JsonConvert.SerializeObject(request));
+            //var verify = aesCrypto.Encrypt(request.UUID) == request.Sign;
             //we will fix it later
-            if (verify || true)
+            if (true)
             {
                 await hubContext.Clients.Groups(request.UUID).SendAsync("simpleWalletExchangeSucceeded", cancellationToken);
+                return Json(new PostSimpleWalletLoginResponse
+                {
+                    Code = 0
+                });
+            }
+
+            return Json(new PostSimpleWalletLoginResponse
+            {
+                Code = 1,
+                Error = "sign error"
+            });
+        }
+
+        [HttpGet("callback/action")]
+        public async Task<IActionResult> ActionCallbackAsync(GetSimpleWalletActionRequest request,
+        [FromServices]IConfiguration config,
+         [FromServices]ILogger logger,
+        [FromServices]IHubContext<SimpleWalletHub> hubContext,
+        [FromServices]AesCrypto aesCrypto,
+        CancellationToken cancellationToken)
+        {
+            logger.LogInfo("actions:" + JsonConvert.SerializeObject(request));
+            //var verify = aesCrypto.Encrypt(request.UUID) == request.Sign;
+            //we will fix it later
+            if (request.Result == 1)
+            {
+                if (request.ActionType == "addfav")
+                {
+                    hubContext.Clients.Groups(request.UUID).SendAsync("simpleWalletDoFavSucceeded", cancellationToken).Wait();
+                }
+                else if (request.ActionType == "removefav")
+                {
+                    await hubContext.Clients.Groups(request.UUID).SendAsync("simpleWalletRemoveFavSucceeded", cancellationToken);
+                }
+                else if (request.ActionType == "cancel")
+                {
+                    await hubContext.Clients.Groups(request.UUID).SendAsync("simpleWalletCancelSucceeded", cancellationToken);
+                }
                 return Json(new PostSimpleWalletLoginResponse
                 {
                     Code = 0

@@ -25,14 +25,13 @@ component.data = function () {
 component.created = function () {
     app.mobile.nav = 'order';
     if (this.isSignedIn) {
-        this.getOpenOrders();
-        this.getHistroyOrders();
+        this.init();
     } else {
         app.redirect('/')
     }
 };
 
-component.mounted = function () { 
+component.mounted = function () {
     $('.date-picker').datepicker({
         autoclose: true,
         todayHighlight: true,
@@ -41,6 +40,31 @@ component.mounted = function () {
 }
 
 component.methods = {
+    cancelCallBack() {
+        var self = this;
+        self.delayRefresh(self.getOpenOrders);
+    },
+    init() {
+        this.getOpenOrders();
+        this.getHistroyOrders();
+    },
+    refresh() {
+        this.openOrdersView.refresh();
+        this.histroyOrdersView.refresh();
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+        setInterval(callback, 10000);
+    },
+    exchangeCancel: function (token, type, id) {
+        const $t = this.$t.bind(this);
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterCancel(token, type, id);
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            app.startQRCodeCancelOrder(id, token, type == 'buy');
+        }
+    },
     formatTime(time) {
         return moment(time).format('MM-DD');
     },
@@ -79,21 +103,21 @@ component.methods = {
     },
     handlePageChange(i) {
         this.pageIndex = i;
-        this.getHistroyOrders((i-1)*this.pageSize);
+        this.getHistroyOrders((i - 1) * this.pageSize);
     },
     next() {
         if (this.pageIndex < this.pageCount) {
-            this.handlePageChange(this.pageIndex+1);
+            this.handlePageChange(this.pageIndex + 1);
         }
     },
     prev() {
         if (this.pageIndex > 1) {
-            this.handlePageChange(this.pageIndex-1);
+            this.handlePageChange(this.pageIndex - 1);
         }
     },
     jump() {
-        if(this.jumpPage < 1) {this.jumpPage = 1}
-        if(this.jumpPage > this.pageCount) {this.jumpPage = this.pageCount}
+        if (this.jumpPage < 1) { this.jumpPage = 1 }
+        if (this.jumpPage > this.pageCount) { this.jumpPage = this.pageCount }
         this.handlePageChange(parseInt(this.jumpPage));
     },
     filterOpenOrders() {
@@ -103,19 +127,10 @@ component.methods = {
             let isSymbol = item.symbol.includes(this.search.filterString.toUpperCase());
             let isType = this.search.type === '' ? true : item.type === this.search.type;
             let timestamp = new Date(item.time).getTime();
-            let isStartTime = this.search.start === '' ? true : startTimestamp <= timestamp 
+            let isStartTime = this.search.start === '' ? true : startTimestamp <= timestamp
             let isEndTime = this.search.end === '' ? true : timestamp <= endTimestamp;
             return isSymbol && isType && timestamp && isStartTime && isEndTime
         })
-    },
-    exchangeCancel: function (token, type, id) {
-        const $t = this.$t.bind(this);
-        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
-            this.scatterCancel(token, type, id);
-        }
-        else if (app.loginMode == "Simple Wallet") {
-            app.notification("error", $t('to_be_continued'));
-        }
     },
     delayRefresh(callback) {
         setInterval(callback, 3000);

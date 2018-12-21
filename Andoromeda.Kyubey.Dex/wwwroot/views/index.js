@@ -7,6 +7,7 @@
         uuid: null,
         loginMode: null,
         eos: null,
+        dexAccount: 'kyubeydex.bp',
         requiredFields: null,
         currentHost: location.protocol + "//" + location.host,
         volume: 0,
@@ -18,6 +19,12 @@
         },
         qrcodeIsValid: true,
         qrcodeTimer: null,
+        qrcodeExchange: {
+            title: null,
+            content: null,
+            items: [],
+            account: null
+        },
         _width: null,
         mobile: {
             nav: 'home'
@@ -69,6 +76,91 @@
     methods: {
         isMobile: function () {
             return this._width < 768;
+        },
+        getEosHexData: function (code, action, args, callback) {
+            qv.get(`/api/v1/lang/${app.lang}/node/AbiJsonToBin/${code}/${action}`, {
+                jsonargs: JSON.stringify(args)
+            }).then(x => {
+                callback(x);
+            });
+        },
+        startQRCodeExchange(title, content, items) {
+            app.qrcodeExchange.title = title;
+            app.qrcodeExchange.content = content;
+            app.qrcodeExchange.items = items;
+            app.qrcodeExchange.account = app.account == null ? "" : app.account.name;
+
+            //set qrcode timer
+            app.qrcodeIsValid = true;
+            clearTimeout(app.qrcodeTimer);
+            app.qrcodeTimer = setTimeout(function () {
+                app.qrcodeIsValid = false;
+            }, 3 * 60 * 1000);
+
+            $("#exchangeQRCodeBox").empty();
+
+            var qrcode = new QRCode('exchangeQRCodeBox', {
+                text: content,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+
+            $('#exchangeModal').modal('show');
+        },
+        getQRCodeActionObject(account, actionName, from, hexData, callbackUrl, desc) {
+            var reqObj = {
+                "protocol": "SimpleWallet",
+                "version": "1.0",
+                "action": "transaction",
+                "blockchain": "eosio",
+                "dappName": "Kyubey",
+                "dappIcon": `${app.currentHost}/img/KYUBEY_logo.png`,
+                "actions": [{ "code": account, "action": actionName, "binargs": hexData }],
+                "from": from,
+                "desc": desc,
+                "expired": new Date().getTime() + (3 * 60 * 1000),
+                "callback": callbackUrl
+            };
+            return reqObj;
+        },
+        startQRCodeFav(symbol, isFav) {
+            var self = this;
+            const $t = this.$t.bind(this);
+            var args = { "symbol": symbol };
+            var code = self.dexAccount;
+            var action = isFav ? "addfav" : "removefav";
+            app.getEosHexData(code, action, args, function (result) {
+                app.startQRCodeExchange((isFav ? $t('title_add_fav', { symbol: symbol }) : $t('title_remove_fav', { symbol: symbol })), JSON.stringify(app.getQRCodeActionObject(code, action, app.account.name, result.data, `${self.currentHost}/api/v1/simplewallet/callback/action?actionType=${action}&uuid=${self.uuid}`)),
+                    [
+                        {
+                            color: 'red',
+                            text: $t('tip_use_medishares_app')
+                        }
+                    ]);
+            });
+        },
+        startQRCodeCancelOrder(id, symbol, isBuy) {
+            var self = this;
+            const $t = this.$t.bind(this);
+            var args = {
+                "symbol": symbol,
+                "id": id,
+                "account": app.account.name
+            };
+            var code = self.dexAccount;
+            var action = isBuy ? "cancelbuy" : "cancelsell";
+            app.getEosHexData(code, action, args, function (result) {
+                app.startQRCodeExchange($t('title_cancel_delegate', { symbol: symbol }), JSON.stringify(app.getQRCodeActionObject(code, action, app.account.name, result.data, `${self.currentHost}/api/v1/simplewallet/callback/action?actionType=cancel&uuid=${self.uuid}`)),
+                    [
+                        {
+                            color: 'red',
+                            text: $t('tip_use_medishares_app')
+                        }
+                    ]);
+            });
         },
         _getLoginRequestObj: function (uuid) {
             var _this = this;
@@ -134,6 +226,41 @@
             self.signalr.simplewallet.connection.on('simpleWalletExchangeSucceeded', () => {
                 $('#exchangeModal').modal('hide');
                 app.notification("succeeded", $t('delegate_succeed'));
+
+                var current = LazyRouting.GetCurrentComponent();
+                if (current && current.delegateCallBack) {
+                    current.delegateCallBack();
+                }
+            });
+
+            self.signalr.simplewallet.connection.on('simpleWalletCancelSucceeded', () => {
+                $('#exchangeModal').modal('hide');
+                app.notification("succeeded", $t('tip_cancel_succeed'));
+
+                var current = LazyRouting.GetCurrentComponent();
+                if (current && current.cancelCallBack) {
+                    current.cancelCallBack();
+                }
+            });
+
+            self.signalr.simplewallet.connection.on('simpleWalletDoFavSucceeded', () => {
+                $('#exchangeModal').modal('hide');
+                app.notification("succeeded", $t('tip_fav_succeed'));
+
+                var current = LazyRouting.GetCurrentComponent();
+                if (current && current.doFavCallBack) {
+                    current.doFavCallBack();
+                }
+            });
+
+            self.signalr.simplewallet.connection.on('simpleWalletRemoveFavSucceeded', () => {
+                $('#exchangeModal').modal('hide');
+                app.notification("succeeded", $t('tip_cancel_succeed'));
+
+                var current = LazyRouting.GetCurrentComponent();
+                if (current && current.doFavCallBack) {
+                    current.doFavCallBack();
+                }
             });
 
             self.signalr.simplewallet.connection.start().then(function () {
@@ -153,7 +280,7 @@
                 console.log('reconnected');
             } catch (err) {
                 console.warn(err);
-                if (err.statusCode > 500 || err.statusCode == 0) {s
+                if (err.statusCode > 500 || err.statusCode == 0) {
                     setTimeout(() => self.restartSignalR(), 2000);
                 }
             }
@@ -270,7 +397,7 @@
         // token, is add favorite, callback
         toggleFav(token, isAdd, cb) {
             if (this.loginMode === 'Simple Wallet') {
-                // todo
+                this.startQRCodeFav(token, isAdd);
             } else if (this.loginMode === 'Scatter Addons' || this.loginMode === 'Scatter Desktop') {
                 this.scatterFav(token, isAdd, cb);
             }

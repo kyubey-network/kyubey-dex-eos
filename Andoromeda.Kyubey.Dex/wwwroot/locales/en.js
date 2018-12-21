@@ -125,4 +125,9 @@ const en = {
     tip_cancel_succeed: 'Cancel succeed!',
     tip_cancel_failed: 'Cancel failed!',
     tip_use_dapp_browser: 'Please use DAPP Broswer.',
+    tip_use_medishares_app: 'This operation only supports medishares app',
+    title_add_fav: 'Add {symbol} to favorite list',
+    title_remove_fav: 'Add {symbol} to favorite list',
+    title_cancel_delegate: 'Cancel Delegate',
+    tip_fav_succeed: 'Collection of success',
 };

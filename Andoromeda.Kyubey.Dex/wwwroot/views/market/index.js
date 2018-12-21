@@ -21,6 +21,15 @@
 };
 
 component.methods = {
+    doFavCallBack() {
+        var self = this;
+        self.delayRefresh(function () {
+            self.getFavoriteList();
+        });
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+    },
     searchToken() {
         if (this.searchText !== '') {
             this.tokenTable = this.tokenTableSource.filter(item => {

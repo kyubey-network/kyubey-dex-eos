@@ -60,6 +60,15 @@ component.created = function () {
 };
 
 component.methods = {
+    doFavCallBack() {
+        var self = this;
+        this.delayRefresh(function () {
+            self.getFavoriteList();
+        });
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+    },
     getNews: function () {
         var self = this;
         qv.createView(`/api/v1/lang/${app.lang}/news`, {}, 60000)

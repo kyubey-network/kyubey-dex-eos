@@ -184,4 +184,40 @@
         </div>
     </div>
     <!-- end notifications -->
+
+
+    <!--exchange modal-->
+    <div class="modal fade" id="exchangeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background: rgba(0, 0, 0, 0.8)">
+                <div class="close-btn text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: #B4B4B4;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-top text-center">
+                    <div class="modal-body">
+                        <p class="p1 text-center">
+                            {{$root.qrcodeExchange.title}}
+                        </p>
+                        <div id="exchangeQRCodeBox" class="qrcode-img"></div>
+                        <p class="p2 text-center">
+                            {{$t('exchange_account')}}<br />
+                            {{$root.qrcodeExchange.account}}
+                        </p>
+                        <div class="qrcode-mask qrcode-exchange-mask d-flex flex-column align-items-center justify-content-center" v-if="!$root.qrcodeIsValid">
+                            <p>{{$t('qrcode_expired')}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-bottom text-center">
+                    <div class="modal-body text-left">
+                        <p v-for="item in $root.qrcodeExchange.items" v-html="item.text" 
+                           v-bind:class="{'text-success':item.color=='green','text-danger':item.color=='red','font-weight-bold':item.bold==true}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

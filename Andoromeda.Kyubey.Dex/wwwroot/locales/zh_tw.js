@@ -126,4 +126,9 @@ const zh_tw = {
     tip_cancel_succeed: '取消成功!',
     tip_cancel_failed: '取消失敗!',
     tip_use_dapp_browser: '請使用DAPP瀏覽器.',
+    tip_use_medishares_app: '該操作僅支持麥子錢包app',
+    title_add_fav: '添加收藏 {symbol}',
+    title_remove_fav: '取消收藏 {symbol}',
+    title_cancel_delegate: '取消委托',
+    tip_fav_succeed: '收藏成功',
 };

@@ -150,5 +150,10 @@ const zh = {
     buy_word: '买',
     load_more: '加载更多',
     to_bottom_notice: '到底啦，没有更多啦~',
-    switch_language: '切换语言'
+    switch_language: '切换语言',
+    tip_use_medishares_app: '该操作仅支持麦子钱包app',
+    title_add_fav: '添加收藏 {symbol}',
+    title_remove_fav: '取消收藏 {symbol}',
+    title_cancel_delegate: '取消委托',
+    tip_fav_succeed: '收藏成功',
 };

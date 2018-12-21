@@ -120,6 +120,24 @@ component.methods = {
         this.getOpenOrders();
         this.getHistroyOrders();
     },
+    delegateCallBack() {
+        var self = this;
+        this.delayRefresh(function () {
+            self.refreshUserViews();
+        });       
+    },
+    cancelCallBack() {
+        var self = this;
+        this.delayRefresh(function () {
+            self.refreshUserViews();
+        });  
+    },
+    doFavCallBack() {
+        var self = this;
+        this.delayRefresh(function () {
+            self.getFavoriteList();
+        });         
+    },
     refreshUserViews() {
         this.balanceView.refresh();
         this.openOrdersView.refresh();
@@ -178,7 +196,7 @@ component.methods = {
             this.scatterCancel(token, type, id);
         }
         else if (app.loginMode == "Simple Wallet") {
-            app.notification("error", $t('to_be_continued'));
+            app.startQRCodeCancelOrder(id, token, type == 'buy');
         }
     },
     scatterCancel: function (token, type, id) {
@@ -244,15 +262,46 @@ component.methods = {
         }
     },
     simpleWalletBuy() {
+        var self = this;
+        const $t = this.$t.bind(this);
+
         var buySymbol = this.tokenId
         var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
         var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
+
         if (this.control.trade === 'limit') {
-            this.simpleWalletExchange("buy", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", "EOS", 4, app.uuid, `${buyAmount.toFixed(4)} ${buySymbol}`);
+            app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
+                [
+                    {
+                        color: 'green',
+                        text: `${$t('exchange_buy')} ${buySymbol}`
+                    },
+                    {
+                        text: `${$t('exchange_price')}: ${parseFloat(buyPrice).toFixed(8)} EOS`
+                    },
+                    {
+                        text: `${$t('exchange_amount')}: ${parseFloat(buyAmount).toFixed(4)} ${buySymbol}` 
+                    },
+                    {
+                        text: `${$t('exchange_total')}: ${parseFloat(buyEosTotal).toFixed(4)} EOS`
+                    }
+                ]);
         }
         else if (this.control.trade === 'market') {
-            this.simpleWalletExchange("buy-market", app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", buyPrice, buyAmount, buySymbol, "EOS", 4);
+
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", "EOS", 4, app.uuid, `market`);
+            app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
+                [
+                    {
+                        color: 'green',
+                        text: `${$t('exchange_buy')} ${buySymbol}`
+                    },
+                    {
+                        text: `${$t('exchange_total')}: ${parseFloat(buyEosTotal).toFixed(4)} EOS`
+                    }
+                ]);
         }
     },
     scatterBuy() {
@@ -351,16 +400,46 @@ component.methods = {
         }
     },
     simpleWalletSell() {
+        const $t = this.$t.bind(this);
         var sellSymbol = this.tokenId;
         var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(sellPrice * sellAmount).toFixed(4));
+
         if (this.control.trade === 'limit') {
-            this.simpleWalletExchange("sell", app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellPrice, sellTotal, "EOS", sellSymbol, 4);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `${sellTotal.toFixed(4)} EOS`);
+            app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
+                [
+                    {
+                        color: 'green',
+                        text: `${$t('exchange_sell')} ${sellSymbol}`
+                    },
+                    {
+                        text: `${$t('exchange_sellprice')}: ${parseFloat(sellPrice).toFixed(8)} EOS`
+                    },
+                    {
+                        text: `${$t('exchange_sellamount')}: ${parseFloat(sellAmount).toFixed(4)} ${sellSymbol}`
+                    },
+                    {
+                        text: `${$t('exchange_total')}: ${parseFloat(sellTotal).toFixed(4)} EOS`
+                    }
+                ]);
         }
         else if (this.control.trade === 'market') {
             sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
-            this.simpleWalletExchange("sell-market", app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellPrice, sellTotal, "EOS", sellSymbol, 4);
+
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `market`);
+
+            app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
+                [
+                    {
+                        color: 'green',
+                        text: `${$t('exchange_sell')} ${sellSymbol}`
+                    },
+                    {
+                        text: `${$t('exchange_total')}: ${parseFloat(sellTotal).toFixed(4)} EOS`
+                    }
+                ]);
         }
     },
     scatterSell() {
@@ -413,31 +492,6 @@ component.methods = {
                 });
         }
     },
-    simpleWalletExchange: function (type, from, to, amount, contract, targetPrice, memoAmount, memoSymbol, exchangeSymbol, precision) {
-        //set qrcode timer
-        app.qrcodeIsValid = true;
-        clearTimeout(app.qrcodeTimer);
-        app.qrcodeTimer = setTimeout(function () {
-            app.qrcodeIsValid = false;
-        }, 3 * 60 * 1000);
-
-        this.exchange.type = type;
-        this.exchange.from = from;
-        this.exchange.to = to;
-        this.exchange.amount = amount;
-        this.exchange.contract = contract;
-        this.exchange.symbol = exchangeSymbol;
-        this.exchange.taretSymbol = memoSymbol;
-        this.exchange.precision = precision;
-        this.exchange.taretAmount = memoAmount;
-        this.exchange.price = targetPrice;
-        if (this.control.trade === 'limit') {
-            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, exchangeSymbol, precision, app.uuid, `${memoAmount.toFixed(precision)} ${memoSymbol}`);
-        }
-        else if (this.control.trade === 'market') {
-            this.generateExchangeQRCode("exchangeQRCodeBox", from, to, amount, contract, exchangeSymbol, precision, app.uuid, `market`);
-        }
-    },
     _getExchangeSign: function (uuid) {
         return uuid;
     },
@@ -461,18 +515,6 @@ component.methods = {
             "callback": `${app.currentHost}/api/v1/simplewallet/callback/exchange?uuid=${uuid}&sign=${_this._getExchangeSign(uuid)}`
         };
         return loginObj;
-    },
-    generateExchangeQRCode: function (idSelector, from, to, amount, contract, symbol, precision, uuid, dappData) {
-        $("#" + idSelector).empty();
-        var reqObj = this._getExchangeRequestObj(from, to, amount, contract, symbol, precision, uuid, dappData);
-        var qrcode = new QRCode(idSelector, {
-            text: JSON.stringify(reqObj),
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.L
-        });
     },
     getSellOrders() {
         this.sellOrdersView = qv.createView(`/api/v1/lang/${app.lang}/token/${this.tokenId}/sell-order`, {}, 6000);

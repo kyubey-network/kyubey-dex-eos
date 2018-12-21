@@ -4,6 +4,7 @@ using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,16 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             });
 
             return ApiResult(responseData);
+        }
+
+        [HttpGet("AbiJsonToBin/{code}/{actionName}")]
+        [ProducesResponseType(typeof(ApiResult<string>), 200)]
+        [ProducesResponseType(typeof(ApiResult), 404)]
+        public async Task<IActionResult> GetAbiJsonToBinAsync(GetAbiJsonToBinRequest request, [FromServices] NodeApiInvoker nodeApiInvoker, CancellationToken cancellationToken)
+        {
+            var args = JsonConvert.DeserializeObject(request.JsonArgs);
+            var nodeResult = await nodeApiInvoker.GetAbiJsonToBinAsync(request.Code, request.Action, args);
+            return ApiResult(nodeResult.Binargs);
         }
     }
 }
