@@ -146,4 +146,8 @@ const zh = {
     handling_fee: '手续费',
     jump_to: '跳至',
     page: '页',
+    sell_word: '卖',
+    buy_word: '买',
+    load_more: '加载更多',
+    to_bottom_notice: '到底啦，没有更多啦~'
 };

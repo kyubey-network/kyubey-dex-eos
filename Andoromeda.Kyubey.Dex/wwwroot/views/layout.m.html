@@ -24,7 +24,7 @@
                         <div class="tab-item-text">行情</div>
                     </div>
                 </td>
-                <td>
+                <td @click="$root.redirect('/order')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'order' }">
                         <img src="/img/order.active.svg" v-if="$root.mobile.nav === 'order'" />
                         <img src="/img/order.svg" v-if="$root.mobile.nav !== 'order'" />

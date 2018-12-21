@@ -23,8 +23,12 @@ component.data = function () {
 };
 
 component.created = function () {
+    app.mobile.nav = 'order';
     if (this.isSignedIn) {
-        this.init();
+        this.getOpenOrders();
+        this.getHistroyOrders();
+    } else {
+        app.redirect('/')
     }
 };
 
@@ -37,59 +41,6 @@ component.mounted = function () {
 }
 
 component.methods = {
-    init() {
-        this.getOpenOrders();
-        this.getHistroyOrders();
-    },
-    refresh() {
-        this.openOrdersView.refresh();
-        this.histroyOrdersView.refresh();
-    },
-    delayRefresh(callback) {
-        setInterval(callback, 3000);
-    },
-    exchangeCancel: function (token, type, id) {
-        const $t = this.$t.bind(this);
-        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
-            this.scatterCancel(token, type, id);
-        }
-        else if (app.loginMode == "Simple Wallet") {
-            app.notification("error", $t('to_be_continued'));
-        }
-    },
-    scatterCancel: function (token, type, id) {
-        var self = this;
-        const { account, requiredFields, eos } = app;
-        const $t = this.$t.bind(this);
-        eos.contract('kyubeydex.bp', { requiredFields })
-            .then(contract => {
-                if (type === 'buy') {
-                    return contract.cancelbuy(
-                        account.name,
-                        token,
-                        id,
-                        {
-                            authorization: [`${account.name}@${account.authority}`]
-                        });
-                } else {
-                    return contract.cancelsell(
-                        account.name,
-                        token,
-                        id,
-                        {
-                            authorization: [`${account.name}@${account.authority}`]
-                        });
-                }
-            })
-            .then(() => {
-                self.delayRefresh(self.refresh);
-
-                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
-            })
-            .catch(error => {
-                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
-            });
-    },
     formatTime(time) {
         return moment(time).format('MM-DD');
     },
@@ -156,6 +107,69 @@ component.methods = {
             let isEndTime = this.search.end === '' ? true : timestamp <= endTimestamp;
             return isSymbol && isType && timestamp && isStartTime && isEndTime
         })
+    },
+    exchangeCancel: function (token, type, id) {
+        const $t = this.$t.bind(this);
+        if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
+            this.scatterCancel(token, type, id);
+        }
+        else if (app.loginMode == "Simple Wallet") {
+            app.notification("error", $t('to_be_continued'));
+        }
+    },
+    delayRefresh(callback) {
+        setInterval(callback, 3000);
+        setInterval(callback, 10000);
+    },
+    scatterCancel: function (token, type, id) {
+        var self = this;
+        const { account, requiredFields, eos } = app;
+        const $t = this.$t.bind(this);
+        eos.contract('kyubeydex.bp', { requiredFields })
+            .then(contract => {
+                if (type === 'buy') {
+                    return contract.cancelbuy(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                } else {
+                    return contract.cancelsell(
+                        account.name,
+                        token,
+                        id,
+                        {
+                            authorization: [`${account.name}@${account.authority}`]
+                        });
+                }
+            })
+            .then(() => {
+                self.delayRefresh(self.openOrdersView.refresh);
+                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
+            })
+            .catch(error => {
+                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
+            });
+    },
+    moreOrders() {
+        if ((this.pageIndex) * this.pageSize >= this.pageTotal) {
+            return;
+        }
+        this.pageIndex += 1;
+        let requestParams = {
+            skip: (this.pageIndex - 1) * this.pageSize,
+            take: this.pageSize
+        }
+        qv.get(`/api/v1/lang/${app.lang}/User/${app.account ? app.account.name : null}/history-delegate`, requestParams)
+            .then(res => {
+                if (res.code === 200) {
+                    this.historyOrders.push(...res.data.result);
+                    this.pageTotal = parseInt(res.data.total);
+                    this.pageCount = parseInt(res.data.count);
+                }
+            })
     }
 };
 
@@ -168,11 +182,13 @@ component.computed = {
 component.watch = {
     '$root.isSignedIn': function (val) {
         if (val === true) {
-            this.init();
+            this.getOpenOrders();
+            this.getHistroyOrders();
         }
         //logout
         else {
             //comments: stop qv job or use signalR
+            app.redirect('/')
         }
     },
     deep: true
