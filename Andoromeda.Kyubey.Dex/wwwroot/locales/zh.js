@@ -149,5 +149,6 @@ const zh = {
     sell_word: '卖',
     buy_word: '买',
     load_more: '加载更多',
-    to_bottom_notice: '到底啦，没有更多啦~'
+    to_bottom_notice: '到底啦，没有更多啦~',
+    switch_language: '切换语言'
 };

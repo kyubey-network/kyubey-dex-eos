@@ -7,6 +7,7 @@
     '/token/:id': { id: '[A-Z]{1,10}' },
     '/home/contact': null,
     '/home/news': null,
+    '/home/more': null,
     '/order': null
 });
 
