@@ -171,7 +171,7 @@
         border-style: none;
         border-width: 0;
         right: 4px;
-        background: #DBDBDB;
+        background: rgb(241,241,241);
         margin-top: 15px;
         margin-right: 10px;
     }
@@ -182,10 +182,10 @@
 .my-input {
     margin-top: 10px;
     -webkit-appearance: none;
-    background-color: #DBDBDB;
+    background-color: rgb(241,241,241);
     background-image: none;
     border-radius: 10px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid rgb(241,241,241);
     box-sizing: border-box;
     color: #606266;
     display: inline-block;
