@@ -130,4 +130,5 @@ const en = {
     title_remove_fav: 'Add {symbol} to favorite list',
     title_cancel_delegate: 'Cancel Delegate',
     tip_fav_succeed: 'Collection of success',
+    tip_exchange_adjuct_zero: 'In order to ensure that your trade is not lost, the minimum purchase price of the current price({price}) is {min_count}, please adjust your price or increase the purchase amount, thank you.',
 };

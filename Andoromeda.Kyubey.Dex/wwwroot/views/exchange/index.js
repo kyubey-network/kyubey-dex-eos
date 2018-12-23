@@ -147,6 +147,38 @@ component.methods = {
         setInterval(callback, 3000);
         setInterval(callback, 10000);
     },
+    lcmTwoNumbers(x, y) {
+        if ((typeof x !== 'number') || (typeof y !== 'number'))
+            return false;
+        return (!x || !y) ? 0 : Math.abs((x * y) / this.gcdTwoNumbers(x, y));
+    },
+    gcdTwoNumbers(x, y) {
+        x = Math.abs(x);
+        y = Math.abs(y);
+        while (y) {
+            var t = y;
+            y = x % y;
+            x = t;
+        }
+        return x;
+    },
+    getExchangeAvailableValues(price, amount) {
+        var tmp_p = price * 100000000;
+
+        var lcm = this.lcmTwoNumbers(tmp_p, 100000000);
+        var min_available_count = lcm / tmp_p / 10000;
+        var min_available_total = lcm / 100000000 / 10000;
+
+        var availableAmount = parseInt(amount / min_available_count) * min_available_count;
+
+        return {
+            price: price,
+            min_count: min_available_count,
+            min_total: min_available_total,
+            availableAmount: parseFloat((availableAmount).toFixed(4)),
+            availableTotal: parseFloat((price * availableAmount).toFixed(4))
+        };
+    },
     dateObjToString: function (date) {
         return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
     },
@@ -225,14 +257,14 @@ component.methods = {
             })
             .then(() => {
                 self.delayRefresh(self.refreshUserViews);
-                if (app.isMobile) {
+                if (app.isMobile()) {
                     app.notification("succeeded", $t('tip_cancel_succeed'));
                 } else {
                     showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 }
             })
             .catch(error => {
-                if (app.isMobile) {
+                if (app.isMobile()) {
                     app.notification("error", $t('tip_cancel_failed'));
                 } else {
                     showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
@@ -241,37 +273,44 @@ component.methods = {
     },
     exchangeBuy() {
         const $t = this.$t.bind(this);
+
+        var buySymbol = this.tokenId;
         var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
-        var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
-        if (buyEosTotal > this.eosBalance) {
+        var buyTotal = parseFloat(parseFloat(this.inputs.buyTotal).toFixed(4));
+
+        if (buyTotal <= 0) {
+            app.notification("error", $t('tip_correct_count'));
+            return;
+        }
+        if (buyTotal > this.eosBalance) {
             app.notification("error", $t('tip_balance_not_enough'));
             return;
         }
-        if (buyEosTotal <= 0) {
-            app.notification("error", $t('tip_correct_count'));
+
+        var availableObj = this.getExchangeAvailableValues(buyPrice, buyAmount);
+        buyAmount = availableObj.availableAmount;
+        buyTotal = parseFloat(parseFloat(parseInt(buyTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
+
+        if (buyAmount == 0 || buyTotal == 0) {
+            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }));
             return;
         }
 
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
-            this.scatterBuy();
+            this.scatterBuy(buySymbol, buyPrice, buyAmount, buyTotal);
         }
         else if (app.loginMode == "Simple Wallet") {
             $('#exchangeModal').modal('show');
-            this.simpleWalletBuy();
+            this.simpleWalletBuy(buySymbol, buyPrice, buyAmount, buyTotal);
         }
     },
-    simpleWalletBuy() {
+    simpleWalletBuy(buySymbol, buyPrice, buyAmount, buyTotal) {
         var self = this;
         const $t = this.$t.bind(this);
 
-        var buySymbol = this.tokenId
-        var buyPrice = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
-        var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
-        var buyEosTotal = parseFloat(parseFloat(buyAmount * buyPrice).toFixed(4));
-
         if (this.control.trade === 'limit') {
-            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", "EOS", 4, app.uuid, `${buyAmount.toFixed(4)} ${buySymbol}`);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyTotal, "eosio.token", "EOS", 4, app.uuid, `${buyAmount.toFixed(4)} ${buySymbol}`);
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
                     {
@@ -285,13 +324,12 @@ component.methods = {
                         text: `${$t('exchange_amount')}: ${parseFloat(buyAmount).toFixed(4)} ${buySymbol}`
                     },
                     {
-                        text: `${$t('exchange_total')}: ${parseFloat(buyEosTotal).toFixed(4)} EOS`
+                        text: `${$t('exchange_total')}: ${parseFloat(buyTotal).toFixed(4)} EOS`
                     }
                 ]);
         }
         else if (this.control.trade === 'market') {
-
-            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyEosTotal, "eosio.token", "EOS", 4, app.uuid, `market`);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyTotal, "eosio.token", "EOS", 4, app.uuid, `market`);
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
                     {
@@ -299,40 +337,38 @@ component.methods = {
                         text: `${$t('exchange_buy')} ${buySymbol}`
                     },
                     {
-                        text: `${$t('exchange_total')}: ${parseFloat(buyEosTotal).toFixed(4)} EOS`
+                        text: `${$t('exchange_total')}: ${parseFloat(buyTotal).toFixed(4)} EOS`
                     }
                 ]);
         }
     },
-    scatterBuy() {
+    scatterBuy(buySymbol, buyPrice, buyAmount, buyTotal) {
         var self = this;
         const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
+
         if (this.control.trade === 'limit') {
-            var price = parseFloat(parseFloat(this.inputs.buyPrice).toFixed(8));
-            var ask = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
-            var bid = parseFloat(ask * price);
             eos.contract('eosio.token', { requiredFields })
                 .then(contract => {
                     return contract.transfer(
                         account.name,
                         'kyubeydex.bp',
-                        bid.toFixed(4) + ' EOS',
-                        ask.toFixed(4) + ' ' + this.tokenId,
+                        buyTotal.toFixed(4) + ' EOS',
+                        buyAmount.toFixed(4) + ' ' + this.tokenId,
                         {
                             authorization: [`${account.name}@${account.authority}`]
                         });
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-                    if (app.isMobile) {
+                    if (app.isMobile()) {
                         app.notification("succeeded", $t('delegate_succeed'));
                     } else {
                         showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                     }
                 })
                 .catch(error => {
-                    if (app.isMobile) {
+                    if (app.isMobile()) {
                         app.notification("error", $t('delegate_failed'));
                     } else {
                         self.handleScatterException(error, $t('delegate_failed'));
@@ -345,7 +381,7 @@ component.methods = {
                     return contract.transfer(
                         account.name,
                         'kyubeydex.bp',
-                        parseFloat(this.inputs.buyTotal).toFixed(4) + ' EOS',
+                        parseFloat(buyTotal).toFixed(4) + ' EOS',
                         'market',
                         {
                             authorization: [`${account.name}@${account.authority}`]
@@ -353,14 +389,14 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-                    if (app.isMobile) {
+                    if (app.isMobile()) {
                         app.notification("succeeded", $t('Transaction Succeeded'));
                     } else {
                         showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                     }
                 })
                 .catch(error => {
-                    if (app.isMobile) {
+                    if (app.isMobile()) {
                         app.notification("error", $t('Transaction Failed'));
                     } else {
                         self.handleScatterException(error, $t('Transaction Failed'));
@@ -381,7 +417,12 @@ component.methods = {
     },
     exchangeSell() {
         const $t = this.$t.bind(this);
+
+        var sellSymbol = this.tokenId;
+        var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
+        var sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
+
         if (sellAmount > this.tokenBalance) {
             app.notification("error", $t('tip_balance_not_enough'));
             return;
@@ -391,27 +432,32 @@ component.methods = {
             return;
         }
 
+        var availableObj = this.getExchangeAvailableValues(sellPrice, sellAmount);
+        sellAmount = availableObj.availableAmount;
+        sellTotal = parseFloat(parseFloat(parseInt(sellTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
+
+        if (sellAmount == 0 || sellTotal == 0) {
+            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: sellPrice, min_count: sellAmount }));
+            return;
+        }
+
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
-            this.scatterSell();
+            this.scatterSell(sellSymbol, sellPrice, sellAmount, sellTotal);
         }
         else if (app.loginMode == "Simple Wallet") {
             $('#exchangeModal').modal('show');
-            this.simpleWalletSell();
+            this.simpleWalletSell(sellSymbol, sellPrice, sellAmount, sellTotal);
         }
     },
-    simpleWalletSell() {
+    simpleWalletSell(sellSymbol, sellPrice, sellAmount, sellTotal) {
         const $t = this.$t.bind(this);
-        var sellSymbol = this.tokenId;
-        var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
-        var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
-        var sellTotal = parseFloat(parseFloat(sellPrice * sellAmount).toFixed(4));
 
         if (this.control.trade === 'limit') {
             var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `${sellTotal.toFixed(4)} EOS`);
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
                     {
-                        color: 'green',
+                        color: 'red',
                         text: `${$t('exchange_sell')} ${sellSymbol}`
                     },
                     {
@@ -426,14 +472,13 @@ component.methods = {
                 ]);
         }
         else if (this.control.trade === 'market') {
-            sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
 
             var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `market`);
 
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
                     {
-                        color: 'green',
+                        color: 'red',
                         text: `${$t('exchange_sell')} ${sellSymbol}`
                     },
                     {
@@ -442,21 +487,19 @@ component.methods = {
                 ]);
         }
     },
-    scatterSell() {
+    scatterSell(sellSymbol, sellPrice, sellAmount, sellTotal) {
         var self = this;
         const { account, requiredFields, eos } = app;
         const $t = this.$t.bind(this);
+
         if (this.control.trade === 'limit') {
-            var price = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
-            var bid = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
-            var ask = parseFloat(bid * price);
             eos.contract(this.baseInfo.contract.transfer, { requiredFields })
                 .then(contract => {
                     return contract.transfer(
                         account.name,
                         'kyubeydex.bp',
-                        bid.toFixed(4) + ' ' + this.tokenId,
-                        ask.toFixed(4) + ' EOS',
+                        sellAmount.toFixed(4) + ' ' + sellSymbol,
+                        sellTotal.toFixed(4) + ' EOS',
                         {
                             authorization: [`${account.name}@${account.authority}`]
                         });
@@ -476,7 +519,7 @@ component.methods = {
                     return contract.transfer(
                         account.name,
                         'kyubeydex.bp',
-                        parseFloat(this.inputs.sellAmount).toFixed(4) + ' ' + this.tokenId,
+                        sellAmount.toFixed(4) + ' ' + sellSymbol,
                         'market',
                         {
                             authorization: [`${account.name}@${account.authority}`]

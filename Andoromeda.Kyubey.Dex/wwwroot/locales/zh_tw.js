@@ -131,4 +131,5 @@ const zh_tw = {
     title_remove_fav: '取消收藏 {symbol}',
     title_cancel_delegate: '取消委托',
     tip_fav_succeed: '收藏成功',
+    tip_exchange_adjuct_zero: '為了保證您的交易不受損失,當前價格({price})的最小購買量是{min_count},請調整您的價格或者加大購買量,謝謝。',
 };
