@@ -46,7 +46,7 @@
 .exchange-table-header {
     table-layout: fixed;
     background: #eee;
-    color: #888!important;
+    color: #888 !important;
     font-size: 12px;
     width: 100%;
 }
@@ -57,28 +57,28 @@
         padding: 5px;
     }
 
-    .exchange-table-header th:first-child {
-        text-align: left;
-    }
+        .exchange-table-header th:first-child {
+            text-align: left;
+        }
 
-    .exchange-table-header th:last-child {
-        text-align: right;
-    }
+        .exchange-table-header th:last-child {
+            text-align: right;
+        }
 
     .exchange-table-header.navigator th {
-        text-align: center!important;
+        text-align: center !important;
     }
 
-    .exchange-buttons {
-        position: fixed;
-        bottom: 60px;
-        left: 0;
-        height: 70px;
-        border-top: 1px solid #ddd;
-        background: #fff;
-        width: 100%;
-        text-align: center;
-    }
+.exchange-buttons {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    height: 70px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    width: 100%;
+    text-align: center;
+}
 
 .exchange-buttons-item {
     display: inline-block;
@@ -112,6 +112,7 @@
 
 #tv_chart_container {
     top: 160px;
+    height: calc(100% - 160px - 134px);
 }
 
 .exchange-table-data-left {
@@ -134,6 +135,11 @@
     color: #c54a4a;
 }
 
+.mobile-chart .interval {
+    left: unset;
+    right: 0;
+}
+
 .exchange-table-data {
     width: 100%;
     font-size: 12px;
@@ -141,13 +147,13 @@
     border-collapse: collapse;
 }
 
-.exchange-table-data tr td:first-child {
-    text-align: left;
-}
+    .exchange-table-data tr td:first-child {
+        text-align: left;
+    }
 
-.exchange-table-data tr td:last-child {
-    text-align: right;
-}
+    .exchange-table-data tr td:last-child {
+        text-align: right;
+    }
 
     .exchange-table-data tr td {
         padding: 5px;
@@ -200,17 +206,17 @@
     background: #fff;
 }
 
-.exchange-table-header.navigator th {
-    padding: 8px 5px
-}
-
-.exchange-table-header.navigator th {
-    cursor: pointer;
-}
-
-    .exchange-table-header.navigator th.active {
-        color: #2C8CE3;
+    .exchange-table-header.navigator th {
+        padding: 8px 5px
     }
+
+    .exchange-table-header.navigator th {
+        cursor: pointer;
+    }
+
+        .exchange-table-header.navigator th.active {
+            color: #2C8CE3;
+        }
 
 .exchange-table-history {
     width: 100%;
@@ -220,38 +226,38 @@
     text-align: right;
 }
 
-.exchange-table-history thead {
-    background: #eee;
-    font-weight: normal;
-    border-bottom: 1px solid #ddd;
-    color: #555;
-}
+    .exchange-table-history thead {
+        background: #eee;
+        font-weight: normal;
+        border-bottom: 1px solid #ddd;
+        color: #555;
+    }
 
     .exchange-table-history th, .exchange-table-history td {
         font-size: 12px;
         padding: 5px;
-        font-weight: normal!important;
+        font-weight: normal !important;
     }
 
         .exchange-table-history th:first-child, .exchange-table-history td:first-child {
             text-align: left;
         }
 
-.exchange-table-history td {
-    color: #888;
+    .exchange-table-history td {
+        color: #888;
+    }
+
+        .exchange-table-history td.red {
+            color: #c54a4a;
+        }
+
+        .exchange-table-history td.green {
+            color: #59c54a;
+        }
+
+.exchange-description {
+    padding: 8px;
 }
-
-    .exchange-table-history td.red {
-        color: #c54a4a;
-    }
-
-    .exchange-table-history td.green {
-        color: #59c54a;
-    }
-
-    .exchange-description {
-        padding: 8px;
-    }
 
 exchange-description-icon-outer {
     height: 50px;
@@ -282,9 +288,9 @@ exchange-description-icon-outer {
     color: #888;
 }
 
-.exchange-description-table td {
-    padding: 8px;
-}
+    .exchange-description-table td {
+        padding: 8px;
+    }
 
 .exchange-container {
     top: 60px;
@@ -303,7 +309,7 @@ exchange-description-icon-outer {
     font-size: 16px;
     width: 30px;
     float: left;
-    text-align: center!important;
+    text-align: center !important;
     color: #888;
     height: 46px;
 }
@@ -392,7 +398,7 @@ exchange-description-icon-outer {
 }
 
 .text-align-left {
-    text-align: left!important;
+    text-align: left !important;
 }
 
 .col-4 {
@@ -433,9 +439,9 @@ exchange-description-icon-outer {
     color: #888;
 }
 
-.exchange-main-delegate-table th {
-    font-weight: normal;
-}
+    .exchange-main-delegate-table th {
+        font-weight: normal;
+    }
 
     .exchange-main-delegate-table th, .exchange-main-delegate-table td {
         padding: 5px;
@@ -493,10 +499,10 @@ exchange-description-icon-outer {
     margin-top: 15px;
 }
 
-.exchange-main-delegate-detail-table tr.field {
-    font-size: 12px;
-    color: #aaa;
-}
+    .exchange-main-delegate-detail-table tr.field {
+        font-size: 12px;
+        color: #aaa;
+    }
 
 .suspension {
     position: fixed;

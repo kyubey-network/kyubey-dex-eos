@@ -22,8 +22,7 @@
                     <div class="infoitem">
                         <p class="infoitem-title">{{$t('ups_downs_24H')}}</p>
                         <p v-bind:class="{ 'text-success': baseInfo.changeRecentDay>0,'text-danger': baseInfo.changeRecentDay<0 }">
-                            <span v-if="baseInfo.changeRecentDay>0">+</span>
-                            <span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
+                            <span v-if="baseInfo.changeRecentDay>0">+</span><span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
                         </p>
                     </div>
                     <div class="infoitem">

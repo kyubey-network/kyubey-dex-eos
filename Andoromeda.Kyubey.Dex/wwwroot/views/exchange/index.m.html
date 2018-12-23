@@ -9,7 +9,6 @@
         <div class="exchange-header-back" v-if="mobile.nav !== 'summary'" @click="mobile.nav = 'summary'"><i class="fa fa-line-chart"></i></div>
     </div>
     <div v-if="mobile.nav === 'summary'">
-
         <div class="exchange-summary">
             <div class="exchange-summary-left">
                 <div class="exchange-summary-price green">
@@ -70,8 +69,16 @@
                 </table>
             </div>
         </div>
-
-        <div id="tv_chart_container" v-show="mobile.summaryActive === 'candlestick'"></div>
+        <div class="mobile-chart chart" v-show="mobile.summaryActive === 'candlestick'">
+            <div class="interval" id="interval">
+                <span v-bind:class="{ 'active': chart.interval === 5 }" @click="chart.interval = 5">{{$t('k_5m')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 30 }" @click="chart.interval = 30">{{$t('k_30m')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 60 }" @click="chart.interval = 60">{{$t('k_1H')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 360 }" @click="chart.interval = 360">{{$t('k_6H')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 1440 }" @click="chart.interval = 1440">{{$t('k_1D')}}</span>
+            </div>
+            <div id="tv_chart_container"></div>
+        </div>
 
         <table class="exchange-table-history" v-if="mobile.summaryActive === 'history'">
             <thead>
@@ -150,7 +157,7 @@
                     <div class="exchange-main-row">
                         <div class="exchange-main-row-label">{{$t('exchange_amount')}}({{tokenId}})</div>
                         <div class="exchange-main-amount-textbox no-border-right">
-                            <input @blur="handleBlur('buyAmount', 5)" @input="handleAmountChange('buy')" v-model="inputs.buyAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="text-align-left">
+                            <input @blur="handleBlur('buyAmount', 4)" @input="handleAmountChange('buy')" v-model="inputs.buyAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="text-align-left">
                         </div>
                         <div class="exchange-main-amount-token">{{tokenId}}</div>
                         <div class="clear"></div>
@@ -177,7 +184,7 @@
                     <div class="exchange-main-row">
                         <div class="exchange-main-row-label">{{$t('exchange_sellamount')}}({{tokenId}})</div>
                         <div class="exchange-main-amount-textbox no-border-right">
-                            <input @blur="handleBlur('sellAmount', 5)" @input="handleAmountChange('sell')" v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="text-align-left">
+                            <input @blur="handleBlur('sellAmount', 4)" @input="handleAmountChange('sell')" v-model="inputs.sellAmount" type="number" autocomplete="off" step="0.0001" min="0.0001" class="text-align-left">
                         </div>
                         <div class="exchange-main-amount-token">{{tokenId}}</div>
                         <div class="clear"></div>

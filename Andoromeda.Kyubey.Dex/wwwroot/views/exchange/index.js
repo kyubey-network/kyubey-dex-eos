@@ -124,19 +124,19 @@ component.methods = {
         var self = this;
         this.delayRefresh(function () {
             self.refreshUserViews();
-        });       
+        });
     },
     cancelCallBack() {
         var self = this;
         this.delayRefresh(function () {
             self.refreshUserViews();
-        });  
+        });
     },
     doFavCallBack() {
         var self = this;
         this.delayRefresh(function () {
             self.getFavoriteList();
-        });         
+        });
     },
     refreshUserViews() {
         this.balanceView.refresh();
@@ -282,7 +282,7 @@ component.methods = {
                         text: `${$t('exchange_price')}: ${parseFloat(buyPrice).toFixed(8)} EOS`
                     },
                     {
-                        text: `${$t('exchange_amount')}: ${parseFloat(buyAmount).toFixed(4)} ${buySymbol}` 
+                        text: `${$t('exchange_amount')}: ${parseFloat(buyAmount).toFixed(4)} ${buySymbol}`
                     },
                     {
                         text: `${$t('exchange_total')}: ${parseFloat(buyEosTotal).toFixed(4)} EOS`
@@ -658,7 +658,12 @@ component.methods = {
         }
     },
     handleBlur(n, m = 8) {
-        this.inputs[n] = parseFloat(this.inputs[n]).toFixed(m);
+        var currentVal = this.inputs[n];
+        if (!currentVal) {
+            this.inputs[n] = 0.0.toFixed(m);
+        }
+        else
+            this.inputs[n] = parseFloat(currentVal).toFixed(m);
     },
     handlePrecentChange(n, x) {
         if (this.isSignedIn) {
