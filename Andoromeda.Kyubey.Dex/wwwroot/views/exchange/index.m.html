@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div class="symbol-container">
     <div class="exchange-header">
         <img class="exchange-header-icon" :src="baseInfo.iconSrc" />
         <div class="exchange-header-text-outer">
@@ -16,8 +16,7 @@
                     <span class="text-danger" v-else>{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(8)}} ↓</span>
                 </div>
                 <div class="exchange-summary-rate" v-bind:class="{ 'text-success': baseInfo.changeRecentDay>0,'text-danger': baseInfo.changeRecentDay<0 }">
-                    <span v-if="baseInfo.changeRecentDay>0">+</span>
-                    <span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
+                    <span v-if="baseInfo.changeRecentDay>0">+</span><span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
                 </div>
             </div>
             <div class="exchange-summary-right">

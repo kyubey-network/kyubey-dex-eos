@@ -105,14 +105,13 @@
     bottom: 130px;
     left: 0;
     right: 0;
-    position: fixed;
+    position: static;
     background: #fff;
     overflow-y: auto;
 }
 
 #tv_chart_container {
-    top: 160px;
-    height: calc(100% - 160px - 134px);
+    height: calc(100vh - 160px - 134px);
 }
 
 .exchange-table-data-left {
@@ -162,6 +161,10 @@
 .exchange-header {
     padding: 5px 15px;
     height: 60px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background-color: #f8f8f8;
 }
 
 .exchange-header-icon {
@@ -291,6 +294,10 @@ exchange-description-icon-outer {
     .exchange-description-table td {
         padding: 8px;
     }
+
+.symbol-container {
+    padding-top: 60px;
+}
 
 .exchange-container {
     top: 60px;
