@@ -79,7 +79,12 @@
         tokenInfoView: null,
         favoriteListView: null,
         balanceView: null,
-        buyAndSellStatus: true
+        buyAndSellStatus: true,
+        pageTotal: 0,
+        pageCount: 0,
+        pageSize: 10,
+        pageIndex: 1,
+        jumpPage: ''
     };
 };
 
@@ -764,12 +769,19 @@ component.methods = {
             }
         })
     },
-    getHistroyOrders() {
+    getHistroyOrders(skip = 0) {
+        let requestParams = {
+            ...this.search,
+            skip,
+            take: this.pageSize
+        }
         var self = this;
-        self.histroyOrdersView = qv.createView(`/api/v1/lang/${app.lang}/User/${app.account.name}/history-delegate`, {});
+        self.histroyOrdersView = qv.createView(`/api/v1/lang/${app.lang}/User/${app.account ? app.account.name : null}/history-delegate`, requestParams);
         self.histroyOrdersView.fetch(res => {
             if (res.code === 200) {
-                self.orderHistory = res.data.result;
+                self.orderHistory = res.data.result || [];
+                self.pageTotal = parseInt(res.data.total);
+                self.pageCount = parseInt(res.data.count);
             }
         })
     },
@@ -781,6 +793,25 @@ component.methods = {
         app.toggleFav(token, isAdd, () => {
             this.favoriteListFilter[i].favorite = isAdd;
         })
+    },
+    handlePageChange(i) {
+        this.pageIndex = i;
+        this.getHistroyOrders((i - 1) * this.pageSize);
+    },
+    next() {
+        if (this.pageIndex < this.pageCount) {
+            this.handlePageChange(this.pageIndex + 1);
+        }
+    },
+    prev() {
+        if (this.pageIndex > 1) {
+            this.handlePageChange(this.pageIndex - 1);
+        }
+    },
+    jump() {
+        if (this.jumpPage < 1) { this.jumpPage = 1 }
+        if (this.jumpPage > this.pageCount) { this.jumpPage = this.pageCount }
+        this.handlePageChange(parseInt(this.jumpPage));
     }
 }
 component.computed = {

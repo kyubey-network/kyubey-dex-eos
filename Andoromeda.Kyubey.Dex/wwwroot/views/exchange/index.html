@@ -339,8 +339,7 @@
                                 <th class="text-center" scope="col">{{$t('type')}}</th>
                                 <th scope="col">{{$t('release_time')}}</th>
                                 <th scope="col">{{$t('unit_price')}}</th>
-                                <th scope="col">{{$t('quantity')}}</th>
-                                <th scope="col">{{$t('transaction_number')}}</th>
+                                <th scope="col">{{$t('transaction_volume')}}</th>
                                 <th scope="col">{{$t('transaction_money')}}</th>
                                 <th scope="col" class="text-center">{{$t('status')}}</th>
                                 <!--<th class="text-center" scope="col">{{$t('operation')}}</th>-->
@@ -354,17 +353,31 @@
                                 <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
                                 <!-- todo：transaction_number -->
-                                <td>——</td>
-                                <td>——</td>
+                                <td>{{parseFloat(x.total).toFixed(8)}} EOS</td>
                                 <!-- todo：status -->
-                                <td class="text-center">——</td>
+                                <td class="text-center">{{$t('deal_done')}}</td>
                                 <!--<td class="text-center text-warning">{{$t('detail')}}</td>-->
                             </tr>
-                            <tr v-if="openOrders.length === 0">
+                            <tr v-if="orderHistory.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <nav class="text-center" v-if="pageCount>0">
+                        <ul class="pagination">
+                            <li><span :class="{'not-allowed': pageIndex <= 1}" @click="prev"> < </span></li>
+                            <li v-for="i in pageCount" :key="i">
+                                <span :class="{'pagination-active': pageIndex === i}" @click="handlePageChange(i)"> {{i}} </span>
+                            </li>
+                            <li><span :class="{'not-allowed': pageIndex >= pageCount}" @click="next"> > </span></li>
+                            <div class="d-inline-block small page-jump">
+                                <span>{{$t('jump_to')}}</span>
+                                <input class="form-control jump-input" type="number" v-model="jumpPage" @keyup.enter="jump">
+                                <span>{{$t('page')}}</span>
+                            </div>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

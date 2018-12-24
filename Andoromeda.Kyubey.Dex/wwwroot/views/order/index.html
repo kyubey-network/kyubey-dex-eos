@@ -56,7 +56,7 @@
               <td>{{formatTime(x.time)}}</td>
               <td>{{parseFloat(x.price).toFixed(8)}}</td>
               <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
-              <td>{{parseFloat(x.total).toFixed(8)}} {{x.symbol}}</td>
+              <td>{{parseFloat(x.total).toFixed(8)}} EOS</td>
               <td><button type="button" class="btn btn-outline-warning cancel-btn" v-on:click="exchangeCancel(x.symbol, x.type, x.id)">{{$t('cancel')}}</button></td>
           </tr>
           <tr v-if="filterCurrent.length === 0">
@@ -84,7 +84,7 @@
                 <td>{{formatTime(x.time)}}</td>
                 <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
-                <td>{{parseFloat(x.total).toFixed(8)}} {{x.symbol}}</td>
+                <td>{{parseFloat(x.total).toFixed(8)}} EOS</td>
                 <td>{{$t('deal_done')}}</td>
             </tr>
             <tr v-if="historyOrders.length === 0">

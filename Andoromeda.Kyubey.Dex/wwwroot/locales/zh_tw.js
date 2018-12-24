@@ -103,7 +103,7 @@ const zh_tw = {
     k_6H: '6小時',
     k_1D: '1天',
     noData: '暫無數據',
-    switch: '切換',
+    switch: '切換帳戶',
     expand_text: '展開全文',
     less_full_text: '收起全文',
     search: 'Search',

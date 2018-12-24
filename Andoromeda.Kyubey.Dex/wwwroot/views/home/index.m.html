@@ -31,9 +31,9 @@
                         <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)" v-if="isSignedIn"></i>
                         {{item.symbol}}/EOS
                     </div>
-                    <div class="token-volume">{{$t('volume_24H') +': '+item.volume_recent_day.toFixed(4)}} EOS</div>
+                    <div class="token-volume">{{$t('volume_24H') +': '+item.volume_recent_day.toFixed(4)}} {{item.symbol}}</div>
                 </td>
-                <td class="token-price-cell">{{item.current_price}} EOS</td>
+                <td class="token-price-cell">{{item.current_price}} {{item.symbol}}</td>
                 <td class="token-change-cell">
                     <div v-bind:class="{ 'token-change green': item.up , 'token-change red': item.down , 'token-change gray':!item.down&!item.up }">{{item.change_recent_day}}</div>
                 </td>

@@ -101,7 +101,7 @@ const en = {
     k_6H: '6 hours',
     k_1D: '1 day',
     noData: 'No data temporarily',
-    switch: 'Switch',
+    switch: 'Switch account',
     expand_text: 'More',
     less_full_text: 'Fold',
     search: 'Search',

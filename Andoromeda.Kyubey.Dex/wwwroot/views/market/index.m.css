@@ -158,3 +158,19 @@ shadow {
 .result-list-search {
     padding-top: 44px;
 }
+
+.my-star {
+    display: inline-block;
+    font: normal normal normal 2em FontAwesome;
+}
+
+    .my-star::before {
+        content: "\f006";
+        color: #AFAFAF;
+    }
+
+
+.my-star-active::before {
+    content: "\f005";
+    color: #FFDC00;
+}
