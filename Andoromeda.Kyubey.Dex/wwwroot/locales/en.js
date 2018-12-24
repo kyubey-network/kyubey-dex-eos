@@ -131,4 +131,6 @@ const en = {
     title_cancel_delegate: 'Cancel Delegate',
     tip_fav_succeed: 'Collection of success',
     tip_exchange_adjuct_zero: 'In order to ensure that your trade is not lost, the minimum purchase price of the current price({price}) is {min_count}, please adjust your price or increase the purchase amount, thank you.',
+    orders: 'Orders',
+    history: 'History',
 };

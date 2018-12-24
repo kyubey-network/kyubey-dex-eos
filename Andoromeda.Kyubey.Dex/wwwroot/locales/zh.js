@@ -157,4 +157,6 @@ const zh = {
     title_cancel_delegate: '取消委托',
     tip_fav_succeed: '收藏成功',
     tip_exchange_adjuct_zero: '为了保证您的交易不受损失,当前价格({price})的最小购买量是{min_count},请调整您的价格或者加大购买量,谢谢。',
+    orders: '当前订单',
+    history: '历史成交',
 };

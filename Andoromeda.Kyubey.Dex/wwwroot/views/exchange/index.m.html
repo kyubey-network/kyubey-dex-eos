@@ -35,10 +35,10 @@
 
         <table class="exchange-table-header navigator">
             <tr>
-                <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> Candlestick</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> Orders</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> History</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> Description</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> {{$t('K_line_chart')}}</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> {{$t('orders')}}</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> {{$t('history')}}</th>
+                <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> {{$t('token_introduction')}}</th>
             </tr>
         </table>
 
@@ -118,7 +118,7 @@
                 </tr>
                 <tr>
                     <td>{{$t('official_website')}}</td>
-                    <td><a href="#">{{baseInfo.website}}</a></td>
+                    <td><a :href="baseInfo.website">{{baseInfo.website}}</a></td>
                 </tr>
             </table>
         </div>
@@ -211,8 +211,8 @@
                     </thead>
 
                     <tbody v-if="control.order !== 'buy'">
-                        <tr v-for="(x, i) in sellOrders" :key="i" v-on:click="setPublish(x.unitPrice, x.amount, x.total)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.2) ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ')'" style="background: linear-gradient(to left, rgb(249,237,235) 33%, rgb(255,255,255) 33%);">
-                            <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
+                        <tr v-for="(x, i) in sellOrders" :key="i" v-on:click="setPublish(x.unitPrice, x.amount, x.total)" :style="'background: linear-gradient(to left, RGBA(232,18,52,.2) ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ', #FFFFFF ' + getcolorOccupationRatio(x.amount,maxAmountSellOrder) + ')'" style="background: linear-gradient(to left, rgb(249,237,235) 33%, rgb(255,255,255) 33%);">
+                            <td class="text-danger">{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                             <td>{{parseFloat(x.amount).toFixed(4)}}</td>
                         </tr>
                     </tbody>
@@ -223,8 +223,8 @@
                 </div>
                 <table class="exchange-main-delegate-table">
                     <tbody>
-                        <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);" v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount, x.total)" :style="'background: linear-gradient(to left, RGBA(82,177,109,.2) ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ', #292929 ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ')'">
-                            <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
+                        <tr style="background: linear-gradient(to left, rgb(232,247,244) 33%, rgb(255,255,255) 33%);" v-for="(x, i) in buyOrders" :key="i" v-if="control.order !== 'sell'" v-on:click="setPublish(x.unitPrice, x.amount, x.total)" :style="'background: linear-gradient(to left, RGBA(82,177,109,.2) ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ', #FFFFFF ' + getcolorOccupationRatio(x.amount,maxAmountBuyOrder) + ')'">
+                            <td class="text-success">{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                             <td>{{parseFloat(x.amount).toFixed(4)}}</td>
                         </tr>
                     </tbody>
@@ -284,7 +284,7 @@
                         </tr>
                     </table>
                 </div>
-                <div v-if="openOrders.length === 0">
+                <div v-if="orderHistory.length === 0">
                     <p colspan="9" class="text-center">{{$t('noData')}}</p>
                 </div>
             </div>
