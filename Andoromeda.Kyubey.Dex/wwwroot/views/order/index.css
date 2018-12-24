@@ -130,7 +130,7 @@ input::-webkit-inner-spin-button {
     font-size: 12px;
 }
 .form-control {
-    font-size: 14px!important;
+    font-size: 14px !important;
 }
 input, input:focus {
     outline: none;
@@ -142,4 +142,11 @@ input.form-control:focus {
 }
 .datepicker-days,.datepicker-months,.datepicker-years,.datepicker-decades,.datepicker-centuries {
     font-size: 12px!important;
+}
+.datepicker{
+    z-index: 9999 !important;
+}
+.search-button {
+    height: calc(2.25rem + 2px);
+    min-width: 80px;
 }

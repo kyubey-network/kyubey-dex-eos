@@ -35,7 +35,7 @@ component.mounted = function () {
     $('.date-picker').datepicker({
         autoclose: true,
         todayHighlight: true,
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
     });
 }
 

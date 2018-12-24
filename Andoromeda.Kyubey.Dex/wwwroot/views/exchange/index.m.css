@@ -161,10 +161,6 @@
 .exchange-header {
     padding: 5px 15px;
     height: 60px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    background-color: #f8f8f8;
 }
 
 .exchange-header-icon {
@@ -519,4 +515,16 @@ exchange-description-icon-outer {
 
 .outline-button-active, .outline-button:hover {
     border: 1px solid #278eda;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9999;
+    background-color: #f8f8f8;
+}
+
+.avoid-the-header {
+    margin-top: 100px;
 }

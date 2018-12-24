@@ -1,47 +1,60 @@
 ﻿<div class="symbol-container">
-    <div class="exchange-header">
-        <img class="exchange-header-icon" :src="baseInfo.iconSrc" />
-        <div class="exchange-header-text-outer">
-            <div class="exchange-header-token">{{tokenId}}/EOS</div>
-            <div class="exchange-header-publisher">{{baseInfo.contract.transfer}}</div>
+    <div class="header">
+        <div class="exchange-header">
+            <img class="exchange-header-icon" :src="baseInfo.iconSrc" />
+            <div class="exchange-header-text-outer">
+                <div class="exchange-header-token">{{tokenId}}/EOS</div>
+                <div class="exchange-header-publisher">{{baseInfo.contract.transfer}}</div>
+            </div>
+            <div class="exchange-header-star"><i class="fa fa-star-o"></i></div>
+            <div class="exchange-header-back" v-if="mobile.nav !== 'summary'" @click="mobile.nav = 'summary'"><i class="fa fa-line-chart"></i></div>
         </div>
-        <div class="exchange-header-star"><i class="fa fa-star-o"></i></div>
-        <div class="exchange-header-back" v-if="mobile.nav !== 'summary'" @click="mobile.nav = 'summary'"><i class="fa fa-line-chart"></i></div>
+        <div v-if="mobile.nav === 'summary'">
+            <div class="exchange-summary">
+                <div class="exchange-summary-left">
+                    <div class="exchange-summary-price green">
+                        <span class="text-success" v-if="latestTransactions[0]?latestTransactions[0].growing:true">{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(8)}} ↑</span>
+                        <span class="text-danger" v-else>{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(8)}} ↓</span>
+                    </div>
+                    <div class="exchange-summary-rate" v-bind:class="{ 'text-success': baseInfo.changeRecentDay>0,'text-danger': baseInfo.changeRecentDay<0 }">
+                        <span v-if="baseInfo.changeRecentDay>0">+</span><span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
+                    </div>
+                </div>
+                <div class="exchange-summary-right">
+                    <div class="exchange-summary-field">
+                        {{$t('volume_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.volumeRecentDay).toFixed(4)}}</span>
+                    </div>
+                    <div class="exchange-summary-field">
+                        {{$t('highest_price_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.maxPriceRecentDay).toFixed(8)}}</span>
+                    </div>
+                    <div class="exchange-summary-field">
+                        {{$t('lowest_price_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.minPriceRecentDay).toFixed(8)}}</span>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <table class="exchange-table-header navigator">
+                <tr>
+                    <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> {{$t('K_line_chart')}}</th>
+                    <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> {{$t('orders')}}</th>
+                    <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> {{$t('history')}}</th>
+                    <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> {{$t('token_introduction')}}</th>
+                </tr>
+            </table>
+
+            <table class="exchange-table-history" v-if="mobile.summaryActive === 'history'">
+                <thead>
+                    <tr>
+                        <th>{{$t('date')}}</th>
+                        <th>{{$t('price')}}(EOS)</th>
+                        <th>{{$t('amount')}}({{tokenId}})</th>
+                    </tr>
+                </thead>
+
+        </div>
     </div>
-    <div v-if="mobile.nav === 'summary'">
-        <div class="exchange-summary">
-            <div class="exchange-summary-left">
-                <div class="exchange-summary-price green">
-                    <span class="text-success" v-if="latestTransactions[0]?latestTransactions[0].growing:true">{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(8)}} ↑</span>
-                    <span class="text-danger" v-else>{{parseFloat(latestTransactions[0]?latestTransactions[0].unitPrice:0).toFixed(8)}} ↓</span>
-                </div>
-                <div class="exchange-summary-rate" v-bind:class="{ 'text-success': baseInfo.changeRecentDay>0,'text-danger': baseInfo.changeRecentDay<0 }">
-                    <span v-if="baseInfo.changeRecentDay>0">+</span><span>{{parseFloat(baseInfo.changeRecentDay*100).toFixed(2)}}</span>%
-                </div>
-            </div>
-            <div class="exchange-summary-right">
-                <div class="exchange-summary-field">
-                    {{$t('volume_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.volumeRecentDay).toFixed(4)}}</span>
-                </div>
-                <div class="exchange-summary-field">
-                    {{$t('highest_price_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.maxPriceRecentDay).toFixed(8)}}</span>
-                </div>
-                <div class="exchange-summary-field">
-                    {{$t('lowest_price_24H')}} <span class="exchange-summary-value">{{parseFloat(baseInfo.minPriceRecentDay).toFixed(8)}}</span>
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
-
-        <table class="exchange-table-header navigator">
-            <tr>
-                <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> {{$t('K_line_chart')}}</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> {{$t('orders')}}</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> {{$t('history')}}</th>
-                <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> {{$t('token_introduction')}}</th>
-            </tr>
-        </table>
-
+    <div v-if="mobile.nav === 'summary'" class="avoid-the-header">
         <table class="exchange-table-header" v-if="mobile.summaryActive === 'order'">
             <tr>
                 <th>{{$t('buy')}}{{$t('amount')}}({{tokenId}})</th>
