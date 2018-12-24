@@ -45,10 +45,6 @@ namespace Andoromeda.Kyubey.Dex.Models
 
         public string Tg { get; set; }
 
-        public double? Total_Supply { get; set; }
-
-        public double Total_Circulate { get; set; }
-
         public double[] Curve_Arguments { get; set; }
 
         public string Price_Table { get; set; }

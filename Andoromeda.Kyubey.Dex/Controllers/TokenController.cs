@@ -1,4 +1,5 @@
-﻿using Andoromeda.Kyubey.Dex.Models;
+﻿using Andoromeda.Framework.EosNode;
+using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -126,9 +127,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
         [ProducesResponseType(typeof(ApiResult), 404)]
         public async Task<IActionResult> TokenDetails(
             string id,
+            GetBaseRequest request,
             [FromServices] KyubeyContext db,
             [FromServices] TokenRepositoryFactory tokenRepositoryFactory,
-            GetBaseRequest request,
+            [FromServices] NodeApiInvoker nodeApiInvoker,
             CancellationToken cancellationToken
             )
         {
@@ -150,6 +152,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var tokenRepository = await tokenRepositoryFactory.CreateAsync(request.Lang);
             var token = tokenRepository.GetSingle(id);
 
+            var symbolSupply = await nodeApiInvoker.GetSymbolSupplyAsync(token?.Basic?.Contract?.Pricing ?? token?.Basic?.Contract?.Transfer, id, cancellationToken);
+
             var responseData = new GetTokenDetailResponse()
             {
                 Symbol = token.Id,
@@ -163,8 +167,8 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 IconSrc = $"/token_assets/{token.Id}/icon.png",
                 Priority = token.Priority,
                 Description = tokenRepository.GetTokenDescription(id, request.Lang),
-                TotalSupply = token.Basic?.Total_Supply ?? 0,
-                TotalCirculate = token.Basic?.Total_Circulate ?? 0,
+                TotalSupply = symbolSupply?.MaxSupply ?? 0,
+                TotalCirculate = symbolSupply?.Supply ?? 0,
                 Contract = new GetTokenResultContract()
                 {
                     Depot = token.Basic?.Contract?.Depot,
