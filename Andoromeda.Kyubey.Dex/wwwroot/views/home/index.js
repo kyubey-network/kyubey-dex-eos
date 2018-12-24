@@ -146,6 +146,10 @@ component.methods = {
         } else {
             this.tokenTable = this.tokenTableSource
         }
+    },
+    backTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     }
 };
 

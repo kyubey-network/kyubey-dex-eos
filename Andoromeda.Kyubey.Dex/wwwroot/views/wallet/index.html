@@ -45,7 +45,7 @@
                         <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
                             @click="goToEosExchange(item.symbol)">
                             <td scope="row">
-                                <i class="my-star"></i>
+                                <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)"></i>
                             </td>
                             <td class="text-left">
                                 <img :src="item.iconSrc" style="width: 30px;">

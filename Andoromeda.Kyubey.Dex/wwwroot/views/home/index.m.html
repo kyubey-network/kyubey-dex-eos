@@ -16,8 +16,8 @@
         <div class="home-token-list">
             <table class="home-token-filter">
                 <tr>
-                    <td :class="[sortControl.row === 'change_recent_day' ? 'active' : '']" @click="sortTokenOnClick('change_recent_day')">{{$t('ups_downs_24H')}}</td>
-                    <td :class="[sortControl.row === 'volume_recent_day' ? 'active' : '']" @click="sortTokenOnClick('volume_recent_day')">{{$t('volume_24H')}}</td>
+                    <td :class="[sortControl.row === 'change_recent_day' ? 'active' : '']" @click="sortTokenOnClick('change_recent_day');backTop()">{{$t('ups_downs_24H')}}</td>
+                    <td :class="[sortControl.row === 'volume_recent_day' ? 'active' : '']" @click="sortTokenOnClick('volume_recent_day');backTop()">{{$t('volume_24H')}}</td>
                 </tr>
             </table>
         </div>

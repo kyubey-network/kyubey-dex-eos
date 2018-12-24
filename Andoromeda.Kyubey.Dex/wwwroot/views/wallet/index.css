@@ -126,6 +126,11 @@ table .symbol-th {
         color: #FFDC00;
     }
 
+.my-star-active::before {
+    content: "\f005";
+    color: #FFDC00;
+}
+
 .my-separator {
     line-height: 100%;
     text-align: center;
