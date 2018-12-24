@@ -9,25 +9,14 @@
             markets: 'eos',
             trade: 'limit'
         },
-        exchange: {
-            type: "buy",
-            from: null,
-            to: null,
-            amount: 0,
-            contract: null,
-            symbol: null,
-            precision: 0,
-            taretSymbol: null,
-            taretAmount: 0
-        },
         inputs: {
             pair: null,
-            buyPrice: 0,
-            sellPrice: 0,
-            buyAmount: 0,
-            sellAmount: 0,
-            buyTotal: 0,
-            sellTotal: 0,
+            buyPrice: null,
+            sellPrice: null,
+            buyAmount: null,
+            sellAmount: null,
+            buyTotal: null,
+            sellTotal: null,
             tokenSearchInput: ''
         },
         chart: {
@@ -163,7 +152,7 @@ component.methods = {
         return x;
     },
     getExchangeAvailableValues(price, amount) {
-        var tmp_p = price * 100000000;
+        var tmp_p = parseFloat((price * 100000000).toFixed(0));
 
         var lcm = this.lcmTwoNumbers(tmp_p, 100000000);
         var min_available_count = lcm / tmp_p / 10000;
@@ -419,7 +408,7 @@ component.methods = {
         const $t = this.$t.bind(this);
 
         var sellSymbol = this.tokenId;
-        var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(4));
+        var sellPrice = parseFloat(parseFloat(this.inputs.sellPrice).toFixed(8));
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
 
@@ -564,11 +553,32 @@ component.methods = {
         this.sellOrdersView.fetch(res => {
             if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.sellOrders = res.data || [];
+
+                let minDelegateSellPrice = 0;
+                let minDelegateSellPriceAmount = 0;
+
                 let maxAmountSellOrder = 0;
                 res.data.forEach(item => {
+                    if (minDelegateSellPrice == 0 || minDelegateSellPrice > item.unitPrice) {
+                        minDelegateSellPrice = item.unitPrice;
+                        minDelegateSellPriceAmount = item.amount;
+                    }
+
                     maxAmountSellOrder = Math.max(maxAmountSellOrder, item.amount)
                 })
                 this.maxAmountSellOrder = maxAmountSellOrder;
+                //first bind
+                if (this.inputs.buyPrice == null) {
+                    this.inputs.buyPrice = minDelegateSellPrice.toFixed(8);
+                    if (this.isSignedIn) {
+                        this.inputs.buyAmount = minDelegateSellPriceAmount.toFixed(4);
+                        this.inputs.buyTotal = (minDelegateSellPrice * minDelegateSellPriceAmount).toFixed(4);
+                    }
+                    else {
+                        this.inputs.buyAmount = 0.0.toFixed(4);
+                        this.inputs.buyTotal = 0.0.toFixed(4);
+                    }
+                }
             }
         })
     },
@@ -577,11 +587,32 @@ component.methods = {
         this.buyOrdersView.fetch(res => {
             if (res.code === 200 && res.request.symbol === this.tokenId) {
                 this.buyOrders = res.data || [];
+
+                let maxDelegateBuyPrice = 0;
+                let maxDelegateBuyPriceAmount = 0;
+
                 let maxAmountBuyOrder = 0;
                 res.data.forEach(item => {
-                    maxAmountBuyOrder = Math.max(maxAmountBuyOrder, item.amount)
+                    if (maxDelegateBuyPrice < item.unitPrice) {
+                        maxDelegateBuyPrice = item.unitPrice;
+                        maxDelegateBuyPriceAmount = item.amount;
+                    }
+
+                    maxAmountBuyOrder = Math.max(maxAmountBuyOrder, item.amount);
                 })
                 this.maxAmountBuyOrder = maxAmountBuyOrder;
+                //first bind
+                if (this.inputs.sellPrice == null) {
+                    this.inputs.sellPrice = maxDelegateBuyPrice.toFixed(8);
+                    if (this.isSignedIn) {
+                        this.inputs.sellAmount = maxDelegateBuyPriceAmount.toFixed(4);
+                        this.inputs.sellTotal = (maxDelegateBuyPrice * maxDelegateBuyPriceAmount).toFixed(4);
+                    }
+                    else {
+                        this.inputs.sellAmount = 0.0.toFixed(4);
+                        this.inputs.sellTotal = 0.0.toFixed(4);
+                    }
+                }
             }
         })
     },

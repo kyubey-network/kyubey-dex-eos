@@ -57,7 +57,7 @@
                         <p>{{$t('total_liquidity')}}</p>
                         <p>{{baseInfo.totalCirculate}}</p>
                         <p>{{$t('official_website')}}</p>
-                        <a href="#">{{baseInfo.website}}</a>
+                        <a target="_blank" v-bind:href="baseInfo.website">{{baseInfo.website}}</a>
                     </div>
                 </div>
             </div>
