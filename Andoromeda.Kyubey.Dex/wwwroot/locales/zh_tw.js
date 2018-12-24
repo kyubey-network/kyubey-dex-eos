@@ -119,7 +119,7 @@ const zh_tw = {
     tip_balance_not_enough: '抱歉，您的餘額不足！',
     to_be_continued: '即將到來',
     home_banner_tip1: '免費的去中心化交易所',
-    home_banner_tip2: '零手續費 / 不限最低成交額 / 鏈上撮合 / 安全透明',
+    home_banner_tip2: '零手續費 / 鏈上撮合 / 安全透明',
     detail: '詳情',
     tip_correct_count: '請填寫正確的數量詞！',
     no_result: '抱歉，沒有這個關鍵字',
@@ -132,4 +132,6 @@ const zh_tw = {
     title_cancel_delegate: '取消委托',
     tip_fav_succeed: '收藏成功',
     tip_exchange_adjuct_zero: '為了保證您的交易不受損失,當前價格({price})的最小購買量是{min_count},請調整您的價格或者加大購買量,謝謝。',
+    scatter_sign_in: 'Satter登錄',
+    turnover_24H: '24H成交額：',
 };

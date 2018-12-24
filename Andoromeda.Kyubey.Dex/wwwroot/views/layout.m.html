@@ -2,9 +2,9 @@
     <div class="mobile-page">
         <router-view></router-view>
         <div class="mobile-copyright">
-            <div>24H成交额：1234.5678 EOS</div>
-            <div>市场有风险，投资需谨慎</div>
-            <div>Copyright © Kyubey 2018. All rights reserved.</div>
+            <div>{{$t('turnover_24H')}}{{parseFloat($root.volume).toFixed(4)}} EOS</div>
+            <div>{{$t('footer_warning')}}</div>
+            <div>Kyubey {{ new Date().getFullYear() }}.All rights reserved.</div>
         </div>
     </div>
     <div class="tab-outer">

@@ -118,7 +118,7 @@ const en = {
     tip_balance_not_enough: 'Sorry, your balance is not enough!',
     to_be_continued: 'to be continued',
     home_banner_tip1: 'Free decentralized exchange',
-    home_banner_tip2: 'Zero trading fee / No limit on minimum order / On-chain order-marching / Secure and transparent',
+    home_banner_tip2: 'Zero trading fee / On-chain order-marching / Secure and transparent',
     detail: 'Detail',
     tip_correct_count: 'Please fill in the correct amount!',
     no_result: 'Sorry, there is no such keyword',
@@ -133,4 +133,6 @@ const en = {
     tip_exchange_adjuct_zero: 'In order to ensure that your trade is not lost, the minimum purchase price of the current price({price}) is {min_count}, please adjust your price or increase the purchase amount, thank you.',
     orders: 'Orders',
     history: 'History',
+    scatter_sign_in: 'Scatter login',
+    turnover_24H: '24H Total: ',
 };

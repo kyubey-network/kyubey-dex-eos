@@ -120,7 +120,7 @@ const zh = {
     to_be_continued: '即将到来',
     collection_fail: '收藏失败',
     home_banner_tip1: '免费的去中心化交易所',
-    home_banner_tip2: '零手续费 / 不限最低成交额 / 链上撮合 / 安全透明',
+    home_banner_tip2: '零手续费 / 链上撮合 / 安全透明',
     detail: '详情',
     tip_correct_count: '请填写正确的数量值！',
     no_result: '抱歉，没有这个关键字',
@@ -159,4 +159,6 @@ const zh = {
     tip_exchange_adjuct_zero: '为了保证您的交易不受损失,当前价格({price})的最小购买量是{min_count},请调整您的价格或者加大购买量,谢谢。',
     orders: '当前订单',
     history: '历史成交',
+    scatter_sign_in: 'Satter登录',
+    turnover_24H: '24H成交额：',
 };

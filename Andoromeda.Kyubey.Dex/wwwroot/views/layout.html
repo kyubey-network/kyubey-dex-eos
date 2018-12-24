@@ -109,7 +109,7 @@
                     <p class="m-0 text-center footer-text-color small">Copyright &copy; Kyubey {{ new Date().getFullYear() }}.All rights reserved.</p>
                 </div>
                 <div class="col-3">
-                    <p class="m-0 text-right footer-text-color small">24H Total：{{parseFloat($root.volume).toFixed(4)}} EOS</p>
+                    <p class="m-0 text-right footer-text-color small">{{$t('turnover_24H')}}{{parseFloat($root.volume).toFixed(4)}} EOS</p>
                 </div>
             </div>
         </div>
@@ -144,8 +144,10 @@
                         </div>
                         <div class="row">
                             <div class="col-5 d-flex flex-column align-items-center justify-content-between">
-                                <img class="mb-3" style="width: 3rem" src="/img/home-page/scatter_logo.png" alt="scatter_logo">
-                                <button type="button" class="btn btn-outline-warning mb-3" @click="$root.scatterLogin">scatter sign in</button>
+                                <div class="plugin-login">
+                                    <img src="/img/home-page/scatter_logo.png" alt="scatter_logo">
+                                    <button type="button" class="btn btn-outline-warning mb-3" @click="$root.scatterLogin">{{$t('scatter_sign_in')}}</button>
+                                </div>
                                 <p class="text-center">{{$t('scatter_tip')}}</p>
                             </div>
                             <div class="col-2 d-flex flex-column align-items-center justify-content-between">

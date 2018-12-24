@@ -1618,3 +1618,18 @@ a:not([href]):not([tabindex]) {
         content: "\f005";
         color: #FFDC00;
     }
+
+.plugin-login {
+    margin-top: 60px;
+    text-align: center;
+}
+    .plugin-login img {
+        margin: 0px auto;
+        margin-bottom: 35px;
+        width: 4rem;
+        display: block;
+    }
+    .plugin-login button {
+        margin: 0px auto;
+        display: block;
+    }
