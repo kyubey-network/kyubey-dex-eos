@@ -28,7 +28,12 @@ var chain_id = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906
 var host = 'nodes.get-scatter.com';
 var account, eos, requiredFields;
 
-function showModal(title, content) {
+function showModal(title, content, type = 'succeeded') {
+    if (app.isMobile()) {
+        app.notification(type, title, content);
+        return;
+    }
+
     $('#modalTitle').text(title);
     $('#modalContent').text(content);
     $('#modal').modal('show');

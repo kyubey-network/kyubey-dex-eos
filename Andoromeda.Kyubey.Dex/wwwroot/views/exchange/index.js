@@ -246,18 +246,10 @@ component.methods = {
             })
             .then(() => {
                 self.delayRefresh(self.refreshUserViews);
-                if (app.isMobile()) {
-                    app.notification("succeeded", $t('tip_cancel_succeed'));
-                } else {
-                    showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
-                }
+                showModal($t('tip_cancel_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
             })
             .catch(error => {
-                if (app.isMobile()) {
-                    app.notification("error", $t('tip_cancel_failed'));
-                } else {
-                    showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'));
-                }
+                showModal($t('tip_cancel_failed'), error.message + $t('Please contact us if you have any questions'), "error");
             });
     },
     exchangeBuy() {
@@ -282,7 +274,7 @@ component.methods = {
         buyTotal = parseFloat(parseFloat(parseInt(buyTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
 
         if (buyAmount == 0 || buyTotal == 0) {
-            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }));
+            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }), "error");
             return;
         }
 
@@ -350,18 +342,10 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-                    if (app.isMobile()) {
-                        app.notification("succeeded", $t('delegate_succeed'));
-                    } else {
-                        showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
-                    }
+                    showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    if (app.isMobile()) {
-                        app.notification("error", $t('delegate_failed'));
-                    } else {
-                        self.handleScatterException(error, $t('delegate_failed'));
-                    }
+                    self.handleScatterException(error, $t('delegate_failed'));
                 });
         }
         else if (this.control.trade === 'market') {
@@ -378,18 +362,10 @@ component.methods = {
                 })
                 .then(() => {
                     self.delayRefresh(self.refreshUserViews);
-                    if (app.isMobile()) {
-                        app.notification("succeeded", $t('Transaction Succeeded'));
-                    } else {
-                        showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
-                    }
+                    showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    if (app.isMobile()) {
-                        app.notification("error", $t('Transaction Failed'));
-                    } else {
-                        self.handleScatterException(error, $t('Transaction Failed'));
-                    }
+                    self.handleScatterException(error, $t('Transaction Failed'));
                 });
         }
     },
@@ -399,10 +375,10 @@ component.methods = {
             error = JSON.parse(error)
         }
         if (error.error != null && error.error.code != null) {
-            showModal(tipTitle, $t(error.error.what));
+            showModal(tipTitle, $t(error.error.what), "error");
         }
         else
-            showModal(tipTitle, error.message + $t('Please contact us if you have any questions'));
+            showModal(tipTitle, error.message + $t('Please contact us if you have any questions'), "error");
     },
     exchangeSell() {
         const $t = this.$t.bind(this);
@@ -426,7 +402,7 @@ component.methods = {
         sellTotal = parseFloat(parseFloat(parseInt(sellTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
 
         if (sellAmount == 0 || sellTotal == 0) {
-            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: sellPrice, min_count: sellAmount }));
+            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: sellPrice, min_count: sellAmount }), "error");
             return;
         }
 
@@ -499,7 +475,7 @@ component.methods = {
                     showModal($t('delegate_succeed'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'), "error");
                 });
         }
         else if (this.control.trade === 'market') {
@@ -520,7 +496,7 @@ component.methods = {
                     showModal($t('Transaction Succeeded'), $t('You can confirm the result in your wallet') + ',' + $t('Please contact us if you have any questions'));
                 })
                 .catch(error => {
-                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'));
+                    showModal($t('Transaction Failed'), error.message + $t('Please contact us if you have any questions'), "error");
                 });
         }
     },
@@ -708,12 +684,27 @@ component.methods = {
             });
         }
     },
+    checkPercentState() {
+        if (this.buyPrecent) {
+            //changed
+            if (parseFloat(this.inputs.buyTotal) != parseFloat((this.buyPrecent * this.eosBalance).toFixed(4))) {
+                this.buyPrecent = 0;
+            }
+        }
+        if (this.sellPrecent) {
+            //changed
+            if (parseFloat(this.inputs.sellTotal) != parseFloat((this.sellPrecent * this.tokenBalance).toFixed(4))) {
+                this.sellPrecent = 0;
+            }
+        }
+    },
     handlePriceChange(type) {
         if (type === 'buy') {
             this.inputs.buyTotal = parseFloat(this.inputs.buyAmount * this.inputs.buyPrice).toFixed(4)
         } else {
             this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4)
         }
+        this.checkPercentState();
     },
     handleAmountChange(type) {
         if (type === 'buy') {
@@ -721,15 +712,17 @@ component.methods = {
         } else {
             this.inputs.sellTotal = parseFloat(this.inputs.sellAmount * this.inputs.sellPrice).toFixed(4)
         }
+        this.checkPercentState();
     },
     handleTotalChange(type) {
         if (type === 'buy') {
-            let isZero = this.inputs.buyPrice === '0.0000';
+            let isZero = (!this.inputs.buyPrice || parseFloat(this.inputs.buyPrice) == 0);
             this.inputs.buyAmount = isZero ? '0.0000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
         } else {
-            let isZero = this.inputs.buyPrice === '0.0000';
+            let isZero = (!this.inputs.sellPrice || parseFloat(this.inputs.sellPrice) == 0);
             this.inputs.sellAmount = isZero ? '0.0000' : parseFloat(this.inputs.sellTotal / this.inputs.buyPrice).toFixed(4);
         }
+        this.checkPercentState();
     },
     handleBlur(n, m = 8) {
         var currentVal = this.inputs[n];
@@ -743,7 +736,8 @@ component.methods = {
         if (this.isSignedIn) {
             this[n] = x;
             if (n === 'buyPrecent') {
-                let isZero = this.inputs.buyPrice === '0.0000';
+                let isZero = (!this.inputs.buyPrice || parseFloat(this.inputs.buyPrice) == 0);
+
                 this.inputs.buyTotal = parseFloat(this.eosBalance * x).toFixed(4);
                 this.inputs.buyAmount = isZero ? '0.0000' : parseFloat(this.inputs.buyTotal / this.inputs.buyPrice).toFixed(4);
             } else {
