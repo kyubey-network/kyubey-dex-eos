@@ -27,7 +27,10 @@
             <tr v-for="(item, index) in tokenTable" :key="index"
                 @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
                 <td class="token-pair-cell">
-                    <div class="token-pair"><i class="fa fa-star-o"></i> {{item.symbol}}/EOS</div>
+                    <div class="token-pair">   
+                        <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)" v-if="isSignedIn"></i>
+                        {{item.symbol}}/EOS
+                    </div>
                     <div class="token-volume">{{$t('volume_24H') +': '+item.volume_recent_day.toFixed(4)}} EOS</div>
                 </td>
                 <td class="token-price-cell">{{item.current_price}} EOS</td>
