@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bot", "bot", "{4E77FC7F-FFB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andoromeda.Kyubey.Dex.Bot", "Andoromeda.Kyubey.Dex.Bot\Andoromeda.Kyubey.Dex.Bot.csproj", "{57A7120E-CF05-4574-B704-F7FC2B839C3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andoromeda.Kyubey.Dex.Contract.TIP", "Andoromeda.Kyubey.Dex.Contract.TIP\Andoromeda.Kyubey.Dex.Contract.TIP.csproj", "{A01003B8-63CA-4747-B0D2-4FCEE735ED4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{57A7120E-CF05-4574-B704-F7FC2B839C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57A7120E-CF05-4574-B704-F7FC2B839C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57A7120E-CF05-4574-B704-F7FC2B839C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A01003B8-63CA-4747-B0D2-4FCEE735ED4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01003B8-63CA-4747-B0D2-4FCEE735ED4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01003B8-63CA-4747-B0D2-4FCEE735ED4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01003B8-63CA-4747-B0D2-4FCEE735ED4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{F5901232-77AD-4A17-B229-15672F807DCD} = {6901E266-DF0D-420B-84D8-611B35F8638C}
 		{4CBC40CA-312A-4821-B8F0-95ED5DC9BBD2} = {817BFCD8-8DC3-4727-8C20-802A222AF42D}
 		{57A7120E-CF05-4574-B704-F7FC2B839C3F} = {4E77FC7F-FFBE-4F54-AE01-B86C9D571B48}
+		{A01003B8-63CA-4747-B0D2-4FCEE735ED4D} = {817BFCD8-8DC3-4727-8C20-802A222AF42D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B4CE9E9D-01BB-413E-B7E0-6027B05FF99B}

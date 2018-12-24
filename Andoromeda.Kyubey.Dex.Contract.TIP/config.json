@@ -1,0 +1,6 @@
+﻿{
+  "MySQL": "Server=mysql.kyubey.net;Port=3306;Database=kyubey-stage;Uid=kyubey_stage_user@andoromeda;Pwd=o3gztipqf41o53LX9DyYc6LbQoEcOEiSmziUzHRue09aGtbRaAfgg8aHGJ7Ha2f5",
+  "PrivateKey": "5J7BKBVGfFMf4rfkv4ppYkH5trhZiG9J9sEkxYHK8tKRuiVwSZW",
+  "TestAccount": "kyubeydextip",
+  "ContractAccount": "kyubeydex.bp"
+}
