@@ -1492,7 +1492,6 @@ section {
 
 #exchangeModal .modal-content {
     width: 495px;
-    height: 464px;
     border: 0;
     color: #C1C1C1;
 }
@@ -1500,7 +1499,7 @@ section {
 #exchangeModal .modal-top {
     width: 100%;
     height: 332px;
-    background-color: rgba(255,255,255,0.16);
+    background-color: rgb(63, 63, 63);
     border: 0;
     border-top-left-radius: .3rem;
     border-top-right-radius: .3rem;
