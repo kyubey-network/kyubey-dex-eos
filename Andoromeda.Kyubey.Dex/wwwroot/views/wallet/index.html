@@ -45,10 +45,10 @@
                         <tr style="cursor: pointer;" v-for="(item, index) in listWithFiter" :key="index"
                             @click="goToEosExchange(item.symbol)">
                             <td scope="row">
-                                <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)"></i>
+                                <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)" v-if="item.symbol !== 'EOS'"></i>
                             </td>
                             <td class="text-left">
-                                <img :src="item.iconSrc" style="width: 30px;">
+                                <img :src="item.iconSrc" style="width: 30px; border-radius:50%">
                                 <font size="3">{{item.symbol}}</font>
                             </td>
                             <td class="text-right"><font size="3" color="#FFB500">{{parseFloat(item.valid).toFixed(4)}}</font></td>
