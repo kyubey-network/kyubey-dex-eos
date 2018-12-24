@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Andoromeda.CleosNet.Client;
@@ -22,10 +23,12 @@ namespace Andoromeda.Kyubey.Dex.Contract.Tests
             return current.Substring(0, current.IndexOf(@"Andoromeda.Kyubey.Dex.Contract.Tests") - 1);
         }
 
-        [Fact(Skip = "Wait for contract upgrade to cdt")]
+        [Fact]
         public async Task CompileAndSetContractTests()
         {
             // Arrange
+            await client.PushActionAsync("eosio.token", "create", "eosio.token", "active", new[] { "eosio.token", "1000000000.0000 KBY" });
+            await client.PushActionAsync("eosio.token", "issue", "eosio.token", "active", new[] { "eosio.token", "1000000000.0000 KBY", "OneBox Init" });
             await client.CreateFolderAsync("/opt/eosio/contracts/pomelo");
             await client.UploadFileAsync("/opt/eosio/contracts/pomelo/pomelo.hpp", File.ReadAllBytes(Path.Combine(GetProjectRootPath(), "Contract/pomelo.hpp")));
             await client.UploadFileAsync("/opt/eosio/contracts/pomelo/pomelo.cpp", File.ReadAllBytes(Path.Combine(GetProjectRootPath(), "Contract/pomelo.cpp")));
@@ -36,7 +39,24 @@ namespace Andoromeda.Kyubey.Dex.Contract.Tests
             await client.ImportPrivateKeyToWalletAsync(keys.PrivateKey, "eosio.token");
             await client.CreateAccountAsync("eosio", "pomelo", keys.PublicKey, keys.PublicKey);
             await client.PushActionAsync("eosio.token", "transfer", "eosio.token", "active", new[] { "eosio.token", "pomelo", "1000.0000 EOS", "" });
-            await client.SetContractAsync("/opt/eosio/contracts/pomelo", "pomelo", "pomelo");
+            var result = await client.SetContractAsync("/opt/eosio/contracts/pomelo", "pomelo", "pomelo");
+            await client.PushActionAsync("pomelo", "setwhitelist", "pomelo", "active", new[] { "EOS", "eosio.token" });
+            await client.PushActionAsync("pomelo", "setwhitelist", "pomelo", "active", new[] { "KBY", "eosio.token" });
+
+            // Assert
+            Assert.True(result.IsSucceeded);
+        }
+
+        [Fact]
+        public async Task PublishBuyOrderTests()
+        {
+            // Arrange
+            var beforeBalance = await client.GetCurrencyBalanceAsync("eosio.token", "eosio.token");
+            await client.PushActionAsync("eosio.token", "transfer", "eosio.token", "active", new object[] { "eosio.token", "pomelo", "1.0000 EOS", "1.0000 KBY" });
+
+            // Assert
+            var afterBalance = await client.GetCurrencyBalanceAsync("eosio.token", "eosio.token");
+            Assert.Equal(beforeBalance.Result.First().Amount - 1, afterBalance.Result.First().Amount);
         }
     }
 }
