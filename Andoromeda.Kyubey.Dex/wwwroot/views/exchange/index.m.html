@@ -287,7 +287,7 @@
                         <span class="exchange-main-current-item-tag-red" :class="{'text-danger': x.type === 'sell', 'text-success': x.type === 'buy'}">{{x.type === 'sell' ? $t('sell'): $t('buy')}}</span>
                         <span class="exchange-main-current-item-token-pair">{{x.symbol}}/EOS</span>
                         <span class="exchange-main-current-item-date">{{formatTime(x.time)}}</span>
-                        <div class="exchange-main-current-item-finished">{{$t('deal_done')}}</div>
+                        <span class="mini-text red">{{$t('deal_done')}}</span>
                     </div>
                     <table class="exchange-main-delegate-detail-table">
                         <tr class="field">

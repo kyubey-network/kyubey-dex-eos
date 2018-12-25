@@ -130,16 +130,14 @@ header.masthead .bg-circle-4 {
 }
 
 .btn-primary {
-    background-color: #ee0979;
-    border-color: #ee0979
+    background-color: #ffffff;
+    border-color: #2C8CE3;
+    color: #2C8CE3;
+    border-Radius: 0px;
 }
 
-.btn-primary:active, .btn-primary:focus, .btn-primary:hover {
-    background-color: #bd0760 !important;
-    border-color: #bd0760 !important
-}
-
-.btn-primary:focus {
-    -webkit-box-shadow: 0 0 0 .2rem rgba(238, 9, 121, .5);
-    box-shadow: 0 0 0 .2rem rgba(238, 9, 121, .5)
-}
+    .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+        background-color: #2C8CE3 !important;
+        border-color: #2C8CE3 !important;
+        color: #ffffff;
+    }
