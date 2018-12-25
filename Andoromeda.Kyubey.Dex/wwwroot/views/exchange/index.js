@@ -164,7 +164,7 @@ component.methods = {
         var min_available_count = lcm / tmp_p / 10000;
         var min_available_total = lcm / 100000000 / 10000;
 
-        var availableAmount = parseInt(amount / min_available_count) * min_available_count;
+        var availableAmount = parseInt((amount / min_available_count).toFixed(0)) * min_available_count;
 
         return {
             price: price,
@@ -277,7 +277,7 @@ component.methods = {
 
         var availableObj = this.getExchangeAvailableValues(buyPrice, buyAmount);
         buyAmount = availableObj.availableAmount;
-        buyTotal = parseFloat(parseFloat(parseInt(buyTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
+        buyTotal = parseFloat(parseFloat(parseInt((buyTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
 
         if (buyAmount == 0 || buyTotal == 0) {
             showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }), "error");
@@ -405,7 +405,7 @@ component.methods = {
 
         var availableObj = this.getExchangeAvailableValues(sellPrice, sellAmount);
         sellAmount = availableObj.availableAmount;
-        sellTotal = parseFloat(parseFloat(parseInt(sellTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
+        sellTotal = parseFloat(parseFloat(parseInt((sellTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
 
         if (sellAmount == 0 || sellTotal == 0) {
             showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero2', { price: sellPrice, min_count: availableObj.min_count + sellSymbol }), "error");
