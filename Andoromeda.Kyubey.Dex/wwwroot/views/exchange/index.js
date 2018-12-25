@@ -178,11 +178,17 @@ component.methods = {
     dateObjToString: function (date) {
         return `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} `;
     },
-    initCandlestick: function () {
+    initCandlestick: function (symbol) {
         var self = this;
+
+        if ((typeof symbol === "undefined")) {
+            symbol = this.tokenId;
+        }
+
+        this.chart.symbol = symbol;
         this.chartWidget = new window.TradingView.widget(this.chart);
         FeedBase.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate, onResult, onError) {
-            self.getCandlestickData(self.tokenId, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
+            self.getCandlestickData(symbol, new Date(rangeStartDate * 1000), new Date(rangeEndDate * 1000), self.chart.interval, function (apiResult) {
                 var data = apiResult.data;
                 if (data && Array.isArray(data)) {
                     var meta = { noData: false };
@@ -267,7 +273,8 @@ component.methods = {
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
         var buyTotal = parseFloat(parseFloat(this.inputs.buyTotal).toFixed(4));
 
-        if (buyTotal <= 0) {
+        if ((this.control.trade === 'limit' && (buyTotal <= 0 || buyPrice <= 0 || buyAmount <= 0))
+            || (this.control.trade === 'market' && buyTotal <= 0)) {
             app.notification("error", $t('tip_correct_count'));
             return;
         }
@@ -395,12 +402,13 @@ component.methods = {
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
 
-        if (sellAmount > this.tokenBalance) {
-            app.notification("error", $t('tip_balance_not_enough'));
+        if ((this.control.trade === 'limit' && (sellAmount <= 0 || sellPrice <= 0 || sellTotal <= 0))
+            || (this.control.trade === 'market' && sellAmount <= 0)) {
+            app.notification("error", $t('tip_correct_count'));
             return;
         }
-        if (sellAmount <= 0) {
-            app.notification("error", $t('tip_correct_count'));
+        if (sellAmount > this.tokenBalance) {
+            app.notification("error", $t('tip_balance_not_enough'));
             return;
         }
 
@@ -793,6 +801,8 @@ component.methods = {
     },
     redirectToDetail(token) {
         app.redirect('/exchange/:id', '/exchange/' + token, { id: token }, {});
+
+        this.initCandlestick(token);
     },
     toggleFav(token, i) {
         const isAdd = !this.favoriteListFilter[i].favorite;

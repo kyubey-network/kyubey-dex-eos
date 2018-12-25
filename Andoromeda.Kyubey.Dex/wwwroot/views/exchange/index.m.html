@@ -87,12 +87,15 @@
             </div>
 
             <div class="interval" id="interval">
-
+                <span v-bind:class="{ 'active': chart.interval === 1 }" @click="chart.interval = 1">{{$t('k_1m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 5 }" @click="chart.interval = 5">{{$t('k_5m')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 15 }" @click="chart.interval = 15">{{$t('k_15m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 30 }" @click="chart.interval = 30">{{$t('k_30m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 60 }" @click="chart.interval = 60">{{$t('k_1H')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 240 }" @click="chart.interval = 240">{{$t('k_4H')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 1440 }" @click="chart.interval = 1440">{{$t('k_1D')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 10080 }" @click="chart.interval = 10080">{{$t('k_1W')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 43200 }" @click="chart.interval = 43200">{{$t('k_1M')}}</span>
             </div>
             <div id="tv_chart_container"></div>
         </div>

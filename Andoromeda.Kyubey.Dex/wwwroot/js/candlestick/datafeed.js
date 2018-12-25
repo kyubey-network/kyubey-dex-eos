@@ -11,12 +11,12 @@ FeedBase.prototype.getSendSymbolName = function (symbolName) {
 
 FeedBase.prototype.resolveSymbol = function (symbolName, onResolve, onError) {
     onResolve({
-        "name": symbolName,
+        "name": symbolName + "/EOS",
         "timezone": "Asia/Shanghai",
         "pricescale": 100000000,
         "minmov": 1,
         "minmov2": 0,
-        "ticker": symbolName,
+        "ticker": symbolName + "/EOS",
         "description": "",
         "session": "24x7",
         "type": "bitcoin",

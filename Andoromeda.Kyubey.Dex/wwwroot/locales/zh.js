@@ -102,6 +102,8 @@ const zh = {
     k_4H: '4小时',
     k_6H: '6小时',
     k_1D: '1天',
+    k_1W: '1周',
+    k_1M: '1月',
     noData: '暂无数据',
     switch: '切换账户',
     expand_text: '展开全文',
