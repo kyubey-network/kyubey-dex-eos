@@ -364,4 +364,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     padding: 0;
     text-align: center;
     height: auto;
+    background-color: #202020;
+    border: none;
 }
+input:focus, textarea:focus {
+    outline: none;
+    border: none;
+    background-color: #202020 !important;
+}
+
+

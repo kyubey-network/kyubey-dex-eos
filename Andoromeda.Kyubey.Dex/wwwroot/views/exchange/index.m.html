@@ -6,7 +6,7 @@
                 <div class="exchange-header-token">{{tokenId}}/EOS</div>
                 <div class="exchange-header-publisher">{{baseInfo.contract.transfer}}</div>
             </div>
-            <div class="exchange-header-star"><i class="fa fa-star-o"></i></div>
+            <div class="exchange-header-star"><i class="my-star" :class="{'my-star-active': favoriteObj[tokenId]}" @click.stop="toggleFav(tokenId)" v-if="isSignedIn"></i></div>
             <div class="exchange-header-back" v-if="mobile.nav !== 'summary'" @click="mobile.nav = 'summary'"><i class="fa fa-line-chart"></i></div>
         </div>
         <div v-if="mobile.nav === 'summary'">

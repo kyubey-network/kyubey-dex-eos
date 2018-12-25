@@ -297,12 +297,10 @@
                             <tr>
                                 <th class="text-center" scope="col">{{$t('currency')}}</th>
                                 <th class="text-center" scope="col">{{$t('type')}}</th>
+                                <th scope="col">{{$t('release_time')}}</th>
                                 <th scope="col">{{$t('unit_price')}}</th>
                                 <th scope="col">{{$t('quantity')}}</th>
-                                <th scope="col">{{$t('transaction_number')}}</th>
                                 <th scope="col">{{$t('total_price')}}</th>
-                                <th scope="col">{{$t('release_time')}}</th>
-                                <th class="text-center" scope="col">{{$t('status')}}</th>
                                 <th class="text-center" scope="col">{{$t('operation')}}</th>
                             </tr>
                         </thead>
@@ -310,14 +308,10 @@
                             <tr v-for="(x, i) in openOrders" :key="i">
                                 <td class="text-center">{{x.symbol}}/EOS</td>
                                 <td class="text-center" :class="{'text-danger': x.type === 'sell', 'text-success': x.type === 'buy'}">{{x.type === 'sell' ? $t('sell'): $t('buy')}}</td>
+                                <td>{{formatTime(x.time)}}</td>
                                 <td>{{parseFloat(x.price).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
-                                <!-- todo：transaction_number -->
-                                <td>——</td>
                                 <td>{{parseFloat(x.total).toFixed(4)}} EOS</td>
-                                <td>{{formatTime(x.time)}}</td>
-                                <!-- todo：status -->
-                                <td class="text-center">——</td>
                                 <td class="text-center text-warning" v-on:click="exchangeCancel(x.symbol, x.type, x.id)">{{$t('cancel')}}</td>
                             </tr>
                             <tr v-if="openOrders.length === 0">
@@ -337,12 +331,11 @@
                             <tr>
                                 <th class="text-center" scope="col">{{$t('currency')}}</th>
                                 <th class="text-center" scope="col">{{$t('type')}}</th>
-                                <th scope="col">{{$t('release_time')}}</th>
+                                <th scope="col">{{$t('transaction_time')}}</th>
                                 <th scope="col">{{$t('unit_price')}}</th>
                                 <th scope="col">{{$t('transaction_volume')}}</th>
                                 <th scope="col">{{$t('transaction_money')}}</th>
                                 <th scope="col" class="text-center">{{$t('status')}}</th>
-                                <!--<th class="text-center" scope="col">{{$t('operation')}}</th>-->
                             </tr>
                         </thead>
                         <tbody>
@@ -352,11 +345,8 @@
                                 <td>{{formatTime(x.time)}}</td>
                                 <td>{{parseFloat(x.unitPrice).toFixed(8)}}</td>
                                 <td>{{parseFloat(x.amount).toFixed(4)}} {{x.symbol}}</td>
-                                <!-- todo：transaction_number -->
                                 <td>{{parseFloat(x.total).toFixed(8)}} EOS</td>
-                                <!-- todo：status -->
                                 <td class="text-center">{{$t('deal_done')}}</td>
-                                <!--<td class="text-center text-warning">{{$t('detail')}}</td>-->
                             </tr>
                             <tr v-if="orderHistory.length === 0">
                                 <td colspan="9" class="text-center">{{$t('noData')}}</td>

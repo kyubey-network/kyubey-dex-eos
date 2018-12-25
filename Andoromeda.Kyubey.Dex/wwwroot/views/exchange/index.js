@@ -85,7 +85,8 @@
         pageCount: 0,
         pageSize: 10,
         pageIndex: 1,
-        jumpPage: ''
+        jumpPage: '',
+        favoriteObj: {}
     };
 };
 
@@ -662,6 +663,10 @@ component.methods = {
         this.favoriteListView.fetch(res => {
             if (res.code === 200) {
                 this.favoriteList = res.data || [];
+                favoriteList.forEach((item) => {
+                    favoriteObj[item.symbol] = item.favorite
+                })
+                this.favoriteObj = favoriteObj;
             }
         });
     },
@@ -793,6 +798,12 @@ component.methods = {
         const isAdd = !this.favoriteListFilter[i].favorite;
         app.toggleFav(token, isAdd, () => {
             this.favoriteListFilter[i].favorite = isAdd;
+        })
+    },
+    toggleFav(token) {
+        const isAdd = !this.favoriteObj[token];
+        app.toggleFav(token, isAdd, () => {
+            this.favoriteObj[token] = isAdd;
         })
     },
     handlePageChange(i) {
