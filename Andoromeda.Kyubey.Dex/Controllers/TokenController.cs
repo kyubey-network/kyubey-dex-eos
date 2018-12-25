@@ -1,8 +1,10 @@
 ﻿using Andoromeda.Framework.EosNode;
+using Andoromeda.Framework.Logger;
 using Andoromeda.Kyubey.Dex.Models;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,6 +133,7 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             [FromServices] KyubeyContext db,
             [FromServices] TokenRepositoryFactory tokenRepositoryFactory,
             [FromServices] NodeApiInvoker nodeApiInvoker,
+            [FromServices]ILogger logger,
             CancellationToken cancellationToken
             )
         {
@@ -152,7 +155,15 @@ namespace Andoromeda.Kyubey.Dex.Controllers
             var tokenRepository = await tokenRepositoryFactory.CreateAsync(request.Lang);
             var token = tokenRepository.GetSingle(id);
 
-            var symbolSupply = await nodeApiInvoker.GetSymbolSupplyAsync(token?.Basic?.Contract?.Pricing ?? token?.Basic?.Contract?.Transfer, id, cancellationToken);
+            GetSymbolSupplyResponse symbolSupply = null;
+            try
+            {
+                symbolSupply = await nodeApiInvoker.GetSymbolSupplyAsync(token?.Basic?.Contract?.Transfer, id, cancellationToken);
+            }
+            catch (ArgumentNullException ex)
+            {
+                logger.LogError(ex.ToString());
+            }
 
             var responseData = new GetTokenDetailResponse()
             {

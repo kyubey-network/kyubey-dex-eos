@@ -329,10 +329,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             padding: 4px 8px;
             margin-left: 10px;
             line-height: 1.42857143;
-            color: #ced4da;
+            color: #AFAFAF;
             text-decoration: none;
-            background-color: #fff;
-            border: 1px solid #E5E5E5;
+            border: 1px solid #3a3636;
             cursor: pointer;
             border-radius: 4px;
         }
@@ -340,14 +339,14 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             .pagination > li > span:hover:not(.not-allowed) {
                 z-index: 2;
                 color: #ffffff;
-                background-color: #FFC600;
-                border-color: #FFC600;
+                background-color: #424241;
+                border-color: #292929;
             }
 
 .pagination-active {
     color: #ffffff !important;
-    background-color: #FFC600 !important;
-    border-color: #FFC600 !important;
+    background-color: #424241;
+    border-color: #292929 !important;
 }
 
 .page-jump {

@@ -1,5 +1,6 @@
 ﻿component.data = function () {
     return {
+        isMobileCandlestickFullScreen: false,
         sellOrders: [],
         maxAmountSellOrder: 0,
         maxAmountBuyOrder: 0,
@@ -26,7 +27,7 @@
             datafeed: new FeedBase(),
             library_path: "/js/candlestick/charting_library/",
             locale: app.lang,
-            disabled_features: ["control_bar", "timeframes_toolbar", "main_series_scale_menu", "symbol_search_hot_key", "header_symbol_search", "header_resolutions", "header_settings", "save_chart_properties_to_local_storage", "header_chart_type", "header_compare", "header_undo_redo", "header_screenshot", "use_localstorage_for_settings", "volume_force_overlay"],
+            disabled_features: app.isMobile() ? ["header_indicators", "header_fullscreen_button", "left_toolbar", "control_bar", "timeframes_toolbar", "main_series_scale_menu", "symbol_search_hot_key", "header_symbol_search", "header_resolutions", "header_settings", "save_chart_properties_to_local_storage", "header_chart_type", "header_compare", "header_undo_redo", "header_screenshot", "use_localstorage_for_settings", "volume_force_overlay"] : ["left_toolbar", "control_bar", "timeframes_toolbar", "main_series_scale_menu", "symbol_search_hot_key", "header_symbol_search", "header_resolutions", "header_settings", "save_chart_properties_to_local_storage", "header_chart_type", "header_compare", "header_undo_redo", "header_screenshot", "use_localstorage_for_settings", "volume_force_overlay"],
             enabled_features: ["keep_left_toolbar_visible_on_small_screens", "side_toolbar_in_fullscreen_mode", "hide_left_toolbar_by_default", "left_toolbar", "keep_left_toolbar_visible_on_small_screens", "hide_last_na_study_output", "move_logo_to_main_pane", "dont_show_boolean_study_arguments"],
             custom_css_url: "chart.css",
             loading_screen: app.isMobile() ? {} : { backgroundColor: '#292929' },
@@ -407,7 +408,7 @@ component.methods = {
         sellTotal = parseFloat(parseFloat(parseInt(sellTotal / availableObj.min_total) * availableObj.min_total).toFixed(4));
 
         if (sellAmount == 0 || sellTotal == 0) {
-            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: sellPrice, min_count: sellAmount }), "error");
+            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero2', { price: sellPrice, min_count: availableObj.min_count + sellSymbol }), "error");
             return;
         }
 

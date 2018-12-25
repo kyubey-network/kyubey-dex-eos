@@ -81,8 +81,13 @@
                 </table>
             </div>
         </div>
-        <div class="mobile-chart chart" v-show="mobile.summaryActive === 'candlestick'">
+        <div class="mobile-chart chart" v-bind:class="{'full-screen':isMobileCandlestickFullScreen}" v-show="mobile.summaryActive === 'candlestick'">
+            <div class="full-screen-btn-box">
+                <i class="fa fa-expand" v-bind:class="{'fa-expand':!isMobileCandlestickFullScreen,'fa-compress':isMobileCandlestickFullScreen}" aria-hidden="true" @click="isMobileCandlestickFullScreen=!isMobileCandlestickFullScreen"></i>
+            </div>
+
             <div class="interval" id="interval">
+
                 <span v-bind:class="{ 'active': chart.interval === 5 }" @click="chart.interval = 5">{{$t('k_5m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 30 }" @click="chart.interval = 30">{{$t('k_30m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 60 }" @click="chart.interval = 60">{{$t('k_1H')}}</span>

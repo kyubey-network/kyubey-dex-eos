@@ -134,10 +134,39 @@
     color: #c54a4a;
 }
 
-.mobile-chart .interval {
-    left: unset;
-    right: 0;
+.full-screen.mobile-chart {
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 9999 !important;
 }
+
+.full-screen #tv_chart_container {
+    height: calc(100vh - 40px);
+}
+
+.full-screen-btn-box {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    border: 1px solid #aaa;
+    padding: 1px 4px;
+}
+
+    .full-screen-btn-box i {
+        color: #615f5f;
+        font-size: 24px;
+    }
+
+
+.mobile-chart {
+    padding-top: 40px;
+    background-color: #f8f8f8;
+}
+
+    .mobile-chart .interval {
+        left: unset;
+        right: 0;
+    }
 
 .exchange-table-data {
     width: 100%;
