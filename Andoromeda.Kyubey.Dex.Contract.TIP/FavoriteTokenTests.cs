@@ -31,13 +31,13 @@ namespace Andoromeda.Kyubey.Dex.Contract.TIP
         [InlineData("KBY")]
         public async Task AddFavoriteTest(string token)
         {
-            var jobPosition = Convert.ToUInt64(await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos"));
+            var jobPosition = Convert.ToUInt64((await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")).Value);
             var addFavResult = await client.PushActionAsync(config.ContractAccount, "addfav", config.TestAccount, "active", new object[] { token });
             Assert.True(addFavResult.IsSucceeded);
 
             await Task.Delay(10000);
             // Assert timer hang
-            Assert.True(Convert.ToUInt64(await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")) > jobPosition);
+            Assert.True(Convert.ToUInt64((await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")).Value) > jobPosition);
             Assert.True(await db.Favorites.AnyAsync(x => x.Account == config.TestAccount && x.TokenId == token));
         }
 
@@ -46,13 +46,13 @@ namespace Andoromeda.Kyubey.Dex.Contract.TIP
         [InlineData("KBY")]
         public async Task RemoveFavoriteTest(string token)
         {
-            var jobPosition = Convert.ToUInt64(await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos"));
+            var jobPosition = Convert.ToUInt64((await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")).Value);
             var addFavResult = await client.PushActionAsync(config.ContractAccount, "removefav", config.TestAccount, "active", new object[] { token });
             Assert.True(addFavResult.IsSucceeded);
 
             await Task.Delay(10000);
             // Assert timer hang
-            Assert.True(Convert.ToUInt64(await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")) > jobPosition);
+            Assert.True(Convert.ToUInt64((await db.Constants.AsNoTracking().SingleAsync(x => x.Id == "action_pos")).Value) > jobPosition);
             Assert.True(!await db.Favorites.AnyAsync(x => x.Account == config.TestAccount && x.TokenId == token));
         }
     }

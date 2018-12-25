@@ -40,7 +40,6 @@ namespace Andoromeda.Kyubey.Dex.Contract.Tests
             await client.CreateAccountAsync("eosio", "pomelo", keys.PublicKey, keys.PublicKey);
             await client.PushActionAsync("eosio.token", "transfer", "eosio.token", "active", new[] { "eosio.token", "pomelo", "1000.0000 EOS", "" });
             var result = await client.SetContractAsync("/opt/eosio/contracts/pomelo", "pomelo", "pomelo");
-            await client.PushActionAsync("pomelo", "setwhitelist", "pomelo", "active", new[] { "EOS", "eosio.token" });
             await client.PushActionAsync("pomelo", "setwhitelist", "pomelo", "active", new[] { "KBY", "eosio.token" });
 
             // Assert
