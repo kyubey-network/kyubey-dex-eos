@@ -48,7 +48,7 @@ component.created = function () {
                 }
                 x.change_recent_day = symbol + x.change_recent_day.toFixed(2) + '%';
             });
-            self.tokenTableSource = self.tokenTable;
+            self.tokenTableSource = JSON.parse(JSON.stringify(self.tokenTable));
             if (app.isMobile()) {
                 this.sortTokenOnClick('change_recent_day');
             }
@@ -82,7 +82,7 @@ component.methods = {
                 return item.symbol.toUpperCase().includes(this.searchText.toUpperCase())
             })
         } else {
-            this.tokenTable = this.tokenTableSource;
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     },
     formatTime(time) {
@@ -99,12 +99,12 @@ component.methods = {
     },
 
     sortByDecrement(row) {
-        this.tokenTable.sort((a, b) => {
+        this.tokenTable = this.tokenTable.sort((a, b) => {
             return parseFloat(b[row]) - parseFloat(a[row])
         })
     },
     sortByIncrement(row) {
-        this.tokenTable.sort((a, b) => {
+        this.tokenTable = this.tokenTable.sort((a, b) => {
             return parseFloat(a[row]) - parseFloat(b[row])
         })
     },
@@ -116,7 +116,7 @@ component.methods = {
         } else if (this.sortControl.desc === 1) {
             this.sortByIncrement(row);
         } else {
-            this.tokenTable = this.tokenTableSource;
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     },
     toggleFav(token) {
@@ -144,7 +144,7 @@ component.methods = {
                 return this.favoriteObj[item.symbol]
             })
         } else {
-            this.tokenTable = this.tokenTableSource
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     },
     backTop() {

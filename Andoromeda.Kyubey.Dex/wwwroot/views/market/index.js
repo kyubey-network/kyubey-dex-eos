@@ -36,7 +36,7 @@ component.methods = {
                 return item.symbol.toUpperCase().includes(this.searchText.toUpperCase())
             })
         } else {
-            this.tokenTable = this.tokenTableSource;
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     },
     sortTokenOnClick(row) {
@@ -55,7 +55,7 @@ component.methods = {
                 return parseFloat(a[row]) - parseFloat(b[row])
             })
         } else {
-            this.tokenTable = this.tokenTableSource;
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     },
     focusMobileSearch() {
@@ -86,7 +86,7 @@ component.methods = {
                 return this.favoriteObj[item.symbol]
             })
         } else {
-            this.tokenTable = this.tokenTableSource
+            this.tokenTable = JSON.parse(JSON.stringify(this.tokenTableSource));
         }
     }
 }
@@ -118,7 +118,7 @@ component.created = function () {
                 }
                 x.change_recent_day = symbol + x.change_recent_day.toFixed(2) + '%';
             });
-            this.tokenTableSource = this.tokenTable;
+            this.tokenTableSource =  JSON.parse(JSON.stringify(this.tokenTable));
         }
     })
     window.addEventListener('scroll', x => {
