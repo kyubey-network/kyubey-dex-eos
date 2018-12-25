@@ -111,7 +111,7 @@
 }
 
 #tv_chart_container {
-    height: calc(100vh - 160px - 134px);
+    height: calc(100vh - 160px - 170px);
 }
 
 .exchange-table-data-left {
