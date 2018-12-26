@@ -2,12 +2,12 @@
     <div class="header" v-bind:class="{ 'shadow': onScroll != 0 }">
         <div class="market-header ">
             <table class="market-filter">
-                <tr v-show="mobile.mode === 'normal'">
+                <tr v-show="mobile.mode === 'normal'" @click="mobile.mode = 'search'; focusMobileSearch();">
                     <td>
                         <img src="/img/home-page/eos.png" />
                         EOS
                     </td>
-                    <td class="market-filter-search-cell" @click="mobile.mode = 'search'; focusMobileSearch();">
+                    <td class="market-filter-search-cell">
                         <i class="fa fa-search"></i>
                     </td>
                 </tr>

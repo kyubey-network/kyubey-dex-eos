@@ -17,35 +17,35 @@
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'home' }">
                         <img src="/img/home.active.svg" v-if="$root.mobile.nav === 'home'" />
                         <img src="/img/home.svg" v-if="$root.mobile.nav !== 'home'" />
-                        <div class="tab-item-text">首页</div>
+                        <div class="tab-item-text">{{$t('mobile_footer_home')}}</div>
                     </div>
                 </td>
                 <td @click="$root.redirect('/market')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'market' }">
                         <img src="/img/market.active.svg" v-if="$root.mobile.nav === 'market'" />
                         <img src="/img/market.svg" v-if="$root.mobile.nav !== 'market'" />
-                        <div class="tab-item-text">行情</div>
+                        <div class="tab-item-text">{{$t('mobile_footer_market')}}</div>
                     </div>
                 </td>
                 <td @click="$root.redirect('/order')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'order' }">
                         <img src="/img/order.active.svg" v-if="$root.mobile.nav === 'order'" />
                         <img src="/img/order.svg" v-if="$root.mobile.nav !== 'order'" />
-                        <div class="tab-item-text">订单</div>
+                        <div class="tab-item-text">{{$t('mobile_footer_order')}}</div>
                     </div>
                 </td>
                 <td @click="$root.redirect('/wallet')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'assets' }">
                         <img src="/img/assets.active.svg" v-if="$root.mobile.nav === 'assets'" />
                         <img src="/img/assets.svg" v-if="$root.mobile.nav !== 'assets'" />
-                        <div class="tab-item-text">资产</div>
+                        <div class="tab-item-text">{{$t('mobile_footer_asset')}}</div>
                     </div>
                 </td>
                 <td @click="$root.redirect('/home/more')">
                     <div class="tab-item" v-bind:class="{ 'active': $root.mobile.nav === 'more' }">
                         <img src="/img/more.active.svg" v-if="$root.mobile.nav === 'more'" />
                         <img src="/img/more.svg" v-if="$root.mobile.nav !== 'more'" />
-                        <div class="tab-item-text">更多</div>
+                        <div class="tab-item-text">{{$t('mobile_footer_more')}}</div>
                     </div>
                 </td>
             </tr>

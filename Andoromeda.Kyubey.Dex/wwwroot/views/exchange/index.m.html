@@ -39,7 +39,7 @@
                     <th v-bind:class="{ active: mobile.summaryActive === 'candlestick' }" @click="mobile.summaryActive = 'candlestick'"><i class="fa fa-bar-chart"></i> {{$t('K_line_chart')}}</th>
                     <th v-bind:class="{ active: mobile.summaryActive === 'order' }" @click="mobile.summaryActive = 'order'"><i class="fa fa-list-ul"></i> {{$t('orders')}}</th>
                     <th v-bind:class="{ active: mobile.summaryActive === 'history' }" @click="mobile.summaryActive = 'history'"><i class="fa fa-history"></i> {{$t('history')}}</th>
-                    <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> {{$t('token_introduction')}}</th>
+                    <th v-bind:class="{ active: mobile.summaryActive === 'description' }" @click="mobile.summaryActive = 'description'"><i class="fa fa-info-circle"></i> {{$t('mobile_token_introduction')}}</th>
                 </tr>
             </table>
 
@@ -91,11 +91,11 @@
                 <span v-bind:class="{ 'active': chart.interval === 5 }" @click="chart.interval = 5">{{$t('k_5m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 15 }" @click="chart.interval = 15">{{$t('k_15m')}}</span>
                 <span v-bind:class="{ 'active': chart.interval === 30 }" @click="chart.interval = 30">{{$t('k_30m')}}</span>
-                <span v-bind:class="{ 'active': chart.interval === 60 }" @click="chart.interval = 60">{{$t('k_1H')}}</span>
-                <span v-bind:class="{ 'active': chart.interval === 240 }" @click="chart.interval = 240">{{$t('k_4H')}}</span>
-                <span v-bind:class="{ 'active': chart.interval === 1440 }" @click="chart.interval = 1440">{{$t('k_1D')}}</span>
-                <span v-bind:class="{ 'active': chart.interval === 10080 }" @click="chart.interval = 10080">{{$t('k_1W')}}</span>
-                <span v-bind:class="{ 'active': chart.interval === 43200 }" @click="chart.interval = 43200">{{$t('k_1M')}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 60 }" @click="chart.interval = 60">{{$t('mobile_k_H',{n:1})}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 240 }" @click="chart.interval = 240">{{$t('mobile_k_H',{n:4})}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 1440 }" @click="chart.interval = 1440">{{$t('mobile_k_D',{n:1})}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 10080 }" @click="chart.interval = 10080">{{$t('mobile_k_W',{n:1})}}</span>
+                <span v-bind:class="{ 'active': chart.interval === 43200 }" @click="chart.interval = 43200">{{$t('mobile_k_M',{n:1})}}</span>
             </div>
             <div id="tv_chart_container"></div>
         </div>

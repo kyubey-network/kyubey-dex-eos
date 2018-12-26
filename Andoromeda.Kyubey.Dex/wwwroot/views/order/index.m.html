@@ -80,7 +80,7 @@
             </div>
         </tr>
         <template v-if="openOrders.length > 0">
-            <div v-if="pageIndex * pageSize < pageTotal" class="home-more-tokens" v-on:click="moreOrders">{{$t('load_more')}} &gt;</div>
+            <div v-if="pageIndex * pageSize < pageTotal" class="home-more-tokens" v-on:click="moreOrders">{{$t('more')}} &gt;</div>
             <div v-else class="no-more-notice">{{$t('to_bottom_notice')}}</div>
         </template>
         <tr v-if="openOrders.length === 0">
