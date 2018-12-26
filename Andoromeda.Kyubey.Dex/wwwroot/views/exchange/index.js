@@ -669,11 +669,12 @@ component.methods = {
         var self = this;
         const name = app.account ? app.account.name : null;
         this.favoriteListView = qv.createView(`/api/v1/lang/${app.lang}/user/${name}/favorite`, {});
+        this.favoriteListView.removeCache();
         this.favoriteListView.fetch(res => {
             if (res.code === 200) {
                 self.favoriteList = res.data || [];
                 self.favoriteList.forEach((item) => {
-                    self.favoriteObj[item.symbol] = item.favorite
+                    self.favoriteObj[item.symbol] = item.favorite;
                 });
             }
         });
