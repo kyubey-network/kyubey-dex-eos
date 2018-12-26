@@ -666,15 +666,15 @@ component.methods = {
         return moment(time + 'Z').format('MM-DD HH:mm:ss')
     },
     getFavoriteList() {
-        const name = app.account ? app.account.name : null
+        var self = this;
+        const name = app.account ? app.account.name : null;
         this.favoriteListView = qv.createView(`/api/v1/lang/${app.lang}/user/${name}/favorite`, {});
         this.favoriteListView.fetch(res => {
             if (res.code === 200) {
-                this.favoriteList = res.data || [];
-                favoriteList.forEach((item) => {
-                    favoriteObj[item.symbol] = item.favorite
-                })
-                this.favoriteObj = favoriteObj;
+                self.favoriteList = res.data || [];
+                self.favoriteList.forEach((item) => {
+                    self.favoriteObj[item.symbol] = item.favorite
+                });
             }
         });
     },
