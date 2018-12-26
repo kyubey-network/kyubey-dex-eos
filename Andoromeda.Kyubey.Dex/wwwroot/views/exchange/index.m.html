@@ -217,9 +217,9 @@
                     </div>
                 </div>
                 <div class="exchange-main-row">
-                    <div v-if="isSignedIn & buyAndSellStatus" @click="exchangeBuy" class="exchange-main-button green">{{$t('buy')}}</div>
-                    <div v-else-if="isSignedIn & !buyAndSellStatus" @click="exchangeSell" class="exchange-main-button red">{{$t('sell')}}</div>
-                    <div v-else @click="$root.login" type="button" class="exchange-main-button green">{{$t('sign_trade')}}</div>
+                    <button v-if="isSignedIn & buyAndSellStatus" @click="exchangeBuy" class="btn exchange-main-button green">{{$t('buy')}}</button>
+                    <button v-else-if="isSignedIn & !buyAndSellStatus" @click="exchangeSell" class="btn exchange-main-button red">{{$t('sell')}}</button>
+                    <button v-else @click="$root.login" type="button" class="exchange-main-button">{{$t('sign_trade')}}</button>
                 </div>
             </div>
             <div class="exchange-main-right">
@@ -264,7 +264,7 @@
                         <span :class="{'text-danger': x.type === 'sell', 'text-success': x.type === 'buy'}">{{x.type === 'sell' ? $t('sell'): $t('buy')}}</span>
                         <span class="exchange-main-current-item-token-pair">{{x.symbol}}/EOS</span>
                         <span class="exchange-main-current-item-date">{{formatTime(x.time)}}</span>
-                        <a class="exchange-main-current-item-cancel-button" v-on:click="exchangeCancel(x.symbol, x.type, x.id)">{{$t('cancel')}}</a>
+                        <button class="btn btn-primary btn-sm cancel-btn" v-on:click="exchangeCancel(x.symbol, x.type, x.id)">{{$t('cancel')}}</button>
                     </div>
                     <table class="exchange-main-delegate-detail-table">
                         <tr class="field">

@@ -450,17 +450,32 @@ exchange-description-icon-outer {
     text-align: center;
     font-size: 16px;
     line-height: 47px;
+    width: 100%;
+    background-color: #ffffff;
+    border-Radius: 0px;
 }
 
     .exchange-main-button.red {
         color: #c54a4a;
         border-color: #c54a4a;
     }
+        .exchange-main-button.red:hover {
+            background-color: #c54a4a !important;
+            border-color: #c54a4a !important;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(244, 141, 141, 0.5);
+        }
 
     .exchange-main-button.green {
         color: #59c54a;
         border-color: #59c54a;
     }
+        .exchange-main-button.green:hover {
+            background-color: #59c54a !important;
+            border-color: #59c54a !important;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(141, 244, 168, 0.5)
+        }
 
 .exchange-main-delegate-table {
     width: 100%;
@@ -590,4 +605,10 @@ exchange-description-icon-outer {
     text-align: center;
     font-size: 12px;
     cursor: pointer;
+}
+
+.cancel-btn {
+    float: right;
+    padding: 3px 15px;
+    font-size: 12px;
 }
