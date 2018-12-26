@@ -147,4 +147,5 @@ const zh_tw = {
     unfilled_amount: '未成交數量',
     unfilled_money: '未成交金額',
     deal_done: '已成交',
+    current_language: '繁体中文',
 };

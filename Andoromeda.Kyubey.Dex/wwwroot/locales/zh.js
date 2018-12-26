@@ -164,4 +164,5 @@ const zh = {
     history: '历史成交',
     scatter_sign_in: 'Scatter登录',
     turnover_24H: '24H成交额：',
+    current_language: '简体中文',
 };

@@ -74,6 +74,9 @@
     watch: {
     },
     methods: {
+        showMobileLanguageSelector() {
+            $('.language-selector').modal('show');
+        },
         isMobile: function () {
             return this._width < 768;
         },

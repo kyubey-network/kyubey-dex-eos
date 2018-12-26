@@ -148,4 +148,5 @@ const en = {
     unfilled_amount: 'Outstanding quantity',
     unfilled_money: 'Outstanding amount',
     deal_done: 'Has been to clinch a deal',
+    current_language: 'English',
 };

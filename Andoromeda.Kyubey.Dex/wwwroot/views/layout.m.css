@@ -77,9 +77,9 @@
     color: #ccc;
 }
 
-.tab-item img {
-    height: 22px;
-}
+    .tab-item img {
+        height: 22px;
+    }
 
 .tab-outer table {
     width: 100%;
@@ -99,4 +99,30 @@
     font-size: 12px;
     text-align: center;
     padding: 15px;
+}
+
+.language-selector.modal.fade .modal-dialog {
+    -webkit-transform: translate(0,25%);
+    -ms-transform: translate(0,25%);
+    -o-transform: translate(0,25%);
+    transform: translate(0,25%);
+}
+
+.language-selector .modal-dialog {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    top: unset;
+    z-index: 9999 !important;
+}
+
+    .language-selector .modal-dialog .modal-content {
+        border: 0;
+        text-align: center;
+    }
+
+.footer-language-selector {
+    width: 140px;
+    margin: 0 auto;
 }
