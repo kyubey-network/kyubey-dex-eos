@@ -45,52 +45,59 @@ namespace Andoromeda.Kyubey.Dex.Bot
 
             while (true)
             {
-                var matches = db.MatchReceipts.OrderByDescending(x => x.Time)
-                .Select(x => new
+                foreach(var pair in config.Pairs)
                 {
-                    unitPrice = x.UnitPrice
-                }).FirstOrDefault();
-                currentTime = System.DateTime.Now;
-                Console.WriteLine("{0}: Price: {1} EOS", currentTime.ToString("T"), matches.unitPrice.ToString("0.0000"));
-                Console.WriteLine("Buy！ ");
-                var z = await client.PushActionAsync("eosio.token", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", matches.unitPrice.ToString("0.0000") + " EOS", "1.0000 KBY" });
-                if (z.IsSucceeded == false)
-                {
-                    Console.WriteLine("Error:" + z.Error);
-                    try
+                    var matches = db.MatchReceipts
+                        .Where(x => x.TokenId == pair.Symbol)
+                        .OrderByDescending(x => x.Time)
+                        .Select(x => new
+                        {
+                            unitPrice = x.UnitPrice
+                        }).FirstOrDefault();
+                    currentTime = System.DateTime.Now;
+                    var price = Math.Min(matches.unitPrice, pair.Price);
+                    Console.WriteLine("{0}: Price: {1} EOS", currentTime.ToString("T"), price.ToString("0.0000"));
+                    Console.WriteLine("Buy！ ");
+                    var z = await client.PushActionAsync("eosio.token", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", matches.unitPrice.ToString("0.0000") + " EOS", "1.0000 KBY" });
+                    if (z.IsSucceeded == false)
                     {
-                        mailMessage.Subject = "BOT: 买入时出现错误";
-                        mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error: " + z.Error;
-                        sendEmails.Send(mailMessage);
-                        Console.Write("<Yes>Successful mail delivery");
+                        Console.WriteLine("Error:" + z.Error);
+                        try
+                        {
+                            mailMessage.Subject = "BOT: 买入时出现错误";
+                            mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error: " + z.Error;
+                            sendEmails.Send(mailMessage);
+                            Console.Write("<Yes>Successful mail delivery");
+                        }
+                        catch
+                        {
+                            Console.Write("<No>Mail Delivery Failed");
+                        }
                     }
-                    catch
+                    Console.WriteLine("Wait 2 seconds");
+                    await Task.Delay(1000 * 2);
+                    Console.WriteLine("Sell! ");
+                    var y = await client.PushActionAsync("dacincubator", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", "1.0000 KBY", price.ToString("0.0000") + " EOS" });
+                    if (y.IsSucceeded == false)
                     {
-                        Console.Write("<No>Mail Delivery Failed");
+                        try
+                        {
+                            Console.WriteLine("Error:" + y.Error);
+                            mailMessage.Subject = "BOT: 卖出时出现错误";
+                            mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error:" + y.Error;
+                            sendEmails.Send(mailMessage);
+                            Console.Write("<Yes>Successful mail delivery");
+                        }
+                        catch
+                        {
+                            Console.Write("<No>Mail Delivery Failed");
+                        }
+
                     }
-                }
-                Console.WriteLine("Wait 2 seconds");
-                await Task.Delay(1000 * 2);
-                Console.WriteLine("Sell! "); 
-                var y = await client.PushActionAsync("dacincubator", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", "1.0000 KBY", matches.unitPrice.ToString("0.0000") + " EOS" });
-                if (y.IsSucceeded == false)
-                {
-                    try
-                    {
-                        Console.WriteLine("Error:" + y.Error);
-                        mailMessage.Subject = "BOT: 卖出时出现错误";
-                        mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error:" + y.Error;
-                        sendEmails.Send(mailMessage);
-                        Console.Write("<Yes>Successful mail delivery");
-                    }
-                    catch
-                    {
-                        Console.Write("<No>Mail Delivery Failed");
-                    }
+                    Console.WriteLine("———— Wait 5 minutes————");
+                    await Task.Delay(1000 * 60 * 5);
 
                 }
-                Console.WriteLine("———— Wait 5 minutes————");
-                await Task.Delay(1000 * 60 * 5);
             }
         }
 
