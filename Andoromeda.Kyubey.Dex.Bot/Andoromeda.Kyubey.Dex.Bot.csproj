@@ -7,6 +7,11 @@
   
   <ItemGroup>
     <PackageReference Include="Andoromeda.CleosNet.Client" Version="1.0.0-*" />
+    <PackageReference Include="Andoromeda.Kyubey.Models" Version="1.0.0-*" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Andoromeda.Kyubey.Dex.Contract.TIP\Andoromeda.Kyubey.Dex.Contract.TIP.csproj" />
+  </ItemGroup>
+  
 </Project>
