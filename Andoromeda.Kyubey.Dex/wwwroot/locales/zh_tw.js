@@ -161,4 +161,7 @@ const zh_tw = {
     mobile_footer_more: '更多',
     sell_word: '賣',
     buy_word: '買',
+    limit_price: '限價',
+    free: '免費',
+    handling_fee: '手續費',
 };

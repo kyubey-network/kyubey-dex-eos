@@ -162,4 +162,7 @@ const en = {
     mobile_footer_more: 'More',
     sell_word: 'S',
     buy_word: 'B',
+    limit_price: 'Limit order',
+    free: 'Free',
+    handling_fee: 'Transaction fee',
 };
