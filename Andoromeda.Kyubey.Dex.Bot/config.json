@@ -1,9 +1,18 @@
 ﻿{
   "MySQL": "Server=mysql.kyubey.net;Port=3306;Database=kyubey-stage;Uid=kyubey_stage_user@andoromeda;Pwd=o3gztipqf41o53LX9DyYc6LbQoEcOEiSmziUzHRue09aGtbRaAfgg8aHGJ7Ha2f5",
-  "PrivateKey": "5J7BKBVGfFMf4rfkv4ppYkH5trhZiG9J9sEkxYHK8tKRuiVwSZW",
-  "TestAccount": "kyubeydextip",
+  "PrivateKey": "5KHUu5X5mgVAbygKemZ5J93ewyNKaN6or8aUjeUxYvxNHoX6PWp",
+  "TestAccount": "onemicrosoft",
   "ContractAccount": "kyubeydex.bp",
   "Pairs": [
-    { "Symbol": "KBY", "Contract": "dacincubator", "Price": "0.0004 EOS" }
+    {
+      "Symbol": "KBY",
+      "Contract": "dacincubator",
+      "Price": "0.0004"
+    },
+    {
+      "Symbol": "CMU",
+      "Contract": "dacincubator",
+      "Price": "0.0041"
+    }
   ]
 }

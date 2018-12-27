@@ -54,11 +54,11 @@ namespace Andoromeda.Kyubey.Dex.Bot
                         {
                             unitPrice = x.UnitPrice
                         }).FirstOrDefault();
-                    currentTime = System.DateTime.Now;
+                    currentTime = DateTime.Now;
                     var price = Math.Min(matches.unitPrice, pair.Price);
-                    Console.WriteLine("{0}: Price: {1} EOS", currentTime.ToString("T"), price.ToString("0.0000"));
+                    Console.WriteLine("[{2}] {0}: Price: {1} EOS", currentTime.ToString("T"), price.ToString("0.0000"), pair.Symbol);
                     Console.WriteLine("Buy！ ");
-                    var z = await client.PushActionAsync("eosio.token", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", matches.unitPrice.ToString("0.0000") + " EOS", "1.0000 KBY" });
+                    var z = await client.PushActionAsync("eosio.token", "transfer", config.TestAccount, "active", new object[] { config.TestAccount, "kyubeydex.bp", matches.unitPrice.ToString("0.0000") + " EOS", "1.0000 " + pair.Symbol });
                     if (z.IsSucceeded == false)
                     {
                         Console.WriteLine("Error:" + z.Error);
@@ -74,10 +74,10 @@ namespace Andoromeda.Kyubey.Dex.Bot
                             Console.Write("<No>Mail Delivery Failed");
                         }
                     }
-                    Console.WriteLine("Wait 2 seconds");
-                    await Task.Delay(1000 * 2);
+                    Console.WriteLine("Wait 0.5 seconds");
+                    await Task.Delay(500);
                     Console.WriteLine("Sell! ");
-                    var y = await client.PushActionAsync("dacincubator", "transfer", "kyubeydextip", "active", new object[] { "kyubeydextip", "kyubeydex.bp", "1.0000 KBY", price.ToString("0.0000") + " EOS" });
+                    var y = await client.PushActionAsync("dacincubator", "transfer", config.TestAccount, "active", new object[] { config.TestAccount, "kyubeydex.bp", "1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS" });
                     if (y.IsSucceeded == false)
                     {
                         try
@@ -94,9 +94,8 @@ namespace Andoromeda.Kyubey.Dex.Bot
                         }
 
                     }
-                    Console.WriteLine("———— Wait 5 minutes————");
-                    await Task.Delay(1000 * 60 * 5);
-
+                    Console.WriteLine("———— Wait 2 minutes————");
+                    await Task.Delay(1000 * 60 * 2);
                 }
             }
         }

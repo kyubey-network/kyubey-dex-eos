@@ -8,6 +8,8 @@ namespace Andoromeda.Kyubey.Dex.Bot
 
         public string PrivateKey { get; set; }
 
+        public string TestAccount { get; set; }
+
         public IEnumerable<Pair> Pairs { get; set; }
     }
 
