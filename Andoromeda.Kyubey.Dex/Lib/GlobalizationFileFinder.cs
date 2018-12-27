@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Andoromeda.Kyubey.Dex.Lib
@@ -110,8 +109,11 @@ namespace Andoromeda.Kyubey.Dex.Lib
 
         public static string GetFileId(string filePath)
         {
-            var regex = new Regex($".*(?={string.Join('|', new string[] { FileCultureFileSuffix.EN, FileCultureFileSuffix.JP, FileCultureFileSuffix.ZHCN, FileCultureFileSuffix.ZHTW })})");
-            return regex.Match(filePath).Value;
+            return Path.GetFileNameWithoutExtension(filePath)
+                         .TrimEnd(FileCultureFileSuffix.EN)
+                         .TrimEnd(FileCultureFileSuffix.JP)
+                         .TrimEnd(FileCultureFileSuffix.ZHCN)
+                         .TrimEnd(FileCultureFileSuffix.ZHTW);
         }
 
         public static string GetFilePathById(string filePath, string id, string cultureStr)
