@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
@@ -15,21 +16,22 @@ namespace Andoromeda.Kyubey.Dex.Bot
     class Program
     {
 
-        struct TradingNormal
+        struct TradingState
         {
             public bool Buy;
             public bool Sell;
-            public double price;
+            public double Price;
         }
 
         static CleosClient client;
-
         static Config config;
         static KyubeyContext db;
         static MailMessage mailMessage;
         static SmtpClient sendEmails;
+        static Dictionary<string, TradingState> states;
+        static Random random = new Random();
 
-        static async Task SelfBrokeredBotAsync()
+        static void InitializeOneBox()
         {
             config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
             var builder = new DbContextOptionsBuilder();
@@ -38,182 +40,159 @@ namespace Andoromeda.Kyubey.Dex.Bot
             client = new CleosClient();
             client.CreateWalletAsync("default", "/home/cleos-net/wallet/wallet.key").Wait();
             client.ImportPrivateKeyToWalletAsync(config.PrivateKey, "default").Wait();
-            var currentTime = System.DateTime.Now;
+        }
 
+        static double GetPrice(string symbol)
+        {
+            var token = db.Tokens.Single(x => x.Id == symbol);
+            var token2 = config.Pairs.Single(x => x.Symbol == symbol);
+            double matched = 99999999;
+            try 
+            {   
+                matched = db.MatchReceipts
+                    .Where(x => x.TokenId == symbol)
+                    .OrderByDescending(x => x.Time)
+                    .Select(x => x.UnitPrice)
+                    .FirstOrDefault();
+            }
+            catch 
+            { 
+            }
+            return Math.Min(Math.Min(Math.Min(token2.Price, token.WhaleExPrice ?? 99999999), token.NewDexAsk ?? 99999999), matched);
+        }
+
+        static async Task BuyAsync(string token, string eos, string account, int retryLeft = 3) 
+        { 
+            try
+            {
+
+                var result = await client.PushActionAsync(
+                        "eosio.token", "transfer", account, "active", new object[] {
+                        account, "kyubeydex.bp",
+                        eos,
+                        token });
+                if (!result.IsSucceeded)
+                {
+                    throw new Exception(result.Error);
+                }
+            }
+            catch 
+            {
+                if (retryLeft == 0)
+                {
+                    throw;
+                }
+                await BuyAsync(token, eos, account, --retryLeft);
+            }
+        }
+
+        static async Task SellAsync(string token, string eos, string contract, string account, int retryLeft = 3)
+        {
+            try
+            {
+
+                var result = await client.PushActionAsync(
+                        contract, "transfer", account, "active", new object[] {
+                        account, "kyubeydex.bp",
+                        token,
+                        eos });
+                if (!result.IsSucceeded)
+                {
+                    throw new Exception(result.Error);
+                }
+            }
+            catch
+            {
+                if (retryLeft == 0)
+                {
+                    throw;
+                }
+                await SellAsync(token, eos, contract, account, --retryLeft);
+            }
+        }
+
+        static async Task SelfBrokeredBotAsync()
+        {
+            InitializeOneBox();
             InitializeMailBox();
 
-            var pairsLength = 0;
-            foreach (var pair in config.Pairs)
-            {
-                pairsLength++;
-            }
-            TradingNormal[] TradingNormals = new TradingNormal[pairsLength];
-            for (int i = 0; i < pairsLength; i++ ){
-                TradingNormals[i].Buy = true;
-                TradingNormals[i].Sell = true;
-                TradingNormals[i].price = 0;
-            }
-
-            Console.WriteLine("Number of tokens: {0}", pairsLength);
+            Console.WriteLine("Total {0} tokens found in configuration file.", config.Pairs.Count());
             Console.WriteLine("—————————— GO ——————————");
             while (true)
             {
-
-                Random timeSeed = new Random();
-                var loopCounter = 0;
-
                 foreach (var pair in config.Pairs)
                 {
-
                     try 
                     {
-                        var matches = db.MatchReceipts
-                        .Where(x => x.TokenId == pair.Symbol)
-                        .OrderByDescending(x => x.Time)
-                        .Select(x => new
+                        double price = GetPrice(pair.Symbol);
+
+                        Console.WriteLine("[{2}] {0}: Price: {1} EOS", DateTime.Now.ToString("T"),
+                            price.ToString("0.0000"),
+                            pair.Symbol);
+
+                        var eosBalance = await client.GetCurrencyBalanceAsync("eosio.token", config.TestAccount, "EOS");
+                        if (eosBalance.Result.Amount < price)
                         {
-                            unitPrice = x.UnitPrice
-                        }).FirstOrDefault();
-                    
-                        currentTime = DateTime.Now;
-                        TradingNormals[loopCounter].price = Math.Min(matches.unitPrice, pair.Price);
+                            Console.WriteLine("EOS balance: {0}, Price = {1}, Cannot execute buy", eosBalance.Output, price);
+
+                            SendEmail("BOT: " + "时间: " + DateTime.Now.ToString("T") + "TokenID: " + pair.Symbol + "EOS 余额不足",
+                                String.Format("EOS balance: {0}, Price = {1}, Cannot execute buy", eosBalance.Output, price));
+
+                            continue;
+                        }
+
+                        Console.WriteLine("Buy！ ");
+                        await BuyAsync("1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS", config.TestAccount);
+
+                        Console.WriteLine("Wait 0.5 seconds");
+                        await Task.Delay(500);
+
+                        Console.WriteLine("Sell! ");
+                        await SellAsync("1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS", pair.Contract, config.TestAccount);
+
+                        var waitingTime = random.Next(1000 * 60 * 1, 1000 * 60 * 3);
+                        Console.WriteLine("———— Next run time: {0} ————", StringToDateTime(waitingTime));
+                        await Task.Delay(waitingTime);
+                    } 
+                    catch (Exception ex)
+                    {
+                        SendEmail("BOT: " + "时间: " + DateTime.Now.ToString("T") + "TokenID: " + pair.Symbol + "发生异常",
+                            ex.ToString());
                     }
-                    catch
-                    {
-                        Console.WriteLine("<No>MySql error, <Note> The price will use the previous result.");
-                        Mailox("BOT: " + "时间: " + currentTime.ToString("T") + "TokenID: " + pair.Symbol + " 读取数据库时出错",
-                            " MySql出错,<注意>EOS价格将采用上一次结果。");
-                    }
-                    Console.WriteLine("[{2}] {0}: Price: {1} EOS", currentTime.ToString("T"),
-                        TradingNormals[loopCounter].price.ToString("0.0000"),
-                        pair.Symbol);
-
-                    var eosBalance = await client.GetCurrencyBalanceAsync("eosio.token", config.TestAccount);
-                    Console.WriteLine("EOS balance: {0}",eosBalance.Output);
-                    Console.WriteLine("Buy！ ");
-                    var buyErrorCount = 0;
-                    do
-                    {
-                        var z = await client.PushActionAsync(
-                           "eosio.token", "transfer", config.TestAccount, "active", new object[] {
-                                config.TestAccount, "kyubeydex.bp", 
-                                TradingNormals[loopCounter].price.ToString("0.0000")  + " EOS",
-                                "1.0000 " + pair.Symbol });
-
-                        if (z.IsSucceeded == false)
-                        {
-                            buyErrorCount++;
-                            Console.WriteLine("Error:" + z.Error);
-                            if (buyErrorCount <= 3)
-                            {
-                                Console.WriteLine("Will try again after 1 seconds");
-                                await Task.Delay(1000);
-                            }
-                            else if (TradingNormals[loopCounter].Buy)
-                            {
-                                TradingNormals[loopCounter].Buy = Mailox("BOT: " + pair.Symbol + "买入时出现错误",
-                                    "时间: " + currentTime.ToString("T") + "错误内容 Error: " + z.Error);
-                            }
-                            else
-                            {
-                                Console.WriteLine("<No>Repeat error, stop mail");
-                            }
-                        }
-                        else
-                        {
-                            if (!TradingNormals[loopCounter].Buy)
-                            {
-                                Mailox("BOT: " + pair.Symbol + "买入功能恢复正常",
-                                    "恢复正常");
-                            }
-                            TradingNormals[loopCounter].Buy = true;
-                        }
-                    } while (buyErrorCount >0 && buyErrorCount <= 3);
-
-                    Console.WriteLine("Wait 0.5 seconds");
-                    await Task.Delay(500);
-
-                    Console.WriteLine("Sell! ");
-
-                    var sellErrorCount = 0;
-                    do
-                    {
-                        var y = await client.PushActionAsync(
-                            "dacincubator", "transfer", config.TestAccount, "active", new object[] { 
-                            config.TestAccount, "kyubeydex.bp", "1.0000 " + pair.Symbol,
-                            TradingNormals[loopCounter].price.ToString("0.0000") + " EOS" });
-
-                        if (y.IsSucceeded == false)
-                        {
-
-                            sellErrorCount++;
-                            Console.WriteLine("Error:" + y.Error);
-                            if (sellErrorCount <= 3)
-                            {
-                                Console.WriteLine("Will try again after 1 seconds");
-                                await Task.Delay(1000);
-                            }
-                            else if (TradingNormals[loopCounter].Sell)
-                            {
-                                TradingNormals[loopCounter].Sell = Mailox("BOT: " + pair.Symbol + "卖出时出现错误",
-                                    "时间: " + currentTime.ToString("T") + "错误内容 Error:" + y.Error);
-                            }
-                            else
-                            {
-                                Console.WriteLine("<No>Repeat error, stop mail");
-                            }
-
-                        }
-                        else
-                        {
-                            if (!TradingNormals[loopCounter].Sell)
-                            {
-                                Mailox("BOT: " + pair.Symbol + "卖出功能恢复正常",
-                                    "恢复正常");
-                            }
-                            TradingNormals[loopCounter].Sell = true;
-                        }
-                    } while (sellErrorCount > 0 && sellErrorCount <= 3);
-
-                    var waitingTime = timeSeed.Next(1000 * 60 * 1, 1000 * 60 * 3);
-                    Console.WriteLine("———— Next run time: {0} ————", StringToDateTime(waitingTime));
-                    await Task.Delay(waitingTime);
-                    loopCounter++;
                 }
             }
         }
+
         static void InitializeMailBox()
         {
-
-
             mailMessage = new MailMessage
             {
-                From = new MailAddress("littlesound@126.com")
+                From = new MailAddress(config.EmailAddress)
             };
-            mailMessage.To.Add(new MailAddress("t-littlesound@andoromeda.io"));
-            mailMessage.CC.Add("911574351@qq.com,little_sound@qq.com,amandatian@andoromeda.io,minakokojima@andoromeda.io,may.xu@andoromeda.io");
+            mailMessage.To.Add(new MailAddress(config.EmailAddress));
+            mailMessage.CC.Add(config.SendTo);
             sendEmails = new SmtpClient
             {
-                Host = "smtp.126.com",
+                Host = config.SmtpHost,
                 EnableSsl = true,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("littlesound@126.com", "cV2oUtwDGH")
+                Credentials = new NetworkCredential(config.EmailAddress, config.EmailPassword)
             };
         }
 
-        static bool Mailox(string Subject,string Body)
+        static bool SendEmail(string Subject,string Body)
         {
             try
             {
                     mailMessage.Subject = Subject;
                     mailMessage.Body = Body;
                     sendEmails.Send(mailMessage);
-                    Console.WriteLine("<Yes>Successful mail delivery");
+                    Console.WriteLine("Email has been sent successfully.");
                     return false;
             }
             catch
             {
-                Console.WriteLine("<No>Mail Delivery Failed");
+                Console.WriteLine("Email has been sent failed.");
                 return true;
             }
         }
@@ -230,7 +209,6 @@ namespace Andoromeda.Kyubey.Dex.Bot
             Console.WriteLine("Start");
             SelfBrokeredBotAsync().Wait();
             Console.WriteLine("End");
-            Console.ReadLine();
         }
 
     }

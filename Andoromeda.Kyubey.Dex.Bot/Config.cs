@@ -11,6 +11,14 @@ namespace Andoromeda.Kyubey.Dex.Bot
         public string TestAccount { get; set; }
 
         public IEnumerable<Pair> Pairs { get; set; }
+
+        public string EmailAddress { get; set; }
+
+        public string SmtpHost { get; set; }
+
+        public string EmailPassword { get; set; }
+
+        public string SendTo { get; set; }
     }
 
     public class Pair
