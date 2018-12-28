@@ -13,6 +13,11 @@
       "Symbol": "CMU",
       "Contract": "dacincubator",
       "Price": "0.0041"
+    },
+    {
+      "Symbol": "DICE",
+      "Contract": "betdicetoken",
+      "Price": "0.0038"
     }
   ],
   "EmailAddress": "littlesound@126.com",
