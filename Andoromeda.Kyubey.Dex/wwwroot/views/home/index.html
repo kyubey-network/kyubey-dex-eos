@@ -84,9 +84,9 @@
                         </td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">
                             <div class="hover-hidden">{{item.current_price}}</div>
-                            <div class="hover-display">{{item.current_price} (Kyubey DEX)</div>
-                            <div class="hover-display" v-if="item.newdex_price_ask">{{item.newdex_price_ask} (NewDex)</div>
-                            <div class="hover-display" v-if="item.whaleex_price">{{item.whaleex_price} (WhaleEx)</div>
+                            <div class="hover-display">Kyubey DEX: {{item.current_price}}</div>
+                            <div class="hover-display" v-if="item.newdex_price_ask">NewDex: {{item.newdex_price_ask}}</div>
+                            <div class="hover-display" v-if="item.whaleex_price">WhaleEx: {{item.whaleex_price}}</div>
                         </td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>
