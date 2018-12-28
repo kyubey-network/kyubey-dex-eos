@@ -45,7 +45,7 @@
                             <span>{{$t('optional')}}</span>
                         </th>
                         <th class="text-left" scope="col">{{$t('trading_pair')}}</th>
-                        <th scope="col">{{$t('latest_price')}}</th>
+                        <th scope="col" style="width:20%">{{$t('latest_price')}}</th>
                         <th scope="col" class="d-flex align-items-center justify-content-end">
                             <span @click="sortTokenOnClick('change_recent_day')" style="cursor:pointer">{{$t('ups_downs_24H')}}</span>
                             <div class="d-flex flex-column align-items-center ml-1">
@@ -85,8 +85,8 @@
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">
                             <div class="hover-hidden">{{item.current_price}}</div>
                             <div class="hover-display">Kyubey DEX: {{item.current_price}}</div>
-                            <div class="hover-display" v-if="item.newdex_price_ask">NewDex: {{item.newdex_price_ask}}</div>
-                            <div class="hover-display" v-if="item.whaleex_price">WhaleEx: {{item.whaleex_price}}</div>
+                            <div class="hover-display" v-if="item.newdex_price_ask">NewDex: {{parseFloat(item.newdex_price_ask).toFixed(8)}}</div>
+                            <div class="hover-display" v-if="item.whaleex_price">WhaleEx: {{parseFloat(item.whaleex_price).toFixed(8)}}</div>
                         </td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>
