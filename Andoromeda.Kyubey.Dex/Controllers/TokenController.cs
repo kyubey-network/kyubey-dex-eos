@@ -51,7 +51,10 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 min_price_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.MinPrice ?? 0,
                 symbol = x.Id,
                 volume_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.Volume ?? 0,
-                priority = x.Priority
+                priority = x.Priority,
+                newdex_price_ask = x.NewDexAsk,
+                newdex_price_bid = x.NewDexBid,
+                whaleex_price = x.WhaleExPrice
             });
 
             return ApiResult(responseData);

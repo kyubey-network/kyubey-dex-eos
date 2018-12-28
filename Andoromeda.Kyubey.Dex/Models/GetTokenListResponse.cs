@@ -16,5 +16,8 @@ namespace Andoromeda.Kyubey.Dex.Models
         public bool is_recommend { get; set; }
         public string icon_src { get; set; }
         public int priority { get; set; }
+        public double? newdex_price_ask { get; set; }
+        public double? newdex_price_bid { get; set; }
+        public double? whaleex_price { get; set; }
     }
 }
