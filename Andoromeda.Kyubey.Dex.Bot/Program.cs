@@ -12,8 +12,16 @@ using System.Net;
 
 namespace Andoromeda.Kyubey.Dex.Bot
 {
+
     class Program
     {
+
+        struct normal
+        {
+            public bool Buy;
+            public bool Sell;
+        }
+
         static CleosClient client;
 
         static Config config;
@@ -41,11 +49,23 @@ namespace Andoromeda.Kyubey.Dex.Bot
             sendEmails.UseDefaultCredentials = false;
             sendEmails.Credentials = new NetworkCredential("littlesound@126.com", "cV2oUtwDGH");
 
-            Console.WriteLine("———————— GO ————————");
+            var pairsLength = 0;
+            foreach (var pair in config.Pairs)
+            {
+                pairsLength++;
+            }
+            normal[] normals = new normal[pairsLength];
+            for (int i = 0; i < pairsLength; i++ ){
+                normals[i].Buy = true;
+                normals[i].Sell = true;
+            }
 
+            Console.WriteLine("pairsLength:{0}", pairsLength);
+            Console.WriteLine("———————— GO ————————");
             while (true)
             {
-                foreach(var pair in config.Pairs)
+                var loopCounter = 0;
+                foreach (var pair in config.Pairs)
                 {
                     var matches = db.MatchReceipts
                         .Where(x => x.TokenId == pair.Symbol)
@@ -64,15 +84,39 @@ namespace Andoromeda.Kyubey.Dex.Bot
                         Console.WriteLine("Error:" + z.Error);
                         try
                         {
-                            mailMessage.Subject = "BOT: 买入时出现错误";
-                            mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error: " + z.Error;
-                            sendEmails.Send(mailMessage);
-                            Console.Write("<Yes>Successful mail delivery");
+                            if (normals[loopCounter].Buy)
+                            {
+                                mailMessage.Subject = "BOT: " + pair.Symbol + "买入时出现错误";
+                                mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error: " + z.Error;
+                                sendEmails.Send(mailMessage);
+                                Console.WriteLine("<Yes>Successful mail delivery");
+                            }
+                            else
+                            {
+                                Console.WriteLine("<No>Repeat error, stop mail");
+                            }
                         }
                         catch
                         {
-                            Console.Write("<No>Mail Delivery Failed");
+                            Console.WriteLine("<No>Mail Delivery Failed");
                         }
+                    }
+                    else
+                    {
+                        if (!normals[loopCounter].Buy)
+                        {
+                            try
+                            {
+                                mailMessage.Subject = "BOT: " + pair.Symbol + "买入功能恢复正常";
+                                mailMessage.Body = "恢复正常";
+                                sendEmails.Send(mailMessage);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("<No>Mail Delivery Failed");
+                            }
+                        }
+                        normals[loopCounter].Buy = true;
                     }
                     Console.WriteLine("Wait 0.5 seconds");
                     await Task.Delay(500);
@@ -80,22 +124,48 @@ namespace Andoromeda.Kyubey.Dex.Bot
                     var y = await client.PushActionAsync("dacincubator", "transfer", config.TestAccount, "active", new object[] { config.TestAccount, "kyubeydex.bp", "1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS" });
                     if (y.IsSucceeded == false)
                     {
+
+                        Console.WriteLine("Error:" + y.Error);
                         try
                         {
-                            Console.WriteLine("Error:" + y.Error);
-                            mailMessage.Subject = "BOT: 卖出时出现错误";
-                            mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error:" + y.Error;
-                            sendEmails.Send(mailMessage);
-                            Console.Write("<Yes>Successful mail delivery");
+                            if (normals[loopCounter].Sell)
+                            {
+                                mailMessage.Subject = "BOT: " + pair.Symbol + "卖出时出现错误";
+                                mailMessage.Body = "时间: " + currentTime.ToString("T") + "错误内容 Error:" + y.Error;
+                                sendEmails.Send(mailMessage);
+                                Console.WriteLine("<Yes>Successful mail delivery");
+                            }
+                            else
+                            {
+                                Console.WriteLine("<No>Repeat error, stop mail");
+                            }
                         }
                         catch
                         {
-                            Console.Write("<No>Mail Delivery Failed");
+                            Console.WriteLine("<No>Mail Delivery Failed");
                         }
 
                     }
+                    else
+                    {
+                        if (!normals[loopCounter].Sell)
+                        {
+                            try
+                            {
+                                mailMessage.Subject = "BOT: " + pair.Symbol + "卖出功能恢复正常";
+                                mailMessage.Body = "恢复正常";
+                                sendEmails.Send(mailMessage);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("<No>Mail Delivery Failed");
+                            }
+                        }
+                        normals[loopCounter].Sell = true;
+                    }
                     Console.WriteLine("———— Wait 2 minutes————");
                     await Task.Delay(1000 * 60 * 2);
+                    loopCounter++;
                 }
             }
         }
