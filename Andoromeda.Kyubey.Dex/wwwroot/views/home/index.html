@@ -73,7 +73,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center" style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
+                    <tr class="text-center token-row" style="cursor: pointer;" v-for="(item, index) in tokenTable.slice(0,10)" :key="index"
                         @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
                         <td class="text-center" scope="row" v-if="isSignedIn">
                             <i class="my-star" :class="{'my-star-active': favoriteObj[item.symbol]}" @click.stop="toggleFav(item.symbol)"></i>
@@ -82,7 +82,12 @@
                             <img :src="item.icon_src" style="width: 30px;">
                             <span>{{item.symbol}}/EOS</span>
                         </td>
-                        <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.current_price}}</td>
+                        <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">
+                            <div class="hover-hidden">{{item.current_price}}</div>
+                            <div class="hover-display">{{item.current_price} (Kyubey DEX)</div>
+                            <div class="hover-display" v-if="item.newdex_price_ask">{{item.newdex_price_ask} (NewDex)</div>
+                            <div class="hover-display" v-if="item.whaleex_price">{{item.whaleex_price} (WhaleEx)</div>
+                        </td>
                         <td v-bind:class="{ 'text-success': item.up , 'text-danger': item.down  }">{{item.change_recent_day}}</td>
                         <td>{{item.max_price_recent_day}}</td>
                         <td>{{item.min_price_recent_day}}</td>
