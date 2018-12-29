@@ -117,14 +117,32 @@ shadow {
 
 .market-filter-search-cell, .market-filter-close-cell {
     width: 16px;
+    font: normal normal normal 14px/1 FontAwesome;
 }
 
-.market-search-textbox {
-    width: 100%;
-    border: none;
-    outline: none;
-    padding: 5px;
+.favorites-button {
+    display: inline-block;
+    content: "\f006";
+    margin-left: 15px;
+    margin-right: 5px;
+    font: normal normal normal 18px FontAwesome;
 }
+    .favorites-button::before {
+        content: "\f006";
+    }
+
+
+    .favorites-button-active::before {
+        content: "\f005";
+        color: #FFDC00;
+    }
+
+    .market-search-textbox {
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 5px;
+    }
 
 .market-search-result {
     padding: 15px;
@@ -158,6 +176,9 @@ shadow {
 .result-list-search {
     padding-top: 44px;
 }
+.result-list-favorites {
+    padding-top: 35px;
+}
 
 .my-star {
     display: inline-block;
@@ -174,3 +195,18 @@ shadow {
     content: "\f005";
     color: #FFDC00;
 }
+.collection-is-empty {
+    font-size: 12px;
+    background-color: #f8f8f8;
+    text-align: center;
+    padding-top: 60%;
+    padding-bottom: 30%;
+}
+
+    .collection-is-empty button {
+        font-size: 12px;
+        padding-left: 75px;
+        padding-right: 75px;
+        background: #3691E4;
+        color: #FFFFFF;
+    }

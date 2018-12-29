@@ -164,4 +164,6 @@ const zh_tw = {
     limit_price: '限價',
     free: '免費',
     handling_fee: '手續費',
+    ok: '好的',
+    favorites_slogan: "快去添加你感興趣的交易對吧"
 };

@@ -165,4 +165,6 @@ const en = {
     limit_price: 'Limit order',
     free: 'Free',
     handling_fee: 'Transaction fee',
+    ok: 'Ok',
+    favorites_slogan: "Go ahead and add deals you're interested in, right"
 };

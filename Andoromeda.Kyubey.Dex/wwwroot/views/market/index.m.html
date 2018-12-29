@@ -2,13 +2,21 @@
     <div class="header" v-bind:class="{ 'shadow': onScroll != 0 }">
         <div class="market-header ">
             <table class="market-filter">
-                <tr v-show="mobile.mode === 'normal'" @click="mobile.mode = 'search'; focusMobileSearch();">
+                <tr v-show="mobile.mode === 'normal'">
                     <td>
                         <img src="/img/home-page/eos.png" />
-                        EOS
+                        <span v-if="control.fav">
+                            {{$t('optional')}}
+                        </span>
+                        <span v-else>
+                            EOS
+                        </span>
                     </td>
-                    <td class="market-filter-search-cell">
+                    <td v-if="!control.fav" @click="mobile.mode = 'search'; focusMobileSearch();" class="market-filter-search-cell">
                         <i class="fa fa-search"></i>
+                    </td>
+                    <td scope="col" v-if="isSignedIn" @click="filterFav" style="cursor: pointer;" class="market-filter-search-cell">
+                        <i class="favorites-button fa" :class="{'favorites-button-active': control.fav}"></i>
                     </td>
                 </tr>
                 <tr v-show="mobile.mode !== 'normal'">
@@ -21,7 +29,7 @@
             </table>
         </div>
 
-        <div class="market-token-list" v-show="mobile.mode === 'normal'">
+        <div class="market-token-list" v-show="mobile.mode === 'normal' && !control.fav">
             <table class="market-token-header">
                 <tr>
                     <td>{{$t('trading_pair')}}</td>
@@ -53,7 +61,16 @@
         </div>
     </div>
 
-    <div class="market-token-list" v-bind:class="{ 'result-list': mobile.mode === 'normal' , 'result-list-search': mobile.mode !== 'normal' }">
+
+    
+
+    <div class="market-token-list" v-bind:class="{ 'result-list': mobile.mode === 'normal' , 'result-list-search': mobile.mode !== 'normal' , 'result-list-favorites': control.fav }">
+        
+        <div v-if="tokenTable.length === 0 && control.fav" class="collection-is-empty">
+            <p>{{$t('favorites_slogan')}}</p>
+            <button @click="filterFav" class="btn">{{$t('ok')}}</button>
+        </div>
+
         <table class="market-token-table">
             <tr v-for="(item, index) in tokenTable" :key="index"
                 @click="$root.redirect('/exchange/:id', '/exchange/' + item.symbol, { id: item.symbol }, {})">
@@ -69,7 +86,7 @@
                     <div v-bind:class="{ 'token-change green': item.up , 'token-change red': item.down , 'token-change gray':!item.down&!item.up }">{{item.change_recent_day}}</div>
                 </td>
             </tr>
-            <tr v-if="tokenTable.length === 0">
+            <tr v-if="tokenTable.length === 0 && !control.fav">
                 <td>
                     {{$t('no_result')}}
                 </td>
