@@ -33,6 +33,9 @@
     line-height: 26px;
     color: #888;
     margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .home-announcement-outer img {
