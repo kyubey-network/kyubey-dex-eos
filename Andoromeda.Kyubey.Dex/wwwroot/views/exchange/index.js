@@ -273,23 +273,36 @@ component.methods = {
         var buyAmount = parseFloat(parseFloat(this.inputs.buyAmount).toFixed(4));
         var buyTotal = parseFloat(parseFloat(this.inputs.buyTotal).toFixed(4));
 
-        if ((this.control.trade === 'limit' && (buyTotal <= 0 || buyPrice <= 0 || buyAmount <= 0))
-            || (this.control.trade === 'market' && buyTotal <= 0)) {
-            app.notification("error", $t('tip_correct_count'));
-            return;
-        }
-        if (buyTotal > this.eosBalance) {
-            app.notification("error", $t('tip_balance_not_enough'));
-            return;
-        }
+        //limit exchange input validate
+        if (this.control.trade === 'limit') {
+            if (buyTotal <= 0 || buyPrice <= 0 || buyAmount <= 0) {
+                app.notification("error", $t('tip_correct_count'));
+                return;
+            }
+            if (buyTotal > this.eosBalance) {
+                app.notification("error", $t('tip_balance_not_enough'));
+                return;
+            }
 
-        var availableObj = this.getExchangeAvailableValues(buyPrice, buyAmount);
-        buyAmount = availableObj.availableAmount;
-        buyTotal = parseFloat(parseFloat(parseInt((buyTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
+            var availableObj = this.getExchangeAvailableValues(buyPrice, buyAmount);
+            buyAmount = availableObj.availableAmount;
+            buyTotal = parseFloat(parseFloat(parseInt((buyTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
 
-        if (buyAmount == 0 || buyTotal == 0) {
-            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }), "error");
-            return;
+            if (buyAmount == 0 || buyTotal == 0) {
+                showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero', { price: buyPrice + "EOS", min_count: availableObj.min_count + buySymbol }), "error");
+                return;
+            }
+        }
+        //market exchange input validate
+        else if (this.control.trade === 'market') {
+            if (buyTotal <= 0) {
+                app.notification("error", $t('tip_correct_count'));
+                return;
+            }
+            if (buyTotal > this.eosBalance) {
+                app.notification("error", $t('tip_balance_not_enough'));
+                return;
+            }
         }
 
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
@@ -324,7 +337,7 @@ component.methods = {
                 ]);
         }
         else if (this.control.trade === 'market') {
-            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyTotal, "eosio.token", "EOS", 4, app.uuid, `market`);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", buyTotal, "eosio.token", "EOS", 4, app.uuid, `0.0000 ${this.tokenId}`);
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
                     {
@@ -369,7 +382,7 @@ component.methods = {
                         account.name,
                         'kyubeydex.bp',
                         parseFloat(buyTotal).toFixed(4) + ' EOS',
-                        'market',
+                        `0.0000 ${this.tokenId}`,
                         {
                             authorization: [`${account.name}@${account.authority}`]
                         });
@@ -402,23 +415,36 @@ component.methods = {
         var sellAmount = parseFloat(parseFloat(this.inputs.sellAmount).toFixed(4));
         var sellTotal = parseFloat(parseFloat(this.inputs.sellTotal).toFixed(4));
 
-        if ((this.control.trade === 'limit' && (sellAmount <= 0 || sellPrice <= 0 || sellTotal <= 0))
-            || (this.control.trade === 'market' && sellAmount <= 0)) {
-            app.notification("error", $t('tip_correct_count'));
-            return;
-        }
-        if (sellAmount > this.tokenBalance) {
-            app.notification("error", $t('tip_balance_not_enough'));
-            return;
-        }
+        //limit exchange input validate
+        if (this.control.trade === 'limit') {
+            if (sellAmount <= 0 || sellPrice <= 0 || sellTotal <= 0) {
+                app.notification("error", $t('tip_correct_count'));
+                return;
+            }
+            if (sellAmount > this.tokenBalance) {
+                app.notification("error", $t('tip_balance_not_enough'));
+                return;
+            }
 
-        var availableObj = this.getExchangeAvailableValues(sellPrice, sellAmount);
-        sellAmount = availableObj.availableAmount;
-        sellTotal = parseFloat(parseFloat(parseInt((sellTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
+            var availableObj = this.getExchangeAvailableValues(sellPrice, sellAmount);
+            sellAmount = availableObj.availableAmount;
+            sellTotal = parseFloat(parseFloat(parseInt((sellTotal / availableObj.min_total).toFixed(0)) * availableObj.min_total).toFixed(4));
 
-        if (sellAmount == 0 || sellTotal == 0) {
-            showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero2', { price: sellPrice, min_count: availableObj.min_count + sellSymbol }), "error");
-            return;
+            if (sellAmount == 0 || sellTotal == 0) {
+                showModal($t('delegate_failed'), $t('tip_exchange_adjuct_zero2', { price: sellPrice, min_count: availableObj.min_count + sellSymbol }), "error");
+                return;
+            }
+        }
+        //market exchange input validate
+        else if (this.control.trade === 'market') {
+            if (sellTotal <= 0) {
+                app.notification("error", $t('tip_correct_count'));
+                return;
+            }
+            if (sellTotal > this.tokenBalance) {
+                app.notification("error", $t('tip_balance_not_enough'));
+                return;
+            }
         }
 
         if (app.loginMode === 'Scatter Addons' || app.loginMode === 'Scatter Desktop') {
@@ -452,8 +478,7 @@ component.methods = {
                 ]);
         }
         else if (this.control.trade === 'market') {
-
-            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellAmount, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `market`);
+            var reqObj = this._getExchangeRequestObj(app.account.name, "kyubeydex.bp", sellTotal, this.baseInfo.contract.transfer, sellSymbol, 4, app.uuid, `0.0000 EOS`);
 
             app.startQRCodeExchange($t('exchange_tip'), JSON.stringify(reqObj),
                 [
@@ -462,7 +487,7 @@ component.methods = {
                         text: `${$t('exchange_sell')} ${sellSymbol}`
                     },
                     {
-                        text: `${$t('exchange_total')}: ${parseFloat(sellTotal).toFixed(4)} EOS`
+                        text: `${$t('exchange_total')}: ${parseFloat(sellTotal).toFixed(4)} ${this.tokenId}`
                     }
                 ]);
         }
@@ -499,8 +524,8 @@ component.methods = {
                     return contract.transfer(
                         account.name,
                         'kyubeydex.bp',
-                        sellAmount.toFixed(4) + ' ' + sellSymbol,
-                        'market',
+                        sellTotal.toFixed(4) + ' ' + sellSymbol,
+                        `0.0000 EOS`,
                         {
                             authorization: [`${account.name}@${account.authority}`]
                         });
