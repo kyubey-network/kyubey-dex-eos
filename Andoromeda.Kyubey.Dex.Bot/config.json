@@ -1,5 +1,5 @@
 ﻿{
-  "MySQL": "Server=mysql.kyubey.net;Port=3306;Database=kyubey-stage;Uid=kyubey_stage_user@andoromeda;Pwd=o3gztipqf41o53LX9DyYc6LbQoEcOEiSmziUzHRue09aGtbRaAfgg8aHGJ7Ha2f5",
+  "MySQL": "Server=kyubeydb.mysql.database.azure.com;Port=3306;Database=dex_stage;Uid=stage@kyubeydb;Pwd=oPp53gICftWv2I7m",
   "PrivateKey": "5KHUu5X5mgVAbygKemZ5J93ewyNKaN6or8aUjeUxYvxNHoX6PWp",
   "TestAccount": "onemicrosoft",
   "ContractAccount": "kyubeydex.bp",
