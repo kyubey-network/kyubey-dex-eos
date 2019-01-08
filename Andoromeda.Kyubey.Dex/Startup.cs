@@ -1,3 +1,4 @@
+using Andoromeda.Kyubey.Dex.Extensions;
 using Andoromeda.Kyubey.Dex.Hubs;
 using Andoromeda.Kyubey.Dex.Middlewares;
 using Andoromeda.Kyubey.Models;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+
 using System;
 
 namespace Andoromeda.Kyubey.Dex
@@ -18,7 +20,7 @@ namespace Andoromeda.Kyubey.Dex
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddConfiguration(out var config, "appsettings");
+            services.AddConfiguration2(out var config, "appsettings");
 
 
 
