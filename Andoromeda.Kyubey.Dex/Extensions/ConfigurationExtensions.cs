@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +34,7 @@ namespace Andoromeda.Kyubey.Dex.Extensions
                 .AddJsonFile($"{fileName}.json")
                 .AddJsonFile($"{fileName}.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+                
             var configuration = builder.Build();
             self.AddSingleton<IConfiguration>(configuration);
 
