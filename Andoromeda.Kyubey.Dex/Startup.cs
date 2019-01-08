@@ -3,10 +3,13 @@ using Andoromeda.Kyubey.Dex.Middlewares;
 using Andoromeda.Kyubey.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 
 namespace Andoromeda.Kyubey.Dex
 {
@@ -16,6 +19,13 @@ namespace Andoromeda.Kyubey.Dex
         {
             services.AddMvc();
             services.AddConfiguration(out var config, "appsettings");
+
+
+
+            //Console.WriteLine(JsonConvert.SerializeObject(config));
+            return;
+
+
             services.AddDbContext<KyubeyContext>(x => x.UseMySql(config["MySql"]));
             services.AddSwaggerGen(x =>
             {
@@ -51,10 +61,15 @@ namespace Andoromeda.Kyubey.Dex
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IConfiguration configuration)
         {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(configuration));
+            });
+            return;
             app.UseCors("Kyubey");
             app.UseErrorHandlingMiddleware();
             app.DexStaticFiles(env, configuration);
-            
+
             app.UseSignalR(x =>
             {
                 x.MapHub<SimpleWalletHub>("/signalr/simplewallet");
