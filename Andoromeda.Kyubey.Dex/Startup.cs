@@ -63,7 +63,7 @@ namespace Andoromeda.Kyubey.Dex
         {
             app.Run(async context =>
             {
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(configuration));
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(configuration["MySql"]));
             });
             return;
             app.UseCors("Kyubey");
