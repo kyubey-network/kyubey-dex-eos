@@ -292,3 +292,7 @@ __pycache__/
 /src/Pomelo.Booster.Client.Swagger/Views/Test.xaml.cs
 
 */GitHubRepositories
+
+Andoromeda\.Kyubey\.Dex/appsettings\.json
+
+Andoromeda\.Kyubey\.Dex\.Bot/config\.json
