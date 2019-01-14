@@ -10,7 +10,7 @@ namespace Andoromeda.Kyubey.Dex.Bot
 
         public string TestAccount { get; set; }
 
-        public IEnumerable<Pair> Pairs { get; set; }
+        public IList<Pair> Pairs { get; set; }
 
         public string EmailAddress { get; set; }
 

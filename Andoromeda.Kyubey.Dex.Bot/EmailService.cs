@@ -30,7 +30,8 @@ namespace Andoromeda.Kyubey.Dex.Bot
             try
             {
                 mailMessage.To.Add(toAddress);
-                mailMessage.CC.Add(ccAddress);
+                if (!string.IsNullOrWhiteSpace(ccAddress))
+                    mailMessage.CC.Add(ccAddress);
 
                 mailMessage.Subject = subject;
                 mailMessage.Body = body;
@@ -38,7 +39,7 @@ namespace Andoromeda.Kyubey.Dex.Bot
                 Console.WriteLine("Email has been sent successfully.");
                 return false;
             }
-            catch
+            catch (Exception e)
             {
                 Console.WriteLine("Email has been sent failed.");
                 return true;

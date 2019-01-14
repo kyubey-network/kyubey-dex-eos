@@ -8,6 +8,7 @@
   
   <ItemGroup>
     <PackageReference Include="Andoromeda.CleosNet.Client" Version="*" />
+    <PackageReference Include="Andoromeda.Framework.EosNode" Version="*" />
     <PackageReference Include="Andoromeda.Kyubey.Models" Version="*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.1.1" />
   </ItemGroup>

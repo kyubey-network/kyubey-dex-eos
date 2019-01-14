@@ -1,4 +1,5 @@
 ﻿using Andoromeda.CleosNet.Client;
+using Andoromeda.Framework.EosNode;
 using Andoromeda.Kyubey.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,8 @@ namespace Andoromeda.Kyubey.Dex.Bot
         static Config configObject;
         static KyubeyContext dbContext;
         static Random random = new Random();
+        const decimal MaxEOSExchangeTotal = 0.02m;
+        static NodeApiInvoker nodeAPI = new NodeApiInvoker(new DefaultNodeProvider());
 
         static async Task Main(string[] args)
         {
@@ -37,18 +40,22 @@ namespace Andoromeda.Kyubey.Dex.Bot
             Console.WriteLine("—————————— GO ——————————");
             while (true)
             {
-                foreach (var pair in configObject.Pairs)
+                //foreach (var pair in configObject.Pairs)
                 {
+                    var randomPairIndex = random.Next(configObject.Pairs.Count());
+                    var pair = configObject.Pairs[randomPairIndex];
                     try
                     {
-                        double price = await GetPriceAsync(pair.Symbol);
+                        decimal price = (decimal)await GetPriceAsync(pair.Symbol);
 
                         Console.WriteLine("[{2}] {0}: Price: {1} EOS", DateTime.Now.ToString("T"),
-                            price.ToString("0.0000"),
+                            price.ToString("0.00000000"),
                             pair.Symbol);
 
                         var eosBalance = await client.GetCurrencyBalanceAsync("eosio.token", configObject.TestAccount, "EOS");
-                        if (eosBalance.Result.Amount < price)
+                        var tokenBalance = await nodeAPI.GetCurrencyBalanceAsync(configObject.TestAccount, pair.Contract, pair.Symbol);
+
+                        if ((decimal)eosBalance.Result.Amount < price)
                         {
                             Console.WriteLine("EOS balance: {0}, Price = {1}, Cannot execute buy", eosBalance.Output, price);
 
@@ -57,18 +64,21 @@ namespace Andoromeda.Kyubey.Dex.Bot
                                                                 configObject.EmailAddress,
                                                                 configObject.SendTo
                                                                );
-
                             continue;
                         }
 
-                        Console.WriteLine("Buy！ ");
-                        await BuyAsync("1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS", configObject.TestAccount, "owner");
-
-                        Console.WriteLine("Wait 0.5 seconds");
-                        await Task.Delay(500);
+                        var amount = BotMath.GetEffectiveRandomAmount(ref price, MaxEOSExchangeTotal, (decimal)tokenBalance, pair.Symbol);
 
                         Console.WriteLine("Sell! ");
-                        await SellAsync("1.0000 " + pair.Symbol, price.ToString("0.0000") + " EOS", pair.Contract, configObject.TestAccount, "owner");
+                        await AutoSellAsync(pair.Symbol, amount, price, pair.Contract);
+                        Console.WriteLine($"Sell {amount} {pair.Symbol},total {price * amount} EOS");
+
+                        Console.WriteLine("Wait 0.2 seconds");
+                        await Task.Delay(200);
+
+                        Console.WriteLine("Buy！ ");
+                        await AutoBuyAsync(pair.Symbol, amount, price);
+                        Console.WriteLine($"Buy {amount} {pair.Symbol},total {price * amount} EOS");
 
                         var waitingTime = random.Next(1000 * 60 * 1, 1000 * 60 * 3);
                         Console.WriteLine("———— Next run time: {0} ————", MillisecondsSpanToDateTimeString(waitingTime));
@@ -101,7 +111,7 @@ namespace Andoromeda.Kyubey.Dex.Bot
             dbContext = new KyubeyContext(optionsBuilder.Options);
 
             client = new CleosClient();
-            await client.CreateWalletAsync("default", "/home/cleos-net/wallet/wallet.key");
+            var createResult = await client.CreateWalletAsync("default", "/home/cleos-net/wallet/wallet.key");
             var privateKey = SecurityTool.Decrypt(config["EncryptText"], config["EncryptKey"]);
             //manual unlock
             //var unlockResult = await client.UnlockWalletAsync(SecurityTool.Decrypt(config["EncryptWalletKey"], config["EncryptKey"]));
@@ -124,17 +134,38 @@ namespace Andoromeda.Kyubey.Dex.Bot
             catch
             {
             }
-            return Math.Min(Math.Min(Math.Min(configToken.MaxPrice, dbToken.WhaleExPrice ?? 99999999), dbToken.NewDexAsk ?? 99999999), matched);
+            var priceR = Math.Min(Math.Min(Math.Min(configToken.MaxPrice, dbToken.WhaleExPrice ?? 99999999), dbToken.NewDexAsk ?? 99999999), (matched == 0 ? 99999999 : matched));
+            return Math.Round(priceR, 8);
         }
 
-        static async Task BuyAsync(string token, string eos, string account, string permission = "active", int retryLeft = 3)
+        static async Task<decimal> AutoBuyAsync(string token, decimal amount, decimal price)
+        {
+            var total = price * amount;
+
+            if (total > 0 && total <= MaxEOSExchangeTotal)
+            {
+                await BuyAsync($"{amount.ToString("0.0000")} {token}", total.ToString("0.0000") + " EOS", configObject.TestAccount, "owner");
+                return amount;
+            }
+
+            return 0;
+        }
+
+        static async Task AutoSellAsync(string token, decimal amount, decimal price, string contract)
+        {
+            var total = amount * price;
+            await SellAsync($"{amount.ToString("0.0000")} {token}", total.ToString("0.0000") + " EOS", contract, configObject.TestAccount, "owner");
+        }
+
+
+        static async Task BuyAsync(string token, string totalEos, string account, string permission = "active", int retryLeft = 3)
         {
             try
             {
                 var result = await client.PushActionAsync(
                         "eosio.token", "transfer", account, permission, new object[] {
                         account, DexAccount,
-                        eos,
+                        totalEos,
                         token });
                 if (!result.IsSucceeded)
                 {
@@ -147,7 +178,7 @@ namespace Andoromeda.Kyubey.Dex.Bot
                 {
                     throw;
                 }
-                await BuyAsync(token, eos, account, permission, retryLeft: --retryLeft);
+                await BuyAsync(token, totalEos, account, permission, retryLeft: --retryLeft);
             }
         }
 
