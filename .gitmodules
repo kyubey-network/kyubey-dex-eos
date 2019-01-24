@@ -1,0 +1,3 @@
+[submodule "dapp-rosetta-contract"]
+	path = dapp-rosetta-contract
+	url = https://github.com/Dapp-rosetta/dapp-rosetta-contract.git
