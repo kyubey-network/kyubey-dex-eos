@@ -1,4 +1,4 @@
-﻿var LazyRouting = {};
+var LazyRouting = {};
 LazyRouting._routeMap = {};
 LazyRouting.__routeMap = {};
 LazyRouting._controlJs = {};
@@ -36,8 +36,7 @@ LazyRouting.SetRoute = function (routemap) {
 
 LazyRouting.SetMirror = function (map) {
     LazyRouting.__mirror = [];
-    for (var x in map)
-    {
+    for (var x in map) {
         LazyRouting.__mirror.push({ src: x, dest: map[x] });
     }
 };
@@ -122,7 +121,7 @@ LazyRouting._hideQueryString = function (path) {
 }
 
 LazyRouting._parseQueryString = function (dataFunc, query) {
-    var data = dataFunc ? dataFunc() : { };
+    var data = dataFunc ? dataFunc() : {};
     if (query) {
         for (var x in query) {
             try {
@@ -188,15 +187,15 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
             if (testCss) {
                 dcss = "/views" + path + ".css";
             }
-        } catch { }
-    } catch {
+        } catch(err) { }
+    } catch (err) {
         desktop = await LazyRouting._getHtmlAsync("/views" + path + "/index.html");
         try {
             var testCss = await LazyRouting._getHtmlAsync("/views" + path + "/index.css");
             if (testCss) {
                 dcss = "/views" + path + "/index.css";
             }
-        } catch { }
+        } catch(err) { }
     }
     try {
         mobile = await LazyRouting._getHtmlAsync("/views" + path + ".m.html");
@@ -205,8 +204,8 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
             if (testCss) {
                 mcss = "/views" + path + ".m.css";
             }
-        } catch { }
-    } catch {
+        } catch(err) { }
+    } catch(err) {
         try {
             mobile = await LazyRouting._getHtmlAsync("/views" + path + "/index.m.html");
             try {
@@ -214,8 +213,8 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
                 if (testCss) {
                     mcss = "/views" + path + "/index.m.css";
                 }
-            } catch { }
-        } catch {
+            } catch(err) { }
+        } catch(err) {
             mobile = desktop;
             mcss = dcss;
         }
@@ -223,11 +222,11 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
     try {
         js = await LazyRouting._getHtmlAsync("/views" + path + ".js");
         LazyRouting._controlJs[rule] = js;
-    } catch {
+    } catch(err) {
         try {
             js = await LazyRouting._getHtmlAsync("/views" + path + "/index.js");
             LazyRouting._controlJs[rule] = js;
-        } catch { }
+        } catch(err) { }
     }
 
     var component = { template: window.innerWidth < 768 ? mobile : desktop };
@@ -276,7 +275,7 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
             $('#page-css').remove();
         }
     };
-    
+
     //component.render = function (_, ref) {
     //    var h = _;
     //    if (app._width < 768) {
@@ -313,7 +312,7 @@ LazyRouting._loadComponentAsync = async function (rule, map) {
     return Promise.resolve(component);
 }
 
-LazyRouting._convertToViewNameBase = function(path) {
+LazyRouting._convertToViewNameBase = function (path) {
     path = path.replace(/(:[0-9a-zA-Z]{1,}\/|:[0-9a-zA-Z]{1,})/g, "");
     if (path[path.length - 1] == '/') {
         path = path.substr(0, path.length - 1);
