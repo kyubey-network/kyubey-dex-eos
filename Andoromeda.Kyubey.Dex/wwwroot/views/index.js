@@ -51,16 +51,16 @@
     mounted: function () {
         var self = this;
 
-        if (self.isMobile()) {
-            setTimeout(function () {
-                if (typeof scatter == 'undefined') {
+        setTimeout(function () {
+            if (typeof scatter == 'undefined') {
+                if (self.isMobile()) {
                     const $t = self.$t.bind(self);
                     alert($t('tip_use_dapp_browser'));
                     return;
                 }
-                self.scatterLogin();
-            }, 1000);
-        };
+            };
+            self.scatterLogin();
+        }, 1000);
 
         self.$nextTick(() => {
             window.addEventListener('resize', () => {
