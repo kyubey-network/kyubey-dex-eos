@@ -1,6 +1,10 @@
 ﻿component.data = function () {
     return {
-        news: [],
+        news: [
+            {
+                title: ''
+            }
+        ],
         slides: [],
         tokenTable: [],
         tokenTableSource: [],
