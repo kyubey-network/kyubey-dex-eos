@@ -38,6 +38,10 @@
     },
     created: function () {
         var self = this;
+        setTimeout(() => {
+            console.log('scatter:', scatter)
+            self.scatterLogin();
+        }, 1000)
         this.initSignalR();
         qv.get(`/api/v1/lang/${this.lang}/info/volume`, {}).then(res => {
             if (res.code === 200) {
