@@ -37,15 +37,15 @@ namespace Andoromeda.Kyubey.Dex.Controllers
                 CurrentPrice = x.FirstOrDefault().UnitPrice
             }).ToListAsync(cancellationToken);
 
-            var responseData = (await db.Tokens.OrderByDescending(x => x.Priority).ToListAsync(cancellationToken)).Select(x => new GetTokenListResponse()
+            var responseData = (await db.Tokens.Where(x => x.Status == TokenStatus.Active).OrderByDescending(x => x.Priority).ToListAsync(cancellationToken)).Select(x => new GetTokenListResponse()
             {
                 icon_src = $"/token_assets/{x.Id}/icon.png",
                 current_price = todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice ?? 0,
                 change_recent_day =
-                    (todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
-                    lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
-                    lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == 0) ?
-                    0 : (todayList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice / lastList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice) - 1,
+                (todayList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
+                lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == null ||
+                lastList.FirstOrDefault(t => t.TokenId == x.Id)?.CurrentPrice == 0) ?
+                0 : (todayList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice / lastList.FirstOrDefault(t => t.TokenId == x.Id).CurrentPrice) - 1,
                 is_recommend = true,
                 max_price_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.MaxPrice ?? 0,
                 min_price_recent_day = todayList.FirstOrDefault(s => s.TokenId == x.Id)?.MinPrice ?? 0,
