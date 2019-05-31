@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,7 +8,8 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+        rel="stylesheet">
     <link href="/css/one-page-wonder.min.css?v=20181123" rel="stylesheet">
     <link href="/css/kyubey-candlestick.css" rel="stylesheet" />
     <link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
@@ -20,7 +22,9 @@
     <script src="/js/bootstrap-slider.min.js"></script>
     <script src="/js/common.js?v=20181029"></script>
     <script src="/js/i18n.js"></script>
-    <script src="/js/eos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eosjs@16.0.9/lib/eos.min.js"></script>
+    <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
+    <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script src="/js/vue.js"></script>
     <script src="/js/vue-router.js"></script>
     <script src="/js/moment.js"></script>
@@ -39,9 +43,11 @@
     <script src="/locales/index.js"></script>
     <title>Kyubey</title>
 </head>
+
 <body>
     <div id="app" v-cloak>
         <render-layout></render-layout>
     </div>
 </body>
+
 </html>
