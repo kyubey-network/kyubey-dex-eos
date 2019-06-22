@@ -1,4 +1,5 @@
-﻿app = new Vue({
+﻿
+app = new Vue({
     router: router,
     data: {
         chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
@@ -6,7 +7,7 @@
         account: null,
         uuid: null,
         loginMode: null,
-        eos: null,
+        //eos: null,
         dexAccount: 'kyubeydex.bp',
         requiredFields: null,
         currentHost: location.protocol + "//" + location.host,
@@ -50,6 +51,7 @@
     },
     mounted: function () {
         var self = this;
+        ScatterJS.plugins(new ScatterEOS());
 
         setTimeout(function () {
             if (typeof scatter == 'undefined') {
@@ -301,11 +303,19 @@
                 _this.qrcodeIsValid = false;
             }, 3 * 60 * 1000);
         },
-        scatterLogin: function () {
+        scatterLogin: async function () {
             const $t = this.$t.bind(this);
-            if (!('scatter' in window)) {
+
+            let connected = await ScatterJS.scatter.connect("kyubeydex eos");
+            console.log('connected', connected);
+
+            if (!connected) {
                 showModal($t('scatter_not_found'), $t('scatter_tip'));
-            } else {
+            }
+
+            window.scatter = ScatterJS.scatter;
+
+            try {
                 var self = this;
                 var network = {
                     blockchain: 'eos',
@@ -314,13 +324,25 @@
                     protocol: 'https',
                     chainId: self.chainId
                 };
-                scatter.getIdentity({ accounts: [network] }).then(identity => {
-                    self.account = identity.accounts.find(acc => acc.blockchain === 'eos');
+
+                self.requiredFields = { accounts: [network] };
+
+                scatter.getIdentity(self.requiredFields).then(() => {
+                    self.account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
                     self.loginMode = 'Scatter Addons';
-                    self.eos = scatter.eos(network, Eos, {});
-                    self.requiredFields = { accounts: [network] };
+
+                    const eosOptions = { expireInSeconds: 60 };
+                    self.eos = scatter.eos(network, Eos, eosOptions);
+
                 });
             }
+            catch (error) {
+                if (error.code == 402) {
+                    //该钱包没有导入EOS账号
+                }
+                console.error(error);
+            }
+
             $('#loginModal').modal('hide');
         },
         scatterLogout: function () {
